@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/list_item_height"
+    android:layout_margin="8dp">
+
+    <ImageView
+        android:layout_width="@dimen/image_width"
+        android:layout_height="@dimen/list_item_height"
+        android:id="@+id/poster"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/list_item_height"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            tools:text="Dunkirk"
+            android:gravity="center"
+            android:padding="8dp"
+            android:textAppearance="?android:textAppearanceListItem"
+            android:textColor="@android:color/black"
+            android:id="@+id/movie_name"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            tools:text="2017"
+            android:gravity="center"
+            android:padding="8dp"
+            android:textAppearance="?android:textAppearanceListItemSecondary"
+            android:id="@+id/year"/>
+
+    </LinearLayout>
+</LinearLayout>
