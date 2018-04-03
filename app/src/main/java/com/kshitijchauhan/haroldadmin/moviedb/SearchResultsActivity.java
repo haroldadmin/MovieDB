@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 public class SearchResultsActivity extends AppCompatActivity {
 
-    String query;
+    String query = "";
     private static final String LOG_TAG = SearchResultsActivity.class.getName();
 
     @Override
@@ -28,8 +28,10 @@ public class SearchResultsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             query = intent.getStringExtra(SearchManager.QUERY);
-            ArrayList<Movie> searchResults = QueryUtils.getSearchResults("Dunkirk");
+//            ArrayList<Movie> searchResults = QueryUtils.getSearchResults("Dunkirk");
         }
+        query = "Dunkirk"; // Hardcoded as of now for debugging purposes
+        // TODO remove the hardcoding here.
 
         new getSearchResultsTask().execute();
     }
@@ -37,22 +39,12 @@ public class SearchResultsActivity extends AppCompatActivity {
     private class getSearchResultsTask extends AsyncTask<String, Void, ArrayList<Movie>> {
         @Override
         protected ArrayList<Movie> doInBackground(String... strings) {
-            String JSONResponse = null;
-            URL searchURL = QueryUtils.createSearchURL(query);
-            try {
-                JSONResponse = QueryUtils.makeHTTPRequest(searchURL);
-            }
-            catch (IOException e) {
-                Log.e(LOG_TAG, "Connection error");
-            }
-            ArrayList<Movie> searchResults = QueryUtils.getSearchResults(JSONResponse);
-            Log.v(LOG_TAG, "SUCCESSFULLY RETRIEVED SEARCH RESULTS");
+            ArrayList<Movie> searchResults = QueryUtils.getSearchResults(query);
             return searchResults;
         }
 
         @Override
         protected void onPostExecute(ArrayList<Movie> movies) {
-            super.onPostExecute(movies);
             ListView listView = findViewById(R.id.searchResultsList);
             listView.setAdapter(new SearchResultsAdapter(SearchResultsActivity.this, movies));
         }

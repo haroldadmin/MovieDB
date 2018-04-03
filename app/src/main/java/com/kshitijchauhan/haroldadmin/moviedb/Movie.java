@@ -1,5 +1,6 @@
 package com.kshitijchauhan.haroldadmin.moviedb;
 
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import java.net.MalformedURLException;
@@ -25,6 +26,7 @@ public class Movie {
     private HashMap<String, Integer> ratings;
     private String posterURL;
     private String website;
+    private Bitmap poster;
 
     private static final String LOG_TAG = Movie.class.getName();
 
@@ -32,7 +34,7 @@ public class Movie {
     public Movie(String name, String director, String year, Date releaseDate,
                  String parentalRating, int runtime, String genre, String writer,
                  String[] cast, String description, HashMap<String, Integer> ratings,
-                 String posterURL, String website) {
+                 String posterURL, Bitmap poster, String website) {
         this.name = name;
         this.director = director;
         this.year = year;
@@ -45,6 +47,7 @@ public class Movie {
         this.description = description;
         this.ratings = ratings;
         this.posterURL = posterURL;
+        this.poster = poster;
         this.website = website;
     }
 
@@ -172,4 +175,5 @@ public class Movie {
     public void setWebsite(String website) {
         this.website = website;
     }
+
 }

@@ -42,11 +42,11 @@ public class QueryUtils {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(QueryURL);
         stringBuilder.append(APIKey);
-        stringBuilder.append("&s=" + "Dunkirk");
+        stringBuilder.append("&s=");
+        stringBuilder.append(query);
         try {
             searchURL = new URL(stringBuilder.toString());
-        }
-        catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             Log.e(LOG_TAG, "Invalid search URL");
         }
         return searchURL;
@@ -57,12 +57,12 @@ public class QueryUtils {
     If the connection is successful and the JSONResponse is properly received, then it returns the
     response as a string.
      */
-    public static String makeHTTPRequest (URL searchURL) throws IOException {
+    public static String makeHTTPRequest(URL searchURL) throws IOException {
         String JSONResponse = "";
-        //If searchURL is null, return early
-//        if (searchURL == null) {
-//            return JSONResponse;
-//        }
+//        If searchURL is null, return early
+        if (searchURL == null) {
+            return JSONResponse;
+        }
 
         HttpURLConnection urlConnection = null;
         InputStream inputStream = null;
@@ -76,6 +76,7 @@ public class QueryUtils {
             if (urlConnection.getResponseCode() == 200) {
                 inputStream = urlConnection.getInputStream();
                 JSONResponse = readFromStream(inputStream);
+                Log.v(LOG_TAG, JSONResponse);
             } else {
                 Log.e(LOG_TAG, "Invalid response code received from server");
             }
@@ -104,24 +105,15 @@ public class QueryUtils {
         return output.toString();
     }
 
-    public static Bitmap getBitmapFromURL(URL url) {
-            ImageLoadTask task = new ImageLoadTask();
-            task.execute(url);
-
-    }
-
     public static ArrayList<Movie> getSearchResults(String query) {
 
-        ArrayList<Movie> searchResults = new ArrayList<Movie>();
-
-//        URL searchURL = createSearchURL(query);
-        URL searchURL = createSearchURL("https://www.omdbapi.com/?apikey=45f6f2c7&s=dunkirk");
+        ArrayList<Movie> searchResults = new ArrayList<>();
+        URL searchURL = createSearchURL(query);
         String JSONResponse;
 
         try {
             JSONResponse = makeHTTPRequest(searchURL);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             Log.e(LOG_TAG, "Unable to get search results. IOException in makeHTTPRequest method");
             return searchResults;
         }
@@ -130,24 +122,19 @@ public class QueryUtils {
             JSONObject root = new JSONObject(JSONResponse);
             JSONArray results = root.getJSONArray("Search");
             int length = Integer.parseInt(root.getString("totalResults"));
-            for (int i =0; i < length; i++)
-            {
+            for (int i = 0; i < length; i++) {
                 JSONObject movie_details = results.getJSONObject(i);
-//                Log.v (LOG_TAG, movie_details.getString("Title") + movie_details.getString("Year") + movie_details.getString("Poster"));
                 Movie movie = new Movie(movie_details.getString("Title"),
                                         movie_details.getString("Year"),
                                         movie_details.getString("Poster"));
                 searchResults.add(movie);
-                Log.v(LOG_TAG, searchResults.get(i).getName());
             }
 
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             Log.e(LOG_TAG, "Problem parsing the JSON response.");
+            return searchResults;
         }
         return searchResults;
-    }
-
     }
     private class ImageLoadTask extends AsyncTask<URL, Void, Bitmap> {
         @Override
@@ -174,6 +161,7 @@ public class QueryUtils {
             super.onPostExecute(bitmap);
         }
     }
+}
 
 
 
