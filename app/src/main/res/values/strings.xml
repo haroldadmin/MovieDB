@@ -2,4 +2,6 @@
     <string name="app_name">MovieDB</string>
     <string name="app_label">MovieDB</string>
     <string name="search_hint">Search movie name</string>
+    <string name="action_search">Search</string>
+    <string name="action_settings">Settings</string>
 </resources>

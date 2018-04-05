@@ -28,11 +28,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             query = intent.getStringExtra(SearchManager.QUERY);
-//            ArrayList<Movie> searchResults = QueryUtils.getSearchResults("Dunkirk");
         }
-        query = "Dunkirk"; // Hardcoded as of now for debugging purposes
-        // TODO remove the hardcoding here.
-
         new getSearchResultsTask().execute();
     }
 
