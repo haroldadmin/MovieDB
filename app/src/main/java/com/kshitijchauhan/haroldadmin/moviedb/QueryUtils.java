@@ -38,17 +38,6 @@ public class QueryUtils {
 
     private static final String QueryURL = "http://www.omdbapi.com/?apikey=";
 
-    public static Bitmap getPosterFromURL(URL url) {
-        Bitmap poster = null;
-        try {
-            poster = new ImageLoadTask().execute(url).get();
-        }
-        catch (Exception e) {
-
-        }
-        return poster;
-    }
-
     /*This function generates the query URL for requesting the JSON response file*/
     public static URL createSearchURL(String query) {
         URL searchURL = null;
@@ -118,47 +107,6 @@ public class QueryUtils {
             }
         }
         return output.toString();
-    }
-
-    public static ArrayList<Movie> getSearchResults(String query) {
-
-        ArrayList<Movie> searchResults = new ArrayList<>();
-        URL searchURL = createSearchURL(query);
-        String JSONResponse;
-
-        try {
-            JSONResponse = makeHTTPRequest(searchURL);
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Unable to get search results. IOException in makeHTTPRequest method. Returning empty list of results");
-            return searchResults;
-        }
-
-        try {
-            JSONObject root = new JSONObject(JSONResponse);
-            JSONArray results = root.getJSONArray("Search");
-            int length = Integer.parseInt(root.getString("totalResults"));
-            for (int i = 0; i < length; i++) {
-                JSONObject movie_details = results.getJSONObject(i);
-                Bitmap poster = null;
-                try {
-                    URL posterURL = new URL(movie_details.getString("Poster"));
-                    poster = getPosterFromURL(posterURL);
-                }
-                catch (MalformedURLException e) {
-
-                }
-                Movie movie = new Movie(movie_details.getString("Title"),
-                                        movie_details.getString("Year"),
-                                        poster);
-                searchResults.add(movie);
-                Log.v(LOG_TAG, "Successfully added " + searchResults.get(i).getName() + " to the list of search results");
-            }
-
-        } catch (JSONException e) {
-            Log.e(LOG_TAG, "Problem parsing the JSON response.");
-            return searchResults;
-        }
-        return searchResults;
     }
 }
 
