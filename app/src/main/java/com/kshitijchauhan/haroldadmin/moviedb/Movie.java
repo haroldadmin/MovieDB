@@ -16,25 +16,36 @@ public class Movie {
     private String name;
     private String director;
     private String year;
-    private Date releaseDate;
+    private String releaseDate;
     private String parentalRating;
-    private int runtime;
+    private String runtime;
     private String genre;
     private String writer;
     private String[] cast;
     private String description;
-    private HashMap<String, Integer> ratings;
+    private String IMDbrating;
     private String posterURL;
     private String website;
     private Bitmap poster;
+    private String imdbID;
 
     private static final String LOG_TAG = Movie.class.getName();
 
+    /*Creating an empty constructor because there's no way to know what movie details might be missing for any given movie
+    This constructor allows the creatipn of a movie with no details given. Setter methods can be used to add as much movie
+    information as is possible.
+     */
+    public Movie() {
 
-    public Movie(String name, String director, String year, Date releaseDate,
-                 String parentalRating, int runtime, String genre, String writer,
-                 String[] cast, String description, HashMap<String, Integer> ratings,
-                 String posterURL, Bitmap poster, String website) {
+    }
+
+    /*This constructor is mostly useless.
+    Probably won't use this.
+     */
+    public Movie(String name, String director, String year, String releaseDate,
+                 String parentalRating, String runtime, String genre, String writer,
+                 String[] cast, String description, String IMDbrating,
+                 String posterURL, Bitmap poster, String website, String IMDbID) {
         this.name = name;
         this.director = director;
         this.year = year;
@@ -45,16 +56,20 @@ public class Movie {
         this.writer = writer;
         this.cast = cast;
         this.description = description;
-        this.ratings = ratings;
+        this.IMDbrating = IMDbrating;
         this.posterURL = posterURL;
         this.poster = poster;
         this.website = website;
+        this.imdbID = IMDbID;
     }
 
-    public Movie (String name, String year, Bitmap poster) {
+    /*This constructor is useful while creating movie search results.
+     */
+    public Movie (String name, String year, Bitmap poster, String imdbID) {
         this.name = name;
         this.year = year;
         this.poster = poster;
+        this.imdbID = imdbID;
     }
 
 
@@ -82,11 +97,11 @@ public class Movie {
         this.year = year;
     }
 
-    public Date getReleaseDate() {
+    public String getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
 
@@ -98,11 +113,11 @@ public class Movie {
         this.parentalRating = parentalRating;
     }
 
-    public int getRuntime() {
+    public String getRuntime() {
         return runtime;
     }
 
-    public void setRuntime(int runtime) {
+    public void setRuntime(String runtime) {
         this.runtime = runtime;
     }
 
@@ -138,12 +153,12 @@ public class Movie {
         this.description = description;
     }
 
-    public HashMap<String, Integer> getRatings() {
-        return ratings;
+    public String getIMDbRating() {
+        return IMDbrating;
     }
 
-    public void setRatings(HashMap<String, Integer> ratings) {
-        this.ratings = ratings;
+    public void setRatings(String IMDbrating) {
+        this.IMDbrating = IMDbrating;
     }
 
     public URL getPosterURL() {
@@ -182,6 +197,14 @@ public class Movie {
 
     public void setPoster(Bitmap moviePoster) {
         poster = moviePoster;
+    }
+
+    public void setImdbID(String ID) {
+        this.imdbID = ID;
+    }
+
+    public String getImdbID() {
+        return imdbID;
     }
 
 }

@@ -10,6 +10,8 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -85,10 +87,12 @@ public class SearchResultsActivity extends AppCompatActivity {
                     }
                     String name = movie_details.getString("Title");
                     String year = movie_details.getString("Year");
+                    String imdbID = movie_details.getString("imdbID");
                     Log.v(LOG_TAG, name + " " + year);
                     Movie movie = new Movie(name,
                                             year,
-                                            poster);
+                                            poster,
+                                            imdbID);
                     searchResults.add(movie);
                     Log.v(LOG_TAG, "Successfully added movie: " + movie.getName());
                 }
@@ -102,10 +106,20 @@ public class SearchResultsActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(ArrayList<Movie> searchResults) {
-            ListView listView = findViewById(R.id.searchResultsList);
+            final ListView listView = findViewById(R.id.searchResultsList);
             listView.setAdapter(new SearchResultsAdapter(SearchResultsActivity.this, searchResults));
             Log.v(LOG_TAG, "Successfully set adapter to listview");
             progress.dismiss();
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Movie selectedMovie = (Movie) listView.getItemAtPosition(position);
+                    Intent intent = new Intent(SearchResultsActivity.this, MovieDetails.class);
+                    intent.putExtra("IMDb ID", selectedMovie.getImdbID());
+                    Log.v(LOG_TAG, "Preparing to show details for movie with IMDb ID " + selectedMovie.getImdbID());
+                    startActivity(intent);
+                }
+            });
         }
     }
 }
