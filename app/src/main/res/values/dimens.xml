@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="list_item_height">89dp</dimen>
+    <dimen name="list_item_height">97dp</dimen>
     <dimen name="image_width">60dp</dimen>
 </resources>

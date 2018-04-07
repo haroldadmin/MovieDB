@@ -4,13 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchResultsActivity">
+    tools:context=".SearchResultsActivity"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/search_results_activity_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/actionBarColor"
+        android:elevation="4dp"
+        android:theme="@style/toolBarStyle"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="8dp"
-        android:id="@+id/searchResultsList"/>
+        android:id="@+id/searchResultsList"
+        android:divider="@null"/>
 
 
 </LinearLayout>

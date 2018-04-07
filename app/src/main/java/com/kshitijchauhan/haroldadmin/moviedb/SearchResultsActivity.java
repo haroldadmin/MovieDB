@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.support.v7.widget.Toolbar;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,6 +44,11 @@ public class SearchResultsActivity extends AppCompatActivity {
             query = intent.getStringExtra(SearchManager.QUERY);
             Log.v(LOG_TAG, "Query successfully received: " + query);
         }
+        Toolbar searchResultsActivityToolbar = findViewById(R.id.search_results_activity_toolbar);
+        setSupportActionBar(searchResultsActivityToolbar);
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle("Search Results");
         progress = new ProgressDialog(this);
         progress.setTitle("Loading");
         progress.setMessage("Getting search results...");

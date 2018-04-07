@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar mainActivityToolbar = findViewById(R.id.main_activity_toolbar);
         setSupportActionBar(mainActivityToolbar);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(false);
         Button searchButton = findViewById(R.id.search_button);
         searchBox = findViewById(R.id.search_box);
         searchBox.setOnEditorActionListener(new TextView.OnEditorActionListener() {
