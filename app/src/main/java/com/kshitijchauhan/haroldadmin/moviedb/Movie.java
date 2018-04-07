@@ -51,10 +51,10 @@ public class Movie {
         this.website = website;
     }
 
-    public Movie (String name, String year, String posterURL) {
+    public Movie (String name, String year, Bitmap poster) {
         this.name = name;
         this.year = year;
-        this.posterURL = posterURL;
+        this.poster = poster;
     }
 
 
@@ -174,6 +174,14 @@ public class Movie {
 
     public void setWebsite(String website) {
         this.website = website;
+    }
+
+    public Bitmap getPoster() {
+        return poster;
+    }
+
+    public void setPoster(Bitmap moviePoster) {
+        poster = moviePoster;
     }
 
 }

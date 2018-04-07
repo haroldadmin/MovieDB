@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -33,29 +34,24 @@ public class SearchResultsAdapter extends ArrayAdapter<Movie> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         View listItemView = convertView;
+        ViewHolder holder;
+        Movie searchResult = getItem(position);
         if (listItemView == null) {
+            holder = new ViewHolder();
             listItemView = LayoutInflater.from(getContext()).inflate(
                     R.layout.search_results_list_item, parent, false);
+            holder.name = listItemView.findViewById(R.id.movie_name);
+            holder.year = listItemView.findViewById(R.id.year);
+            holder.poster = listItemView.findViewById(R.id.poster);
+            listItemView.setTag(holder);
+        }
+        else {
+            holder = (ViewHolder) convertView.getTag();
         }
 
-        Movie searchResult = getItem(position);
-        TextView titleView = listItemView.findViewById(R.id.movie_name);
-        TextView yearView = listItemView.findViewById(R.id.year);
-        ImageView imageView = listItemView.findViewById(R.id.poster);
-        if (searchResult.getPosterURL() != null) {
-                try {
-                    Bitmap poster = new ImageLoadTask().execute(searchResult.getPosterURL()).get();
-                    imageView.setImageBitmap(poster);
-                }
-                catch (Exception e) {
-                    Log.e(LOG_TAG, "Error getting poster for " + searchResult.getName());
-                }
-
-            }
-
-        titleView.setText(searchResult.getName());
-        yearView.setText(searchResult.getYear());
-
+        holder.name.setText(searchResult.getName());
+        holder.year.setText(searchResult.getYear());
+        holder.poster.setImageBitmap(searchResult.getPoster());
         return listItemView;
     }
     private class ImageLoadTask extends AsyncTask<URL, Void, Bitmap> {
@@ -82,5 +78,11 @@ public class SearchResultsAdapter extends ArrayAdapter<Movie> {
         protected void onPostExecute(Bitmap bitmap) {
             super.onPostExecute(bitmap);
         }
+    }
+
+    static class ViewHolder {
+        TextView name;
+        TextView year;
+        ImageView poster;
     }
 }

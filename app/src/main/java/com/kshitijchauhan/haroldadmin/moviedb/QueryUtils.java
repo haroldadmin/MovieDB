@@ -1,7 +1,9 @@
 package com.kshitijchauhan.haroldadmin.moviedb;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -36,6 +38,17 @@ public class QueryUtils {
 
     private static final String QueryURL = "http://www.omdbapi.com/?apikey=";
 
+    public static Bitmap getPosterFromURL(URL url) {
+        Bitmap poster = null;
+        try {
+            poster = new ImageLoadTask().execute(url).get();
+        }
+        catch (Exception e) {
+
+        }
+        return poster;
+    }
+
     /*This function generates the query URL for requesting the JSON response file*/
     public static URL createSearchURL(String query) {
         URL searchURL = null;
@@ -46,6 +59,7 @@ public class QueryUtils {
         stringBuilder.append(query);
         try {
             searchURL = new URL(stringBuilder.toString());
+            Log.v(LOG_TAG, "Successfully created search URL :" + searchURL);
         } catch (MalformedURLException e) {
             Log.e(LOG_TAG, "Invalid search URL");
         }
@@ -61,6 +75,7 @@ public class QueryUtils {
         String JSONResponse = "";
 //        If searchURL is null, return early
         if (searchURL == null) {
+            Log.v(LOG_TAG, "Unable to retrieve JSON response because search URL is null");
             return JSONResponse;
         }
 
@@ -76,7 +91,7 @@ public class QueryUtils {
             if (urlConnection.getResponseCode() == 200) {
                 inputStream = urlConnection.getInputStream();
                 JSONResponse = readFromStream(inputStream);
-                Log.v(LOG_TAG, JSONResponse);
+                Log.v(LOG_TAG, "Successfully retrieved JSON response: " + JSONResponse);
             } else {
                 Log.e(LOG_TAG, "Invalid response code received from server");
             }
@@ -114,7 +129,7 @@ public class QueryUtils {
         try {
             JSONResponse = makeHTTPRequest(searchURL);
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Unable to get search results. IOException in makeHTTPRequest method");
+            Log.e(LOG_TAG, "Unable to get search results. IOException in makeHTTPRequest method. Returning empty list of results");
             return searchResults;
         }
 
@@ -124,10 +139,19 @@ public class QueryUtils {
             int length = Integer.parseInt(root.getString("totalResults"));
             for (int i = 0; i < length; i++) {
                 JSONObject movie_details = results.getJSONObject(i);
+                Bitmap poster = null;
+                try {
+                    URL posterURL = new URL(movie_details.getString("Poster"));
+                    poster = getPosterFromURL(posterURL);
+                }
+                catch (MalformedURLException e) {
+
+                }
                 Movie movie = new Movie(movie_details.getString("Title"),
                                         movie_details.getString("Year"),
-                                        movie_details.getString("Poster"));
+                                        poster);
                 searchResults.add(movie);
+                Log.v(LOG_TAG, "Successfully added " + searchResults.get(i).getName() + " to the list of search results");
             }
 
         } catch (JSONException e) {
@@ -135,31 +159,6 @@ public class QueryUtils {
             return searchResults;
         }
         return searchResults;
-    }
-    private class ImageLoadTask extends AsyncTask<URL, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(URL... urls) {
-            Bitmap myBitmap = null;
-            URL url = urls[0];
-            try {
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                InputStream input = connection.getInputStream();
-                myBitmap = BitmapFactory.decodeStream(input);
-                Log.e("Bitmap", "returned");
-                return myBitmap;
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.e("Exception", e.getMessage());
-            }
-            return myBitmap;
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            super.onPostExecute(bitmap);
-        }
     }
 }
 
