@@ -1,39 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@color/colorPrimary">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/main_activity_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/actionBarColor"
-        android:elevation="4dp"
+        android:background="@color/colorPrimary"
         android:theme="@style/toolBarStyle"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
-        <EditText
-            android:id="@+id/search_box"
-            android:textColor="@android:color/white"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_margin="8dp"
-            android:gravity="center"
-            android:hint="Search Movies"
-            android:textColorHint="@android:color/white"
-            android:background="@drawable/search_box"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:imeOptions="actionSend"
-            android:inputType="text"/>
-        <Button
-            android:id="@+id/search_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@id/search_box"
-            android:text="Search" />
-</RelativeLayout>
+    <EditText
+        android:id="@+id/pretty_search_box"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/pretty_search_box"
+        android:elevation="4dp"
+        android:gravity="center"
+        android:hint="Search Movies"
+        android:inputType="text"
+        android:singleLine="true"
+        android:imeOptions="actionSend"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:scaleType="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pretty_search_box"
+        app:srcCompat="@drawable/ic_search_white_24dp" />
+
+    <ImageView
+        android:id="@+id/logo_view"
+        android:layout_width="144dp"
+        android:layout_height="144dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toTopOf="@+id/pretty_search_box"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/main_activity_toolbar"
+        app:srcCompat="@drawable/movie_roll_png" />
+
+</android.support.constraint.ConstraintLayout>
