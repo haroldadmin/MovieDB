@@ -2,18 +2,15 @@ package com.kshitijchauhan.haroldadmin.moviedb;
 
 import android.app.ProgressDialog;
 import android.app.SearchManager;
-import android.content.AsyncTaskLoader;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.support.v7.widget.Toolbar;
 
 import org.json.JSONArray;
@@ -32,6 +29,10 @@ public class SearchResultsActivity extends AppCompatActivity {
     String query = "";
     private static final String LOG_TAG = SearchResultsActivity.class.getName();
     ProgressDialog progress;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,16 +45,27 @@ public class SearchResultsActivity extends AppCompatActivity {
             query = intent.getStringExtra(SearchManager.QUERY);
             Log.v(LOG_TAG, "Query successfully received: " + query);
         }
+
+        mRecyclerView = findViewById(R.id.my_recycler_view);
+        mRecyclerView.setHasFixedSize(true);
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+
         Toolbar searchResultsActivityToolbar = findViewById(R.id.search_results_activity_toolbar);
         setSupportActionBar(searchResultsActivityToolbar);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle("Search Results");
+
+
         progress = new ProgressDialog(this);
         progress.setTitle("Loading");
         progress.setMessage("Getting search results...");
         progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
         progress.show();
+
+
         new getSearchResultsTask().execute(query);
     }
 
@@ -96,9 +108,9 @@ public class SearchResultsActivity extends AppCompatActivity {
                     String imdbID = movie_details.getString("imdbID");
                     Log.v(LOG_TAG, name + " " + year);
                     Movie movie = new Movie(name,
-                                            year,
-                                            poster,
-                                            imdbID);
+                            year,
+                            poster,
+                            imdbID);
                     searchResults.add(movie);
                     Log.v(LOG_TAG, "Successfully added movie: " + movie.getName());
                 }
@@ -112,20 +124,9 @@ public class SearchResultsActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(ArrayList<Movie> searchResults) {
-            final ListView listView = findViewById(R.id.searchResultsList);
-            listView.setAdapter(new SearchResultsAdapter(SearchResultsActivity.this, searchResults));
-            Log.v(LOG_TAG, "Successfully set adapter to listview");
+            SearchResultsAdapter searchResultsAdapter = new SearchResultsAdapter(SearchResultsActivity.this, searchResults);
+            mRecyclerView.setAdapter(searchResultsAdapter);
             progress.dismiss();
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Movie selectedMovie = (Movie) listView.getItemAtPosition(position);
-                    Intent intent = new Intent(SearchResultsActivity.this, MovieDetails.class);
-                    intent.putExtra("IMDb ID", selectedMovie.getImdbID());
-                    Log.v(LOG_TAG, "Preparing to show details for movie with IMDb ID " + selectedMovie.getImdbID());
-                    startActivity(intent);
-                }
-            });
         }
     }
 }
