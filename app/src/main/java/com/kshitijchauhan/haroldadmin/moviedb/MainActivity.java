@@ -1,8 +1,8 @@
 package com.kshitijchauhan.haroldadmin.moviedb;
 
-import android.app.ActionBar;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -10,12 +10,11 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.app.ActionBar;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mainActivityToolbar);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(false);
-        Button searchButton = findViewById(R.id.search_button);
-        searchBox = findViewById(R.id.search_box);
+        FloatingActionButton searchButton = findViewById(R.id.floatingActionButton);
+        searchBox = findViewById(R.id.pretty_search_box);
         searchBox.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -61,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_settings:
                 // User chose the "Settings" item, show the app settings UI...
+                Toast.makeText(this, "Settings currently not implemented", Toast.LENGTH_SHORT).show();
                 return true;
 
             case R.id.action_search:

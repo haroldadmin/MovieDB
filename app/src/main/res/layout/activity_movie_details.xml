@@ -10,7 +10,7 @@
         android:id="@+id/details_activity_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/actionBarColor"
+        android:background="@color/colorPrimary"
         android:elevation="4dp"
         android:theme="@style/toolBarStyle"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
@@ -76,7 +76,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         app:layout_constraintStart_toEndOf="@+id/poster_imageview"
-        app:layout_constraintTop_toBottomOf="@+id/director_textview" />
+        app:layout_constraintTop_toBottomOf="@+id/director_textview"
+        android:theme="@style/RatingBar"/>
 
     <TextView
         android:id="@+id/genre_view"
