@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/media_image"
-            android:layout_width="120dp"
-            android:layout_height="194dp"
+            android:layout_width="92dp"
+            android:layout_height="138dp"
             android:layout_margin="4dp"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="4dp"

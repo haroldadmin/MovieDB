@@ -125,6 +125,11 @@ public class QueryUtils {
         }
         return output.toString();
     }
+
+    public static String getGenreFromId(int id) {
+        Constants.setGenreMap();
+        return Constants.genreMap.get(id);
+    }
 }
 
 

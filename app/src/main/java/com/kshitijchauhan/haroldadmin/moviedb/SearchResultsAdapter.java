@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 
 public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdapter.ViewHolder> {
@@ -36,13 +38,16 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
 
     @Override
     public void onBindViewHolder(@NonNull SearchResultsAdapter.ViewHolder holder, int position) {
-        Movie searchResult = (Movie) mSearchResults.get(position);
+        Movie searchResult = mSearchResults.get(position);
         TextView nameTextView = holder.name;
         TextView yearTextView = holder.year;
         ImageView posterView = holder.poster;
-        nameTextView.setText(searchResult.getName());
-        yearTextView.setText(searchResult.getYear());
-        posterView.setImageBitmap(searchResult.getPoster());
+        nameTextView.setText(searchResult.getTitle());
+        yearTextView.setText(searchResult.getReleaseDate().substring(0, 4));
+        Glide
+                .with(getContext())
+                .load("https://image.tmdb.org/t/p/w92" + searchResult.getPosterPath())
+                .into(posterView);
     }
 
     @Override
@@ -66,7 +71,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
                         Intent intent = new Intent(mContext, MovieDetails.class);
-                        intent.putExtra("IMDb ID", mSearchResults.get(position).getImdbID());
+                        intent.putExtra("ID", mSearchResults.get(position).getId());
                         mContext.startActivity(intent);
                     }
                 }

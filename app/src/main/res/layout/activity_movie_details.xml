@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MovieDetails">
+    tools:context=".MovieDetails"
+    android:id="@+id/constraint_layout">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/details_activity_toolbar"
@@ -17,8 +18,8 @@
 
     <ImageView
         android:id="@+id/poster_imageview"
-        android:layout_width="120dp"
-        android:layout_height="178dp"
+        android:layout_width="154dp"
+        android:layout_height="231dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,16 +50,18 @@
 
     <TextView
         android:id="@+id/description_textview"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/poster_imageview"
-        tools:text="TextView" />
+        tools:text="Description" />
 
     <TextView
-        android:id="@+id/director_textview"
+        android:id="@+id/runtime_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -66,7 +69,7 @@
         android:textAppearance="@android:style/TextAppearance.Material.Medium"
         app:layout_constraintStart_toEndOf="@+id/poster_imageview"
         app:layout_constraintTop_toBottomOf="@+id/year_textview"
-        tools:text="Christopher Nolan" />
+        tools:text="106 min" />
 
     <RatingBar
         android:id="@+id/ratingBar"
@@ -76,7 +79,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
         app:layout_constraintStart_toEndOf="@+id/poster_imageview"
-        app:layout_constraintTop_toBottomOf="@+id/director_textview"
+        app:layout_constraintTop_toBottomOf="@+id/runtime_textview"
         android:theme="@style/RatingBar"/>
 
     <TextView
@@ -91,13 +94,16 @@
         tools:text="Genres" />
 
     <TextView
-        android:id="@+id/parental_rating"
-        android:layout_width="wrap_content"
+        android:id="@+id/tagline_view"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
-        tools:text="PG-13"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/poster_imageview"
-        app:layout_constraintTop_toBottomOf="@+id/genre_view" />
+        app:layout_constraintTop_toBottomOf="@+id/genre_view"
+        tools:text="tagline" />
 
 </android.support.constraint.ConstraintLayout>
