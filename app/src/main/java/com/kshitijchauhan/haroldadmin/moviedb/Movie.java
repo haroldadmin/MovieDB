@@ -3,6 +3,7 @@ package com.kshitijchauhan.haroldadmin.moviedb;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Date;
 
 public class Movie {
 

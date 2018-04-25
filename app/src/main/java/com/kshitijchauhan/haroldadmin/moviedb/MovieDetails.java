@@ -1,31 +1,40 @@
 package com.kshitijchauhan.haroldadmin.moviedb;
 
 import android.content.Intent;
-import android.support.constraint.ConstraintLayout;
+import android.graphics.Bitmap;
+import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.graphics.Palette;
+import android.support.v7.widget.CardView;
 import android.util.Log;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MovieDetails extends AppCompatActivity {
 
     private static final String LOG_TAG = MovieDetails.class.getName();
-    public static final String BASE_URL = "https://api.themoviedb.org/3/";
+    private static String imdbID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,54 +44,69 @@ public class MovieDetails extends AppCompatActivity {
         String ID = intent.getStringExtra("ID");
         Toolbar movieDetailsToolbar = findViewById(R.id.details_activity_toolbar);
         setSupportActionBar(movieDetailsToolbar);
-        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        final android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        /* Build OkHTTP client and Retrofit client for making network requests */
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        final ScrollView scrollView = findViewById(R.id.scrollView);
+        final ImageView posterView = findViewById(R.id.poster_imageview);
+        final TextView titleView = findViewById(R.id.title_textview);
+        final TextView yearView = findViewById(R.id.year_textview);
+        final TextView descriptionView = findViewById(R.id.description_textview);
+        final RatingBar ratingBar = findViewById(R.id.rating_bar);
+        final TextView genreView = findViewById(R.id.genre_textview);
+        final TextView taglineView = findViewById(R.id.tagline_textview);
+        final CardView descriptionCard = findViewById(R.id.description_card);
+        final CardView miscCard = findViewById(R.id.misc_card);
 
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create());
-        Retrofit retrofit = builder.client(httpClient.build()).build();
-        TMDbInterface client = retrofit.create(TMDbInterface.class);
+        TMDbClient client = ServiceGenerator.createService(TMDbClient.class);
 
         Call<Movie> getMovieDetails = client.getMovieDetails(ID, BuildConfig.TMDb_API_KEY);
+
         getMovieDetails.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
 
                 if(response.isSuccessful()) {
-                    Movie movie = response.body();
-                    final ConstraintLayout constraintLayout = findViewById(R.id.constraint_layout);
-                    ImageView posterView = findViewById(R.id.poster_imageview);
-                    TextView titleView = findViewById(R.id.title_textview);
-                    TextView yearView = findViewById(R.id.year_textview);
-                    TextView descriptionView = findViewById(R.id.description_textview);
-                    TextView RuntimeView = findViewById(R.id.runtime_textview);
-                    RatingBar ratingBar = findViewById(R.id.ratingBar);
-                    ratingBar.setVisibility(View.INVISIBLE);
-                    TextView genreView = findViewById(R.id.genre_view);
-                    TextView taglineView = findViewById(R.id.tagline_view);
+                    final Movie movie = response.body();
 
                     Glide
                             .with(MovieDetails.this)
-                            .load("https://image.tmdb.org/t/p/w154" + movie.getPosterPath())
-                            .into(posterView);
+                            .asBitmap()
+                            .load(QueryUtils.getMovieDetailsPosterURL(movie.getPosterPath()))
+                            .apply(new RequestOptions()
+                                    .placeholder(R.drawable.no_image)
+                                    .error(R.drawable.no_image)
+                                    .centerCrop())
+                            .into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                    posterView.setImageBitmap(resource);
+                                    Palette.Builder paletteBuilder = Palette.from(resource);
+                                    paletteBuilder.generate(new Palette.PaletteAsyncListener() {
+                                        @Override
+                                        public void onGenerated(@NonNull Palette palette) {
+                                            scrollView.setBackgroundColor(palette.getDarkMutedColor(ContextCompat.getColor(MovieDetails.this ,R.color.scrollViewBackground)));
+                                            descriptionCard.setCardBackgroundColor(palette.getDarkVibrantColor(ContextCompat.getColor(MovieDetails.this, R.color.scrollViewBackground)));
+                                            miscCard.setCardBackgroundColor(palette.getDarkVibrantColor(ContextCompat.getColor(MovieDetails.this, R.color.scrollViewBackground)));
+                                            actionBar.setBackgroundDrawable(new ColorDrawable());
+                                        }
+                                    });
+                                }
+                            });
                     titleView.setText(movie.getTitle());
-                    yearView.setText(movie.getReleaseDate().substring(0, 4));
+
+                    if (movie.getReleaseDate() != null) {
+                        yearView.setText(movie.getReleaseDate().substring(0, 4));
+                    }
+                    else {
+                        yearView.setText("N/A");
+                    }
                     descriptionView.setText(movie.getOverview());
-                    String runtimeText = movie.getRuntime() + " " + getString(R.string.runtime_units);
-                    RuntimeView.setText(runtimeText);
-                    double stars = movie.getRating();
-
-                    ratingBar.setVisibility(View.VISIBLE);
-                    ratingBar.setNumStars((int) (stars/2));
-                    genreView.setText(movie.getGenre());
-
-                    taglineView.setText(movie.getTagline());
-                    android.support.v7.app.ActionBar actionBar = getSupportActionBar();
                     actionBar.setTitle(movie.getTitle());
+                    ratingBar.setNumStars((int) movie.getRating());
+                    genreView.setText(movie.getGenre());
+                    taglineView.setText(movie.getTagline());
+                    imdbID = movie.getImdbID();
                 }
                 else if(response.body() == null){
                     Log.e(LOG_TAG, "Error getting movie response");
@@ -98,5 +122,22 @@ public class MovieDetails extends AppCompatActivity {
                 Toast.makeText(MovieDetails.this, "Error loading movie details", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.movie_details_app_bar_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.imdbButton) {
+            String url = QueryUtils.imdbUriGenerator(imdbID);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

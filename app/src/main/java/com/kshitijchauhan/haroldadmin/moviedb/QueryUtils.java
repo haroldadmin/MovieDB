@@ -130,6 +130,22 @@ public class QueryUtils {
         Constants.setGenreMap();
         return Constants.genreMap.get(id);
     }
+
+    public static String getSearchPosterURL(String posterPath) {
+        return "https://image.tmdb.org/t/p/w154" + posterPath;
+    }
+
+    public static String getMovieDetailsPosterURL(String posterPath) {
+        return "https://image.tmdb.org/t/p/w500" + posterPath;
+    }
+
+    public static String getBackdropURL(String posterPath) {
+        return "https://image.tmdb.org/t/p/w1280" + posterPath;
+    }
+
+    public static String imdbUriGenerator(String imdbID) {
+        return "https://imdb.com/title/" + imdbID;
+    }
 }
 
 

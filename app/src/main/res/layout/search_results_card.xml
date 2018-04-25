@@ -15,7 +15,7 @@
         android:padding="4dp">
 
         <ImageView
-            android:id="@+id/media_image"
+            android:id="@+id/poster_imageview"
             android:layout_width="92dp"
             android:layout_height="138dp"
             android:layout_margin="4dp"
@@ -40,7 +40,7 @@
             android:textAppearance="?android:textAppearanceLarge"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/media_image"
+            app:layout_constraintStart_toEndOf="@+id/poster_imageview"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Dunkirk" />
 
@@ -56,7 +56,7 @@
             android:textAppearance="?android:textAppearanceMedium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/media_image"
+            app:layout_constraintStart_toEndOf="@+id/poster_imageview"
             app:layout_constraintTop_toBottomOf="@+id/supporting_text"
             tools:text="2017" />
 

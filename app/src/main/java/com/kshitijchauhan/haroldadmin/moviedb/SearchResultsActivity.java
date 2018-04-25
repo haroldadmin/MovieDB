@@ -9,6 +9,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.support.v7.widget.Toolbar;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -61,30 +64,34 @@ public class SearchResultsActivity extends AppCompatActivity {
         progress.setCancelable(false); // disable dismiss by tapping outside of the dialog
         progress.show();
 
-        /* Build OkHTTP client and Retrofit client for making network requests */
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        Retrofit.Builder builder = new Retrofit.Builder()
-                .baseUrl(BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create());
-        Retrofit retrofit = builder.client(httpClient.build()).build();
-        TMDbInterface client = retrofit.create(TMDbInterface.class);
+        TMDbClient client = ServiceGenerator.createService(TMDbClient.class);
 
         Call<SearchResponse> searchResponseCall = client.getSearchResults(BuildConfig.TMDb_API_KEY, query);
-        Log.v(LOG_TAG, "Success: created call object");
+
         searchResponseCall.enqueue(new Callback<SearchResponse>() {
             @Override
             public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
                 if (response.isSuccessful() && response.body().getSearchResults() != null) {
                     ArrayList<Movie> searchResults = response.body().getSearchResults();
-                    Log.v(LOG_TAG, "Successfully retrieved search results using retrofit");
-                    SearchResultsAdapter searchResultsAdapter = new SearchResultsAdapter(SearchResultsActivity.this, searchResults);
-                    mRecyclerView.setAdapter(searchResultsAdapter);
-                    progress.dismiss();
+                    if (searchResults.size() != 0) {
+                        SearchResultsAdapter searchResultsAdapter = new SearchResultsAdapter(SearchResultsActivity.this, searchResults);
+                        mRecyclerView.setAdapter(searchResultsAdapter);
+                        int resId = R.anim.layout_animation_fall_down;
+                        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(SearchResultsActivity.this, resId);
+                        mRecyclerView.setLayoutAnimation(animation);
+                        progress.dismiss();
+                    }
+                    else {
+                        progress.dismiss();
+                        Toast.makeText(SearchResultsActivity.this, "No search results found", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<SearchResponse> call, Throwable t) {
+                progress.dismiss();
+                Toast.makeText(SearchResultsActivity.this, "Error retrieving search results", Toast.LENGTH_SHORT).show();
                 Log.e(LOG_TAG, "Could not retrieve search results using retrofit");
             }
         });

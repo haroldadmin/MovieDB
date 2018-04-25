@@ -11,8 +11,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdapter.ViewHolder> {
 
@@ -43,10 +47,23 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
         TextView yearTextView = holder.year;
         ImageView posterView = holder.poster;
         nameTextView.setText(searchResult.getTitle());
-        yearTextView.setText(searchResult.getReleaseDate().substring(0, 4));
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy");
+        try {
+            Date date = dateFormat.parse(searchResult.getReleaseDate());
+            yearTextView.setText(dateFormat.format(date));
+        }
+        catch (ParseException e) {
+            yearTextView.setText("Release date N/A");
+        }
+
         Glide
                 .with(getContext())
-                .load("https://image.tmdb.org/t/p/w92" + searchResult.getPosterPath())
+                .load(QueryUtils.getSearchPosterURL(searchResult.getPosterPath()))
+                .apply(new RequestOptions()
+                        .placeholder(R.drawable.no_image)
+                        .error(R.drawable.no_image)
+                )
                 .into(posterView);
     }
 
@@ -64,7 +81,7 @@ public class SearchResultsAdapter extends RecyclerView.Adapter<SearchResultsAdap
             super(cardView);
             name = cardView.findViewById(R.id.supporting_text);
             year = cardView.findViewById(R.id.supporting_secondary_text);
-            poster = cardView.findViewById(R.id.media_image);
+            poster = cardView.findViewById(R.id.poster_imageview);
             cardView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
