@@ -13,7 +13,8 @@
         <item name="actionMenuTextColor">@android:color/white</item>
     </style>
     <style name="RatingBar" parent="Theme.AppCompat">
-        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlNormal">#FFEB3B</item>
+        <item name="colorControlActivated">#FFC107</item>
     </style>
 
 </resources>

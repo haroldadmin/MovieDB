@@ -3,6 +3,7 @@ package com.kshitijchauhan.haroldadmin.moviedb;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,6 +15,8 @@ import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.ScrollView;
@@ -23,6 +26,9 @@ import android.widget.Toast;
 
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.TransitionOptions;
+import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -89,6 +95,10 @@ public class MovieDetails extends AppCompatActivity {
                                             descriptionCard.setCardBackgroundColor(palette.getDarkVibrantColor(ContextCompat.getColor(MovieDetails.this, R.color.scrollViewBackground)));
                                             miscCard.setCardBackgroundColor(palette.getDarkVibrantColor(ContextCompat.getColor(MovieDetails.this, R.color.scrollViewBackground)));
                                             actionBar.setBackgroundDrawable(new ColorDrawable());
+                                            Window window = getWindow();
+                                            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                                            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                                            window.setStatusBarColor(palette.getDarkMutedColor(ContextCompat.getColor(MovieDetails.this, R.color.scrollViewBackground)));
                                         }
                                     });
                                 }
