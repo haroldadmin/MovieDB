@@ -6,7 +6,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProviders
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.databinding.ActivityAuthenticationBinding
-import com.kshitijchauhan.haroldadmin.moviedb.utils.app
 
 class AuthenticationActivity : AppCompatActivity() {
 
@@ -14,7 +13,6 @@ class AuthenticationActivity : AppCompatActivity() {
     private lateinit var authViewModel: AuthenticationViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        app().appComponent.inject(this)
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_authentication)
 

@@ -16,21 +16,22 @@ android {
     }
     buildTypes {
         debug {
-            hasProperty('MovieDB_ApiKey') ? {
-                buildConfigField 'String', API_KEY, MovieDB_ApiKey
-            }: {
-                buildConfigField 'String', API_KEY, System.getenv('MovieDB_ApiKey')
+            if (project.hasProperty('MovieDB_ApiKey')) {
+                buildConfigField('String', 'API_KEY', MovieDB_ApiKey)
+            } else {
+                buildConfigField('String', 'API_KEY', "\"mock-key\"")
             }
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            hasProperty('MovieDB_ApiKey') ? {
-                buildConfigField 'String', API_KEY, MovieDB_ApiKey
-            }: {
-                buildConfigField 'String', API_KEY, System.getenv('MovieDB_ApiKey')
+            if (project.hasProperty('MovieDB_ApiKey')) {
+                buildConfigField('String', 'API_KEY', MovieDB_ApiKey)
+            } else {
+                buildConfigField('String', 'API_KEY', "\"mock-key\"")
             }
         }
+
     }
     androidExtensions {
         experimental = true

@@ -25,7 +25,6 @@ class AuthenticationViewModel(application: Application): AndroidViewModel(applic
         getApplication<MovieDBApplication>()
             .appComponent
             .inject(this)
-        println("$apiManager in AuthVM")
     }
 
     fun guestLogin() {
