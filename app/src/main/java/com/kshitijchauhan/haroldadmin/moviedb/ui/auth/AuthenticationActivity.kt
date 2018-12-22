@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.auth
+package com.kshitijchauhan.haroldadmin.moviedb.ui.auth
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

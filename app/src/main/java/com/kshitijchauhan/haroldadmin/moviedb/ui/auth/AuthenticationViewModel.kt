@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.auth
+package com.kshitijchauhan.haroldadmin.moviedb.ui.auth
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel

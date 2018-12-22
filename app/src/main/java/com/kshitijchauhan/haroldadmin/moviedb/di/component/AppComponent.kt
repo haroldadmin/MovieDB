@@ -1,8 +1,7 @@
 package com.kshitijchauhan.haroldadmin.moviedb.di.component
 
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
-import com.kshitijchauhan.haroldadmin.moviedb.auth.AuthenticationActivity
-import com.kshitijchauhan.haroldadmin.moviedb.auth.AuthenticationViewModel
+import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AuthenticationViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.di.AppScope
 import com.kshitijchauhan.haroldadmin.moviedb.di.module.ApiServiceModule
 import com.kshitijchauhan.haroldadmin.moviedb.di.module.ContextModule
