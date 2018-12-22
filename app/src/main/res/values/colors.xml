@@ -9,4 +9,5 @@
     <color name="textOnSurface">#ffffff</color>
     <color name="textOnPrimary">#FFFFFF</color>
     <color name="textOnSecondary">#000000</color>
+    <color name="onPrimaryActivated">#FFFFFF</color>
 </resources>
