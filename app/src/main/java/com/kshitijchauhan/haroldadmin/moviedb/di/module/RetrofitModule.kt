@@ -3,6 +3,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.di.module
 import android.content.Context
 import com.kshitijchauhan.haroldadmin.moviedb.di.AppScope
 import com.kshitijchauhan.haroldadmin.moviedb.remote.Config
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.AuthenticationService
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
@@ -43,4 +44,8 @@ class RetrofitModule {
     @AppScope
     @Provides
     fun provideCache(context: Context): Cache = Cache(context.cacheDir, 5 * 1024 * 1024)
+
+    @AppScope
+    @Provides
+    fun provideAuthenticationService(retrofit: Retrofit) = retrofit.create(AuthenticationService::class.java)
 }
