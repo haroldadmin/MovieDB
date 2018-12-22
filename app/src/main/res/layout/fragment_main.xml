@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorSurfaceDark"
+    tools:context=".ui.main.MainFragment">
+
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:text="@string/app_name"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline2"
+        android:textColor="@color/textOnSurface"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btDiscover"
+        style="@style/Widget.MaterialComponents.Button.TextButton.MainSectionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/open_sans_light"
+        android:text="Discover"
+        app:layout_constraintStart_toStartOf="@+id/tvTitle"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btSearch"
+        style="@style/Widget.MaterialComponents.Button.TextButton.MainSectionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Search"
+        app:layout_constraintStart_toStartOf="@+id/btDiscover"
+        app:layout_constraintTop_toBottomOf="@+id/btDiscover" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btFavourites"
+        style="@style/Widget.MaterialComponents.Button.TextButton.MainSectionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Favourites"
+        app:layout_constraintStart_toStartOf="@+id/btSearch"
+        app:layout_constraintTop_toBottomOf="@+id/btSearch" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btAccount"
+        style="@style/Widget.MaterialComponents.Button.TextButton.MainSectionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-1dp"
+        android:text="Your Account"
+        app:layout_constraintStart_toStartOf="@+id/btFavourites"
+        app:layout_constraintTop_toBottomOf="@+id/btFavourites" />
+</androidx.constraintlayout.widget.ConstraintLayout>

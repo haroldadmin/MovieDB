@@ -9,4 +9,10 @@
         <item name="fontFamily">@font/open_sans</item>
     </style>
 
+    <style name="Widget.MaterialComponents.Button.TextButton.MainSectionButton">
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Headline4</item>
+        <item name="android:padding">0dp</item>
+        <item name="fontFamily">@font/open_sans_light</item>
+    </style>
+
 </resources>

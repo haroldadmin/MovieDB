@@ -6,7 +6,7 @@
     <color name="colorSurface">#455A64</color>
     <color name="colorSurfaceDark">#263238</color>
     <color name="colorSurfaceLight">#607D8B</color>
-    <color name="textOnSurface">#FFFFFF</color>
+    <color name="textOnSurface">#ffffff</color>
     <color name="textOnPrimary">#FFFFFF</color>
     <color name="textOnSecondary">#000000</color>
 </resources>
