@@ -2,8 +2,8 @@ package com.kshitijchauhan.haroldadmin.moviedb.di.module
 
 import android.content.Context
 import com.kshitijchauhan.haroldadmin.moviedb.di.AppScope
+import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiKeyInterceptor
 import com.kshitijchauhan.haroldadmin.moviedb.remote.Config
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.AuthenticationService
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
@@ -28,8 +28,11 @@ class RetrofitModule {
 
     @AppScope
     @Provides
-    fun provideHttpClient(interceptor: HttpLoggingInterceptor, cache: Cache): OkHttpClient =
+    fun provideHttpClient(apiKeyInterceptor: ApiKeyInterceptor,
+                          interceptor: HttpLoggingInterceptor,
+                          cache: Cache): OkHttpClient =
         OkHttpClient.Builder()
+            .addInterceptor(apiKeyInterceptor)
             .addInterceptor(interceptor)
             .cache(cache)
             .build()
@@ -40,6 +43,11 @@ class RetrofitModule {
         HttpLoggingInterceptor()
             .apply { level = HttpLoggingInterceptor.Level.BODY }
             .also { return it }
+
+    @AppScope
+    @Provides
+    fun provideApiKeyInterceptor(): ApiKeyInterceptor =
+        ApiKeyInterceptor()
 
     @AppScope
     @Provides
