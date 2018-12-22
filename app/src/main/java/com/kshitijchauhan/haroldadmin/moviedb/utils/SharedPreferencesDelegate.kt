@@ -6,8 +6,8 @@ import android.content.SharedPreferences
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import kotlin.reflect.KProperty
 
-class SharedPreferencesDelegate<T>(val context: Context, val key: String, val defaultValue: T) {
-    val prefs: SharedPreferences by lazy { context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE) }
+class SharedPreferencesDelegate<T>(private val context: Context, private val key: String, private val defaultValue: T) {
+    private val prefs: SharedPreferences by lazy { context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE) }
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
         return findPreferences(key, defaultValue)

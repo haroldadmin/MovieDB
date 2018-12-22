@@ -14,4 +14,6 @@ interface AppComponent {
 
     fun inject(app: MovieDBApplication)
 
+    fun inject(viewModel: AuthenticationViewModel)
+
 }

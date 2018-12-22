@@ -7,7 +7,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.di.module.ContextModule
 
 class MovieDBApplication: Application() {
 
-    private val appComponent: AppComponent by lazy {
+    val appComponent: AppComponent by lazy {
         DaggerAppComponent.builder()
             .contextModule(ContextModule(this.applicationContext))
             .build()
