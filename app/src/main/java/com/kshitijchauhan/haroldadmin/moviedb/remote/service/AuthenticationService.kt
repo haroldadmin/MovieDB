@@ -6,15 +6,15 @@ import retrofit2.http.*
 
 interface AuthenticationService {
 
-    @GET("/authentication/guest_session/new")
+    @GET("3/authentication/guest_session/new")
     fun getGuestSessionToken(@Query("api_key") apiKey: String): Single<GuestSessionResponse>
 
-    @GET("/authentication/token/new")
+    @GET("3/authentication/token/new")
     fun getRequestToken(@Query("api_key") apiKey: String): Single<RequestTokenResponse>
 
-    @POST("/authentication/session/new")
+    @POST("3/authentication/session/new")
     fun createNewSession(@Body request: CreateSessionRequest): Single<CreateSessionResponse>
 
-    @DELETE("/authentication/session")
+    @DELETE("3/authentication/session")
     fun deleteSession(@Body request: DeleteSessionRequest): Single<DeleteSessionRequest>
 }

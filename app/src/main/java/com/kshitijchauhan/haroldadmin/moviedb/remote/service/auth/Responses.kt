@@ -8,7 +8,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class GuestSessionResponse(
     @field:Json(name="success") val success: Boolean,
-    @field:Json(name="guess_session_id") val id: String,
+    @field:Json(name="guest_session_id") val id: String,
     @field:Json(name="expires_at") val expiresAt: String): Parcelable
 
 
