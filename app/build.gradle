@@ -20,11 +20,16 @@ android {
                 buildConfigField 'String', API_KEY, MovieDB_ApiKey
             }: {
                 buildConfigField 'String', API_KEY, System.getenv('MovieDB_ApiKey')
-            }        }
+            }
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            buildConfigField 'String', 'API_KEY', MovieDB_ApiKey
+            hasProperty('MovieDB_ApiKey') ? {
+                buildConfigField 'String', API_KEY, MovieDB_ApiKey
+            }: {
+                buildConfigField 'String', API_KEY, System.getenv('MovieDB_ApiKey')
+            }
         }
     }
     androidExtensions {
