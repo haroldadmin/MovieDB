@@ -38,14 +38,11 @@ class RetrofitModule {
     @Provides
     fun provideLoggingInterceptor(): HttpLoggingInterceptor =
         HttpLoggingInterceptor()
-            .apply { level = HttpLoggingInterceptor.Level.BASIC }
+            .apply { level = HttpLoggingInterceptor.Level.BODY }
             .also { return it }
 
     @AppScope
     @Provides
     fun provideCache(context: Context): Cache = Cache(context.cacheDir, 5 * 1024 * 1024)
 
-    @AppScope
-    @Provides
-    fun provideAuthenticationService(retrofit: Retrofit) = retrofit.create(AuthenticationService::class.java)
 }
