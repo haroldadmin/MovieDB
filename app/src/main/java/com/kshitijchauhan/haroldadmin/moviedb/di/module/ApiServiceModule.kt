@@ -1,6 +1,7 @@
 package com.kshitijchauhan.haroldadmin.moviedb.di.module
 
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.auth.AuthenticationService
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.discover.DiscoveryService
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -11,5 +12,9 @@ class ApiServiceModule {
     @Provides
     fun provideAuthenticationService(retrofit: Retrofit): AuthenticationService =
             retrofit.create(AuthenticationService::class.java)
+
+    @Provides
+    fun provideDiscoveryService(retrofit: Retrofit): DiscoveryService =
+            retrofit.create(DiscoveryService::class.java)
 
 }
