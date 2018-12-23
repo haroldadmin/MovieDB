@@ -6,6 +6,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.di.AppScope
 import com.kshitijchauhan.haroldadmin.moviedb.di.module.ApiServiceModule
 import com.kshitijchauhan.haroldadmin.moviedb.di.module.ContextModule
 import com.kshitijchauhan.haroldadmin.moviedb.di.module.RetrofitModule
+import com.kshitijchauhan.haroldadmin.moviedb.ui.discover.DiscoverViewModel
 import dagger.Component
 
 @AppScope
@@ -15,5 +16,7 @@ interface AppComponent {
     fun inject(app: MovieDBApplication)
 
     fun inject(viewModel: AuthenticationViewModel)
+
+    fun inject(viewModel: DiscoverViewModel)
 
 }
