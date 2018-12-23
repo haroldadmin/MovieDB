@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Movie(
-    @field:Json(name="poster_path") val posterPath: String?,
+    @field:Json(name="poster_path") var posterPath: String?,
     @field:Json(name="adult") val isAdultMovie: Boolean,
     @field:Json(name="overview") val overview: String,
     @field:Json(name="release_date") val releaseDate: String,

@@ -12,7 +12,7 @@ import io.reactivex.disposables.Disposable
 fun AppCompatActivity.app(): MovieDBApplication = this.application as MovieDBApplication
 
 fun Any.log(message: String) {
-    if (BuildConfig.DEBUG) Log.d(this::class.java.simpleName, message)
+    if (this !is BaseFragment) Log.d(this::class.java.simpleName, message)
 }
 
 /**
@@ -46,3 +46,5 @@ inline fun <reified T: BaseFragment> AppCompatActivity.replaceFragment(fragment:
 }
 
 fun Disposable.disposeWith(compositeDisposable: CompositeDisposable) = compositeDisposable.add(this)
+
+val Unit?.safe get() = Unit

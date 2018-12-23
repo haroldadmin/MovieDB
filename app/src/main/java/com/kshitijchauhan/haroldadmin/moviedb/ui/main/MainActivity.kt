@@ -7,10 +7,8 @@ import androidx.lifecycle.ViewModelProviders
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoginFragment
-import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
-import com.kshitijchauhan.haroldadmin.moviedb.utils.SharedPreferencesDelegate
-import com.kshitijchauhan.haroldadmin.moviedb.utils.log
-import com.kshitijchauhan.haroldadmin.moviedb.utils.replaceFragment
+import com.kshitijchauhan.haroldadmin.moviedb.ui.discover.DiscoverFragment
+import com.kshitijchauhan.haroldadmin.moviedb.utils.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -45,6 +43,8 @@ class MainActivity : AppCompatActivity() {
 
             is UIState.AuthScreenState ->
                 replaceFragment(LoginFragment.newInstance(), R.id.fragment_container)
-        }
+            is UIState.DiscoverScreenState ->
+                replaceFragment(DiscoverFragment.newInstance(), R.id.fragment_container)
+        }.safe
     }
 }

@@ -39,10 +39,16 @@ class HomeFragment : BaseFragment() {
         btAccount.setOnClickListener {
             mainViewModel.updateState(UIState.HomeScreenState to UIState.AuthScreenState)
         }
+        btDiscover.setOnClickListener {
+            mainViewModel.updateState(UIState.HomeScreenState to UIState.DiscoverScreenState)
+        }
     }
 
     override fun onDestroyView() {
         val lastState: UIState? = mainViewModel.peekState()?.first
+            .also {
+                log("Last State: $it")
+            }
         if (isRemoving && lastState != UIState.HomeScreenState) {
             lastState?.let {
                 mainViewModel.updateState(UIState.HomeScreenState to lastState)

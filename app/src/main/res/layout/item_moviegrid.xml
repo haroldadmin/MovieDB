@@ -7,30 +7,31 @@
     android:orientation="vertical"
     app:cardBackgroundColor="@color/primaryColor50"
     app:cardCornerRadius="8dp"
-    android:padding="8dp">
+    android:layout_margin="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:elevation="4dp">
+
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/tvMovieName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             android:paddingTop="8dp"
-            android:text="TextView"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             android:textColor="@color/textOnSecondary"
-            app:layout_constraintBottom_toTopOf="@+id/ratingBar"
+            app:layout_constraintBottom_toTopOf="@+id/rbMovieRating"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="TextView" />
 
         <RatingBar
-            android:id="@+id/ratingBar"
+            android:id="@+id/rbMovieRating"
             style="@style/Widget.AppCompat.RatingBar.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -40,10 +41,11 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:rating="3.5"/>
 
         <View
-            android:id="@+id/transparentBackground"
+            android:id="@+id/transluscentBg"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:alpha="0.3"
@@ -52,7 +54,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView2" />
+            app:layout_constraintTop_toTopOf="@+id/tvMovieName" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
