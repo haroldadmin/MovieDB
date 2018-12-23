@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.model.Movie
 import kotlinx.android.synthetic.main.item_moviegrid.view.*
@@ -42,7 +43,8 @@ class MoviesAdapter(
             with(movie) {
                 itemView.apply {
                     tvMovieName.text = title
-                    rbMovieRating.numStars = voteAverage.div(10.0).times(5).roundToInt()
+                    rbMovieRating.rating = voteAverage.toFloat()
+                    glide.load(movie.posterPath).apply(RequestOptions().centerCrop()).into(ivPoster)
                 }
             }
         }

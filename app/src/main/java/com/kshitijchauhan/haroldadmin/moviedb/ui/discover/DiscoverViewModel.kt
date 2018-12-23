@@ -9,12 +9,14 @@ import com.bumptech.glide.Glide.init
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.model.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
+import com.kshitijchauhan.haroldadmin.moviedb.remote.Config
 import com.kshitijchauhan.haroldadmin.moviedb.utils.RxDiffUtil
 import com.kshitijchauhan.haroldadmin.moviedb.utils.disposeWith
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 class DiscoverViewModel(application: Application): AndroidViewModel(application) {
 
@@ -44,6 +46,15 @@ class DiscoverViewModel(application: Application): AndroidViewModel(application)
             .map {
                 response -> response.results
             }
+            .flatMapObservable { list ->
+                Observable.fromIterable(list)
+            }
+            .map { movie ->
+                movie.posterPath = "${Config.BASE_IMAGE_URL}${Config.DEFAULT_POSTER_SIZE}${movie.posterPath}"
+                movie.voteAverage = movie.voteAverage.div(10.0).times(5)
+                movie
+            }
+            .toList()
             .toObservable()
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())

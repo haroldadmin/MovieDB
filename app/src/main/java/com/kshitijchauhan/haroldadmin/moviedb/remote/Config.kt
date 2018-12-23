@@ -10,6 +10,6 @@ object Config {
 
     const val DEFAULT_LOGO_SIZE: String = "w300"
 
-    const val DEFAULT_POSTER_SIZE: String = "w500"
+    const val DEFAULT_POSTER_SIZE: String = "w154"
 
 }

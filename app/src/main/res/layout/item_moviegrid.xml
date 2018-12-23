@@ -2,36 +2,59 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="150dp"
-    android:layout_height="150dp"
+    android:layout_width="175dp"
+    android:layout_height="200dp"
     android:orientation="vertical"
     app:cardBackgroundColor="@color/primaryColor50"
     app:cardCornerRadius="8dp"
     android:layout_margin="8dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-
-        <TextView
-            android:id="@+id/tvMovieName"
-            android:layout_width="0dp"
+        <ImageView
+            android:id="@+id/ivPoster"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:paddingTop="8dp"
-            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-            android:textColor="@color/textOnSecondary"
-            app:layout_constraintBottom_toTopOf="@+id/rbMovieRating"
+            android:scaleType="centerCrop"
+            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+        <View
+            android:id="@+id/transluscentBg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.8"
+            android:background="@color/primaryColor50"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            tools:text="TextView" />
+            app:layout_constraintTop_toTopOf="@+id/tvMovieName" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/groupTextContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvMovieName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:paddingTop="8dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+                android:textColor="@color/colorSecondary"
+                app:layout_constraintBottom_toTopOf="@+id/rbMovieRating"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="TextView" />
 
         <RatingBar
             android:id="@+id/rbMovieRating"
-            style="@style/Widget.AppCompat.RatingBar.Small"
+            style="@style/Widget.AppCompat.RatingBar.Small.MyRatingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -41,19 +64,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            tools:rating="3.5"/>
-
-        <View
-            android:id="@+id/transluscentBg"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:alpha="0.3"
-            android:background="@color/colorSurface"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tvMovieName" />
+            tools:rating="3.5" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -15,4 +15,8 @@
         <item name="fontFamily">@font/open_sans_light</item>
     </style>
 
+    <style name="Widget.AppCompat.RatingBar.Small.MyRatingBar">
+        <item name="android:colorControlNormal">@color/colorSecondary</item>
+        <item name="android:colorControlActivated">@color/colorSecondary</item>
+    </style>
 </resources>

@@ -19,4 +19,4 @@ data class Movie(
     @field:Json(name="popularity") val popularity: Double,
     @field:Json(name="vote_count") val voteCount: Int,
     @field:Json(name="video") val video: Boolean,
-    @field:Json(name="vote_average") val voteAverage: Double): Parcelable
+    @field:Json(name="vote_average") var voteAverage: Double): Parcelable
