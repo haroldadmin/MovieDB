@@ -4,14 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.auth.LoginFragment">
+    tools:context=".ui.auth.LoginFragment"
+    android:background="@color/colorSurfaceDark">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btGuestLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="244dp"
         android:text="Guest Login"
         app:layout_constraintEnd_toStartOf="@+id/btWebLogin"
         app:layout_constraintHorizontal_bias="0.5"
@@ -23,7 +24,7 @@
         android:id="@+id/btWebLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="244dp"
         android:layout_marginEnd="8dp"
         android:text="Web Login"
         app:layout_constraintEnd_toEndOf="parent"
