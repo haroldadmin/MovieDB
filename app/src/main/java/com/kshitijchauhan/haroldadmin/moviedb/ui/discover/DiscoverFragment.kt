@@ -9,11 +9,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
-
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
+import com.kshitijchauhan.haroldadmin.moviedb.utils.gone
+import com.kshitijchauhan.haroldadmin.moviedb.utils.visible
 import kotlinx.android.synthetic.main.fragment_discover.*
 
 class DiscoverFragment : BaseFragment() {
@@ -22,7 +23,7 @@ class DiscoverFragment : BaseFragment() {
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var discoverViewModel: DiscoverViewModel
-    private lateinit var moviesAdapter: MoviesAdapter
+    private var moviesAdapter: MoviesAdapter? = null
 
     companion object {
         fun newInstance() = DiscoverFragment()
@@ -39,7 +40,17 @@ class DiscoverFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
         discoverViewModel = ViewModelProviders.of(this).get(DiscoverViewModel::class.java)
-        discoverViewModel.moviesUpdate.observe(viewLifecycleOwner, Observer(moviesAdapter::updateList))
+
+        discoverViewModel.apply {
+
+            getPopularMovies()
+
+            discoverViewModel.moviesUpdate.observe(viewLifecycleOwner, Observer { moviesAdapter?.updateList(it) })
+
+            discoverViewModel.isLoading.observe(viewLifecycleOwner, Observer { loading ->
+                if (loading) progressBar.visible() else progressBar.gone()
+            })
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,6 +70,7 @@ class DiscoverFragment : BaseFragment() {
                 mainViewModel.updateState(associatedState to lastState)
             }
         }
+        moviesAdapter = null
         super.onDestroyView()
     }
 }

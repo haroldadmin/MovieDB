@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
+import com.bumptech.glide.Glide.init
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.model.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
@@ -21,20 +22,23 @@ class DiscoverViewModel(application: Application): AndroidViewModel(application)
     lateinit var apiManager: ApiManager
 
     private val _moviesUpdate = MutableLiveData<Pair<List<Movie>, DiffUtil.DiffResult>>()
+    private val _isLoading = MutableLiveData<Boolean>()
     private val compositeDisposable = CompositeDisposable()
 
     val moviesUpdate: LiveData<Pair<List<Movie>, DiffUtil.DiffResult>>
         get() = _moviesUpdate
 
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
+
     init {
         (application as MovieDBApplication)
             .appComponent
             .inject(this)
-
-        getPopularMovies()
     }
 
-    private fun getPopularMovies() {
+    fun getPopularMovies() {
+        _isLoading.value = true
         apiManager
             .getPopularMovies()
             .map {
@@ -47,6 +51,7 @@ class DiscoverViewModel(application: Application): AndroidViewModel(application)
                 MoviesDiffUtil(oldList, newList)
             })
             .doOnNext {
+                _isLoading.postValue(false)
                 _moviesUpdate.postValue(it)
             }
             .subscribe()
@@ -57,5 +62,4 @@ class DiscoverViewModel(application: Application): AndroidViewModel(application)
         super.onCleared()
         compositeDisposable.dispose()
     }
-
 }

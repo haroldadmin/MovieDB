@@ -29,7 +29,8 @@
         android:fontFamily="@font/open_sans_light"
         android:text="Discover"
         app:layout_constraintStart_toStartOf="@+id/tvTitle"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitle" />
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
+        android:transitionName="discoverTitle"/>
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btSearch"

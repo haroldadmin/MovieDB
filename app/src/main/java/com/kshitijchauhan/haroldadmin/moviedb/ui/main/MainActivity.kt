@@ -2,14 +2,19 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.transition.Fade
+import androidx.transition.TransitionInflater
+import androidx.transition.TransitionSet
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoginFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.discover.DiscoverFragment
 import com.kshitijchauhan.haroldadmin.moviedb.utils.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_home.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,6 +37,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(mainToolbar)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
+            setDisplayShowTitleEnabled(false)
         }
 
     }
@@ -43,8 +49,35 @@ class MainActivity : AppCompatActivity() {
 
             is UIState.AuthScreenState ->
                 replaceFragment(LoginFragment.newInstance(), R.id.fragment_container)
-            is UIState.DiscoverScreenState ->
-                replaceFragment(DiscoverFragment.newInstance(), R.id.fragment_container)
+            is UIState.DiscoverScreenState -> {
+
+                val adInterpolator = AccelerateDecelerateInterpolator()
+                val exitFade = Fade()
+                exitFade.apply {
+                    duration = 200
+                    exitFade.interpolator = adInterpolator
+                }
+
+                val enterTransitionSet = TransitionSet()
+                enterTransitionSet.apply {
+                    addTransition(TransitionInflater.from(this@MainActivity).inflateTransition(android.R.transition.move))
+                    interpolator = adInterpolator
+                    duration = 300
+                }
+
+                val enterFade = Fade()
+                enterFade.apply {
+                    duration = 200
+                    interpolator = adInterpolator
+                }
+
+                replaceFragment(DiscoverFragment.newInstance(),
+                    R.id.fragment_container,
+                    enterTransition = enterFade,
+                    exitTransition = exitFade,
+                    sharedElement = btDiscover,
+                    sharedElementTransisition = enterTransitionSet)
+            }
         }.safe
     }
 }

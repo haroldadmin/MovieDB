@@ -15,8 +15,4 @@
         <item name="fontFamily">@font/open_sans_light</item>
     </style>
 
-    <style name="Widget.MaterialComponents.Toolbar.MainToolbar">
-        <item name="android:title">null</item>
-    </style>
-
 </resources>

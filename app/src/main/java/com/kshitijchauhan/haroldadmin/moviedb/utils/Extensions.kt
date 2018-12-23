@@ -1,9 +1,9 @@
 package com.kshitijchauhan.haroldadmin.moviedb.utils
 
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import com.kshitijchauhan.haroldadmin.moviedb.BuildConfig
+import androidx.transition.Transition
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import io.reactivex.disposables.CompositeDisposable
@@ -16,35 +16,60 @@ fun Any.log(message: String) {
 }
 
 /**
- * This method is used to replace the current fragment in the Activity
+ * This method is used to replace the current nextFragment in the Activity
  * with the given new Fragment. It has a safeguard against adding the same
- * fragment twice: It does not perform the fragment transaction if the new type
- * of the new fragment is the same as the type of the already existing fragment.
+ * nextFragment twice: It does not perform the nextFragment transaction if the new type
+ * of the new nextFragment is the same as the type of the already existing nextFragment.
  *
- * @param fragment The new fragment to display
- * @param containerId The ID of the container in which to place this fragment
- * @param addToBackStack To indicate whether this fragment should be added to
+ * @param nextFragment The new nextFragment to display
+ * @param containerId The ID of the container in which to place this nextFragment
+ * @param addToBackStack To indicate whether this nextFragment should be added to
  * the backstack
  * @param backStackName The name to give when adding to backstack
  */
-inline fun <reified T: BaseFragment> AppCompatActivity.replaceFragment(fragment: T, containerId: Int, addToBackStack: Boolean = true, backStackName: String? = null) {
+inline fun <reified T: BaseFragment> AppCompatActivity.replaceFragment(nextFragment: T, containerId: Int,
+                                                                       addToBackStack: Boolean = true,
+                                                                       backStackName: String? = null,
+                                                                       enterTransition: Transition? = null,
+                                                                       exitTransition: Transition? = null,
+                                                                       sharedElementTransisition: Transition? = null,
+                                                                       sharedElement: View? = null) {
     val currentFragment = this.supportFragmentManager
         .findFragmentById(containerId)
 
     if (currentFragment is T) {
-        this.log("Not replacing the current fragment of type ${T::class.java.simpleName}")
+        this.log("Not replacing the current nextFragment of type ${T::class.java.simpleName}")
         return
     }
 
+    exitTransition?.let { currentFragment?.exitTransition = it }
+    enterTransition?.let { nextFragment?.enterTransition = it }
+    sharedElementTransisition?.let { nextFragment.sharedElementEnterTransition = it }
+
     val ft = this.supportFragmentManager
         .beginTransaction()
-        .replace(containerId, fragment)
+        .replace(containerId, nextFragment)
     if (addToBackStack) {
         ft.addToBackStack(backStackName)
     }
+
+    sharedElement?.let { ft.addSharedElement(sharedElement, sharedElement.transitionName) }
+
     ft.commit()
 }
 
 fun Disposable.disposeWith(compositeDisposable: CompositeDisposable) = compositeDisposable.add(this)
 
 val Unit?.safe get() = Unit
+
+fun View.visible() {
+    this.visibility = View.VISIBLE
+}
+
+fun View.invisible() {
+    this.visibility = View.INVISIBLE
+}
+
+fun View.gone() {
+    this.visibility = View.GONE
+}
