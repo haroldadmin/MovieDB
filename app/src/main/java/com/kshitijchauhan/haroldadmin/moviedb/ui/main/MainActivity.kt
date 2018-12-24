@@ -1,12 +1,13 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.transition.ChangeBounds
+import androidx.transition.ChangeTransform
 import androidx.transition.Fade
-import androidx.transition.TransitionInflater
 import androidx.transition.TransitionSet
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
@@ -49,27 +50,31 @@ class MainActivity : AppCompatActivity() {
 
             is UIState.AuthScreenState ->
                 replaceFragment(LoginFragment.newInstance(), R.id.fragment_container)
+
             is UIState.DiscoverScreenState -> {
 
                 val adInterpolator = AccelerateDecelerateInterpolator()
-                val exitFade = Fade()
-                exitFade.apply {
-                    duration = 200
-                    exitFade.interpolator = adInterpolator
-                }
-
-                val enterTransitionSet = TransitionSet()
-                enterTransitionSet.apply {
-                    addTransition(TransitionInflater.from(this@MainActivity).inflateTransition(android.R.transition.move))
-                    interpolator = adInterpolator
-                    startDelay = 100
-                    duration = 200
-                }
 
                 val enterFade = Fade()
                 enterFade.apply {
-                    duration = 200
+                    duration = 300
                     interpolator = adInterpolator
+                }
+
+                val exitFade = Fade()
+                exitFade.apply {
+                    duration = 300
+                    interpolator = adInterpolator
+                }
+
+                val sharedTransitionSet = TransitionSet()
+                sharedTransitionSet.apply {
+                    ordering = TransitionSet.ORDERING_TOGETHER
+                    addTransition(TextSizeTransition())
+                    addTransition(ChangeBounds())
+                    addTransition(ChangeTransform())
+                    interpolator = adInterpolator
+                    duration = 300
                 }
 
                 replaceFragment(DiscoverFragment.newInstance(),
@@ -77,7 +82,7 @@ class MainActivity : AppCompatActivity() {
                     enterTransition = enterFade,
                     exitTransition = exitFade,
                     sharedElement = btDiscover,
-                    sharedElementTransisition = enterTransitionSet)
+                    sharedElementTransition = sharedTransitionSet)
             }
         }.safe
     }

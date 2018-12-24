@@ -2,6 +2,8 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.discover
 
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +16,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.gone
+import com.kshitijchauhan.haroldadmin.moviedb.utils.postDelayed
 import com.kshitijchauhan.haroldadmin.moviedb.utils.visible
 import kotlinx.android.synthetic.main.fragment_discover.*
 
@@ -24,6 +27,7 @@ class DiscoverFragment : BaseFragment() {
     private lateinit var mainViewModel: MainViewModel
     private lateinit var discoverViewModel: DiscoverViewModel
     private var moviesAdapter: MoviesAdapter? = null
+    private val mainHandler = Handler(Looper.getMainLooper())
 
     companion object {
         fun newInstance() = DiscoverFragment()
@@ -43,12 +47,30 @@ class DiscoverFragment : BaseFragment() {
 
         discoverViewModel.apply {
 
-            getPopularMovies()
+            mainHandler.postDelayed(1000) {
+                getPopularMovies()
+            }
 
-            discoverViewModel.moviesUpdate.observe(viewLifecycleOwner, Observer { moviesAdapter?.updateList(it) })
+            discoverViewModel.moviesUpdate.observe(viewLifecycleOwner, Observer {
+                moviesAdapter?.updateList(it)
+            })
 
             discoverViewModel.isLoading.observe(viewLifecycleOwner, Observer { loading ->
-                if (loading) progressBar.visible() else progressBar.gone()
+                if (loading) {
+                    progressBar.apply {
+                        visible()
+                        animate()
+                            .alpha(1f)
+                            .duration = 200
+                    }
+                } else {
+                    progressBar.apply {
+                        gone()
+                        animate()
+                            .alpha(0f)
+                            .duration = 200
+                    }
+                }
             })
         }
     }

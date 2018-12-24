@@ -1,5 +1,6 @@
 package com.kshitijchauhan.haroldadmin.moviedb.utils
 
+import android.os.Handler
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -26,13 +27,17 @@ fun Any.log(message: String) {
  * @param addToBackStack To indicate whether this nextFragment should be added to
  * the backstack
  * @param backStackName The name to give when adding to backstack
+ * @param enterTransition Enter transition for next fragment
+ * @param exitTransition Exit transition for previous fragment
+ * @param sharedElementTransition Shared element transition between the fragments
+ * @param sharedElement Shared Element to be used for sharedElementTransition
  */
 inline fun <reified T: BaseFragment> AppCompatActivity.replaceFragment(nextFragment: T, containerId: Int,
                                                                        addToBackStack: Boolean = true,
                                                                        backStackName: String? = null,
                                                                        enterTransition: Transition? = null,
                                                                        exitTransition: Transition? = null,
-                                                                       sharedElementTransisition: Transition? = null,
+                                                                       sharedElementTransition: Transition? = null,
                                                                        sharedElement: View? = null) {
     val currentFragment = this.supportFragmentManager
         .findFragmentById(containerId)
@@ -43,8 +48,11 @@ inline fun <reified T: BaseFragment> AppCompatActivity.replaceFragment(nextFragm
     }
 
     exitTransition?.let { currentFragment?.exitTransition = it }
-    enterTransition?.let { nextFragment?.enterTransition = it }
-    sharedElementTransisition?.let { nextFragment.sharedElementEnterTransition = it }
+    enterTransition?.let { nextFragment.enterTransition = it }
+    sharedElementTransition?.let {
+        nextFragment.sharedElementEnterTransition = it
+        nextFragment.sharedElementReturnTransition = it
+    }
 
     val ft = this.supportFragmentManager
         .beginTransaction()
@@ -72,4 +80,10 @@ fun View.invisible() {
 
 fun View.gone() {
     this.visibility = View.GONE
+}
+
+fun Handler.postDelayed(timeInMillis: Long, runnable: () -> Unit) {
+    this.postDelayed({
+        runnable.invoke()
+    }, timeInMillis)
 }

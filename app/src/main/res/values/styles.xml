@@ -15,6 +15,17 @@
         <item name="fontFamily">@font/open_sans_light</item>
     </style>
 
+    <style name="TextAppearance.MaterialComponents.Headline4.ButtonStyleTextview">
+        <item name="android:textColor">@color/colorSecondary</item>
+        <item name="fontFamily">@font/open_sans_light</item>
+    </style>
+
+    <style name="TextAppearance.MaterialComponents.Headline4.ButtonStyleTextview.HomeFragmentButtonTextview">
+        <item name="android:textSize">40sp</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingBottom">4dp</item>
+    </style>
+
     <style name="Widget.AppCompat.RatingBar.Small.MyRatingBar">
         <item name="android:colorControlNormal">@color/colorSecondary</item>
         <item name="android:colorControlActivated">@color/colorSecondary</item>
