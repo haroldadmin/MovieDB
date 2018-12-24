@@ -62,7 +62,8 @@ class MainActivity : AppCompatActivity() {
                 enterTransitionSet.apply {
                     addTransition(TransitionInflater.from(this@MainActivity).inflateTransition(android.R.transition.move))
                     interpolator = adInterpolator
-                    duration = 300
+                    startDelay = 100
+                    duration = 200
                 }
 
                 val enterFade = Fade()

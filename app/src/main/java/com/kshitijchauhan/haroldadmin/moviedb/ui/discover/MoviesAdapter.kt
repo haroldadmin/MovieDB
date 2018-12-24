@@ -1,11 +1,14 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.discover
 
+import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.model.Movie
@@ -44,7 +47,13 @@ class MoviesAdapter(
                 itemView.apply {
                     tvMovieName.text = title
                     rbMovieRating.rating = voteAverage.toFloat()
-                    glide.load(movie.posterPath).apply(RequestOptions().centerCrop()).into(ivPoster)
+                    glide
+                        .load(movie.posterPath)
+                        .transition(DrawableTransitionOptions.withCrossFade(200))
+                        .apply(RequestOptions()
+                            .centerCrop()
+                        )
+                        .into(ivPoster)
                 }
             }
         }
