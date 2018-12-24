@@ -16,7 +16,7 @@
         android:layout_marginTop="24dp"
         android:text="@string/app_name"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline2"
-        android:textColor="@color/textOnSurface"
+        android:textColor="@color/textOnSurfaceHighEmphasis"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -41,7 +41,8 @@
         android:text="Search"
         app:layout_constraintStart_toStartOf="@+id/btDiscover"
         app:layout_constraintTop_toBottomOf="@+id/btDiscover"
-        android:clickable="true"/>
+        android:clickable="true"
+        android:transitionName="@string/searchTitleTransName"/>
 
     <TextView
         android:id="@+id/btFavourites"

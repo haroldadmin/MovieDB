@@ -8,6 +8,7 @@ import android.util.Property;
 import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import androidx.transition.ArcMotion;
 import androidx.transition.Transition;
 import androidx.transition.TransitionValues;
 
@@ -29,6 +30,7 @@ public class TextSizeTransition extends Transition {
             };
 
     public TextSizeTransition() {
+        setPathMotion(new ArcMotion());
     }
 
     public TextSizeTransition(Context context, AttributeSet attrs) {

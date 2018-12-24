@@ -5,5 +5,6 @@ sealed class UIState {
     object HomeScreenState: UIState()
     object AuthScreenState: UIState()
     object DiscoverScreenState: UIState()
+    object SearchScreenState: UIState()
 
 }

@@ -42,5 +42,8 @@ class HomeFragment : BaseFragment() {
         btDiscover.setOnClickListener {
             mainViewModel.updateStateTo(UIState.DiscoverScreenState)
         }
+        btSearch.setOnClickListener {
+            mainViewModel.updateStateTo(UIState.SearchScreenState)
+        }
     }
 }

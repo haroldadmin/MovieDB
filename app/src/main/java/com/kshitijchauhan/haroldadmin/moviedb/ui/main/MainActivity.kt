@@ -13,6 +13,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoginFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.discover.DiscoverFragment
+import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchFragment
 import com.kshitijchauhan.haroldadmin.moviedb.utils.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -110,6 +111,39 @@ class MainActivity : AppCompatActivity() {
                     enterTransition = enterFade,
                     exitTransition = exitFade,
                     sharedElement = btDiscover,
+                    sharedElementTransition = sharedTransitionSet)
+            }
+            UIState.SearchScreenState -> {
+
+                val adInterpolator = AccelerateDecelerateInterpolator()
+
+                val enterFade = Fade()
+                enterFade.apply {
+                    duration = 300
+                    interpolator = adInterpolator
+                }
+
+                val exitFade = Fade()
+                exitFade.apply {
+                    duration = 300
+                    interpolator = adInterpolator
+                }
+
+                val sharedTransitionSet = TransitionSet()
+                sharedTransitionSet.apply {
+                    ordering = TransitionSet.ORDERING_TOGETHER
+                    addTransition(TextSizeTransition())
+                    addTransition(ChangeBounds())
+                    addTransition(ChangeTransform())
+                    interpolator = adInterpolator
+                    duration = 300
+                }
+
+                replaceFragment(SearchFragment.newInstance(),
+                    R.id.fragment_container,
+                    enterTransition = enterFade,
+                    exitTransition = exitFade,
+                    sharedElement = btSearch,
                     sharedElementTransition = sharedTransitionSet)
             }
         }.safe

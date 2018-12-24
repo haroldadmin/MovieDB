@@ -4,8 +4,8 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorSecondary">@color/colorSecondary</item>
-        <item name="android:textColorPrimary">@color/textOnPrimary</item>
-        <item name="android:textColorSecondary">@color/textOnSecondary</item>
+        <item name="android:textColorPrimary">@color/textOnPrimaryHighEmphasis</item>
+        <item name="android:textColorSecondary">@color/textOnSecondaryHighEmphasis</item>
         <item name="fontFamily">@font/open_sans</item>
     </style>
 
@@ -40,4 +40,38 @@
         <item name="android:colorControlNormal">@color/colorSecondary</item>
         <item name="android:colorControlActivated">@color/colorSecondary</item>
     </style>
+
+    <style name="Base.Widget.MaterialComponents.TextInputLayout.SearchBox">
+        <item name="android:colorControlNormal">@android:color/transparent</item>
+        <item name="android:colorControlActivated">@color/colorSecondary</item>
+        <item name="android:textColorPrimary">@color/textOnSurfaceHighEmphasis</item>
+        <item name="android:textColorHint">@color/textOnSurfaceMediumEmphasis</item>
+        <item name="hintTextAppearance">@style/TextAppearance.MaterialComponents.Subtitle1.TextFieldHintTextStyle</item>
+        <item name="errorTextAppearance">@style/TextAppearance.MaterialComponents.Caption.TextFieldErrorTextStyle</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+        <item name="android:background">@drawable/shape_searchbox_background</item>
+    </style>
+
+    <style name="Base.Widget.MaterialComponents.TextInputLayout.SearchBox.Light">
+        <item name="android:textColorPrimary">@color/textOnSecondaryHighEmphasis</item>
+        <item name="android:textColorHint">@color/textOnSecondaryMediumEmphasis</item>
+        <item name="hintTextAppearance">@style/TextAppearance.MaterialComponents.Subtitle1.TextFieldHintTextStyle.Light</item>
+        <item name="errorTextAppearance">@style/TextAppearance.MaterialComponents.Caption.TextFieldErrorTextStyle</item>
+    </style>
+    
+    <style name="TextAppearance.MaterialComponents.Caption.TextFieldErrorTextStyle">
+        <item name="android:textColor">@color/colorError</item>
+    </style>
+
+    <style name="TextAppearance.MaterialComponents.Subtitle1.TextFieldHintTextStyle">
+        <item name="android:textColor">@color/textOnSurfaceMediumEmphasis</item>
+    </style>
+
+    <style name="TextAppearance.MaterialComponents.Subtitle1.TextFieldHintTextStyle.Light">
+        <item name="android:textColor">@color/textOnSecondaryMediumEmphasis</item>
+    </style>
+
 </resources>

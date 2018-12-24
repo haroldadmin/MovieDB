@@ -6,9 +6,13 @@
     <color name="colorSurface">#455A64</color>
     <color name="colorSurfaceDark">#263238</color>
     <color name="colorSurfaceLight">#607D8B</color>
-    <color name="textOnSurface">#ffffff</color>
-    <color name="textOnPrimary">#FFFFFF</color>
-    <color name="textOnSecondary">#000000</color>
+    <color name="textOnSurfaceHighEmphasis">#ffffff</color>
+    <color name="textOnSurfaceMediumEmphasis">#B3FFFFFF</color>
+    <color name="textOnPrimaryHighEmphasis">#FFFFFF</color>
+    <color name="textOnPrimaryMediumEmphasis">#B3FFFFFF</color>
+    <color name="textOnSecondaryHighEmphasis">#000000</color>
+    <color name="textOnSecondaryMediumEmphasis">#B3000000</color>
+    <color name="colorError">#B00020</color>
     <color name="onPrimaryActivated">#FFFFFF</color>
     <color name="primaryColor50">#ECEFF1</color>
 </resources>
