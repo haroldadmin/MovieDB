@@ -22,7 +22,7 @@
 
     <TextView
         android:id="@+id/btDiscover"
-        style="@style/TextAppearance.MaterialComponents.Headline4.ButtonStyleTextview.HomeFragmentButtonTextview"
+        style="@style/AppTheme.ButtonStyleTextView.HomeFragmentButtonTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -30,34 +30,38 @@
         android:text="Discover"
         app:layout_constraintStart_toStartOf="@+id/tvTitleDiscover"
         app:layout_constraintTop_toBottomOf="@+id/tvTitleDiscover"
-        android:transitionName="discoverTitle"/>
+        android:transitionName="discoverTitle"
+        android:clickable="true"/>
 
     <TextView
         android:id="@+id/btSearch"
-        style="@style/TextAppearance.MaterialComponents.Headline4.ButtonStyleTextview.HomeFragmentButtonTextview"
+        style="@style/AppTheme.ButtonStyleTextView.HomeFragmentButtonTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Search"
         app:layout_constraintStart_toStartOf="@+id/btDiscover"
-        app:layout_constraintTop_toBottomOf="@+id/btDiscover" />
+        app:layout_constraintTop_toBottomOf="@+id/btDiscover"
+        android:clickable="true"/>
 
     <TextView
         android:id="@+id/btFavourites"
-        style="@style/TextAppearance.MaterialComponents.Headline4.ButtonStyleTextview.HomeFragmentButtonTextview"
+        style="@style/AppTheme.ButtonStyleTextView.HomeFragmentButtonTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Favourites"
         app:layout_constraintStart_toStartOf="@+id/btSearch"
-        app:layout_constraintTop_toBottomOf="@+id/btSearch" />
+        app:layout_constraintTop_toBottomOf="@+id/btSearch"
+        android:clickable="true"/>
 
     <TextView
         android:id="@+id/btAccount"
-        style="@style/TextAppearance.MaterialComponents.Headline4.ButtonStyleTextview.HomeFragmentButtonTextview"
+        style="@style/AppTheme.ButtonStyleTextView.HomeFragmentButtonTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="-1dp"
         android:text="Your Account"
         app:layout_constraintStart_toStartOf="@+id/btFavourites"
         app:layout_constraintTop_toBottomOf="@+id/btFavourites"
-        android:transitionName="@string/loginTitleTransitionName"/>
+        android:transitionName="@string/loginTitleTransitionName"
+        android:clickable="true"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
