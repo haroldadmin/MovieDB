@@ -37,23 +37,10 @@ class HomeFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         btAccount.setOnClickListener {
-            mainViewModel.updateState(UIState.HomeScreenState to UIState.AuthScreenState)
+            mainViewModel.updateStateTo(UIState.AuthScreenState)
         }
         btDiscover.setOnClickListener {
-            mainViewModel.updateState(UIState.HomeScreenState to UIState.DiscoverScreenState)
+            mainViewModel.updateStateTo(UIState.DiscoverScreenState)
         }
-    }
-
-    override fun onDestroyView() {
-        val lastState: UIState? = mainViewModel.peekState()?.first
-            .also {
-                log("Last State: $it")
-            }
-        if (isRemoving && lastState != UIState.HomeScreenState) {
-            lastState?.let {
-                mainViewModel.updateState(UIState.HomeScreenState to lastState)
-            }
-        }
-        super.onDestroyView()
     }
 }

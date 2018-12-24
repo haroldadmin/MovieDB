@@ -86,12 +86,6 @@ class DiscoverFragment : BaseFragment() {
     }
 
     override fun onDestroyView() {
-        val lastState: UIState? = mainViewModel.peekState()?.first
-        if (isRemoving && lastState != associatedState) {
-            lastState?.let {
-                mainViewModel.updateState(associatedState to lastState)
-            }
-        }
         moviesAdapter = null
         super.onDestroyView()
     }

@@ -11,14 +11,14 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.log
 
 class MainViewModel(application: Application): AndroidViewModel(application) {
 
-    private val _state = SingleLiveEvent<Pair<UIState?, UIState>>()
+    private val _state = SingleLiveEvent<UIState>()
     private var sessionId by SharedPreferencesDelegate(getApplication(), Constants.KEY_SESSION_ID, "")
 
-    val state: LiveData<Pair<UIState?, UIState>>
+    val state: LiveData<UIState>
         get() = _state
 
-    fun updateState(state: Pair<UIState?, UIState>?) {
-        log("Update state from ${state?.first} to ${state?.second}")
+    fun updateStateTo(state: UIState) {
+        log("Updating view to: ${UIState::class.java.simpleName}")
         _state.postValue(state)
     }
 

@@ -34,14 +34,4 @@ class LoginFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
     }
-
-    override fun onDestroyView() {
-        val lastState: UIState? = mainViewModel.peekState()?.first
-        if (isRemoving && lastState != associatedState) {
-            lastState?.let {
-                mainViewModel.updateState(UIState.AuthScreenState to lastState)
-            }
-        }
-        super.onDestroyView()
-    }
 }

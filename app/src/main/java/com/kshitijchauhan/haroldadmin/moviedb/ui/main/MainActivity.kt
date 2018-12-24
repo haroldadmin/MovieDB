@@ -29,11 +29,10 @@ class MainActivity : AppCompatActivity() {
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 
         mainViewModel.state.observe(this, Observer { pair ->
-            log(pair.second.toString())
             handleStateChange(pair)
         })
 
-        savedInstanceState ?: mainViewModel.updateState(null to UIState.HomeScreenState)
+        savedInstanceState ?: replaceFragment(HomeFragment.newInstance(), R.id.fragment_container, addToBackStack = false)
 
         setSupportActionBar(mainToolbar)
         supportActionBar?.apply {
@@ -43,8 +42,8 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun handleStateChange(state: Pair<UIState?, UIState>) {
-        when (state.second) {
+    private fun handleStateChange(state: UIState) {
+        when (state) {
             is UIState.HomeScreenState ->
                 replaceFragment(HomeFragment.newInstance(), R.id.fragment_container)
 
