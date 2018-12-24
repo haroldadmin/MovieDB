@@ -4,32 +4,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.auth.LoginFragment"
-    android:background="@color/colorSurfaceDark">
+    android:background="@color/colorSurfaceDark"
+    tools:context=".ui.auth.LoginFragment">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btGuestLogin"
-        android:layout_width="wrap_content"
+    <TextView
+        android:id="@+id/tvTitleLogin"
+        style="@style/TextAppearance.MaterialComponents.Headline4.ButtonStyleTextview"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="244dp"
-        android:text="Guest Login"
-        app:layout_constraintEnd_toStartOf="@+id/btWebLogin"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="spread"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Login"
+        android:textColor="@color/colorSecondary"
+        android:textSize="48sp"
+        android:transitionName="@string/loginTitleTransitionName"
+        app:layout_constraintBottom_toTopOf="@+id/rvMovies"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/btWebLogin"
-        android:layout_width="wrap_content"
+        android:id="@+id/btGuestLogin"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="244dp"
-        android:layout_marginEnd="8dp"
-        android:text="Web Login"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:text="Guest Login"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btGuestLogin"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btWebLogin" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btWebLogin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="Web Login"
+        app:layout_constraintBottom_toTopOf="@+id/btGuestLogin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitleLogin"
+        app:layout_constraintVertical_chainStyle="packed" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

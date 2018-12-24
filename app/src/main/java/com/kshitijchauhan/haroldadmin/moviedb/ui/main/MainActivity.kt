@@ -48,8 +48,37 @@ class MainActivity : AppCompatActivity() {
             is UIState.HomeScreenState ->
                 replaceFragment(HomeFragment.newInstance(), R.id.fragment_container)
 
-            is UIState.AuthScreenState ->
-                replaceFragment(LoginFragment.newInstance(), R.id.fragment_container)
+            is UIState.AuthScreenState -> {
+                val adInterpolator = AccelerateDecelerateInterpolator()
+
+                val enterFade = Fade()
+                enterFade.apply {
+                    duration = 300
+                    interpolator = adInterpolator
+                }
+
+                val exitFade = Fade()
+                exitFade.apply {
+                    duration = 300
+                    interpolator = adInterpolator
+                }
+
+                val sharedTransitionSet = TransitionSet()
+                sharedTransitionSet.apply {
+                    ordering = TransitionSet.ORDERING_TOGETHER
+                    addTransition(TextSizeTransition())
+                    addTransition(ChangeBounds())
+                    addTransition(ChangeTransform())
+                    interpolator = adInterpolator
+                    duration = 300
+                }
+                replaceFragment(LoginFragment.newInstance(),
+                    R.id.fragment_container,
+                    enterTransition = enterFade,
+                    exitTransition = exitFade,
+                    sharedElement = btAccount,
+                    sharedElementTransition = sharedTransitionSet)
+            }
 
             is UIState.DiscoverScreenState -> {
 
