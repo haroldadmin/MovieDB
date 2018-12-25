@@ -1,14 +1,13 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
 import android.os.Bundle
+import android.view.Gravity
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
+import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.transition.ChangeBounds
-import androidx.transition.ChangeTransform
-import androidx.transition.Fade
-import androidx.transition.TransitionSet
+import androidx.transition.*
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoginFragment
@@ -33,7 +32,11 @@ class MainActivity : AppCompatActivity() {
             handleStateChange(pair)
         })
 
-        savedInstanceState ?: replaceFragment(HomeFragment.newInstance(), R.id.fragment_container, addToBackStack = false)
+        savedInstanceState ?: replaceFragment(
+            HomeFragment.newInstance(),
+            R.id.fragment_container,
+            addToBackStack = false
+        )
 
         setSupportActionBar(mainToolbar)
         supportActionBar?.apply {
@@ -45,10 +48,18 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleStateChange(state: UIState) {
         when (state) {
-            is UIState.HomeScreenState ->
+            is UIState.HomeScreenState -> {
+                supportActionBar?.setDisplayShowTitleEnabled(false)
                 replaceFragment(HomeFragment.newInstance(), R.id.fragment_container)
+            }
 
             is UIState.AuthScreenState -> {
+
+                supportActionBar?.apply {
+                    setDisplayShowTitleEnabled(true)
+                    title = "Your Account"
+                }
+
                 val adInterpolator = AccelerateDecelerateInterpolator()
 
                 val enterFade = Fade()
@@ -72,7 +83,8 @@ class MainActivity : AppCompatActivity() {
                     interpolator = adInterpolator
                     duration = 300
                 }
-                replaceFragment(LoginFragment.newInstance(),
+                replaceFragment(
+                    LoginFragment.newInstance(),
                     R.id.fragment_container,
                     enterTransition = enterFade,
                     exitTransition = exitFade,
@@ -82,6 +94,10 @@ class MainActivity : AppCompatActivity() {
 
             is UIState.DiscoverScreenState -> {
 
+                supportActionBar?.apply {
+                    setDisplayShowTitleEnabled(true)
+                    title = "Discover"
+                }
                 val adInterpolator = AccelerateDecelerateInterpolator()
 
                 val enterFade = Fade()
@@ -115,6 +131,10 @@ class MainActivity : AppCompatActivity() {
             }
             UIState.SearchScreenState -> {
 
+                supportActionBar?.apply {
+                    setDisplayShowTitleEnabled(true)
+                    title = "Search"
+                }
                 val adInterpolator = AccelerateDecelerateInterpolator()
 
                 val enterFade = Fade()

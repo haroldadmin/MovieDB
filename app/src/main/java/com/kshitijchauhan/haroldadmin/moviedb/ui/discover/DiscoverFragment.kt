@@ -12,13 +12,14 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.kshitijchauhan.haroldadmin.moviedb.R
+import com.kshitijchauhan.haroldadmin.moviedb.R.id.rvMovies
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.gone
+import com.kshitijchauhan.haroldadmin.moviedb.utils.postDelayed
 import com.kshitijchauhan.haroldadmin.moviedb.utils.visible
 import com.mikepenz.itemanimators.AlphaInAnimator
-import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import kotlinx.android.synthetic.main.fragment_discover.*
 
 class DiscoverFragment : BaseFragment() {
@@ -48,7 +49,9 @@ class DiscoverFragment : BaseFragment() {
 
         discoverViewModel.apply {
 
-            getPopularMovies()
+            mainHandler.postDelayed(500) {
+                getPopularMovies()
+            }
 
             discoverViewModel.moviesUpdate.observe(viewLifecycleOwner, Observer {
                 moviesAdapter?.updateList(it)
