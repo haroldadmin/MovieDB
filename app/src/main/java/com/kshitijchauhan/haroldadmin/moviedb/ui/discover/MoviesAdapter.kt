@@ -10,7 +10,8 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.model.Movie
-import kotlinx.android.synthetic.main.item_moviegrid.view.*
+import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
+import kotlinx.android.synthetic.main.item_movielist.view.*
 
 class MoviesAdapter(
     val glide: RequestManager,
@@ -18,7 +19,7 @@ class MoviesAdapter(
 ): RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_moviegrid, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_movielist, parent, false)
         return ViewHolder(view)
     }
 
@@ -48,7 +49,8 @@ class MoviesAdapter(
             with(movie) {
                 itemView.apply {
                     tvMovieName.text = title
-                    rbMovieRating.rating = voteAverage.toFloat()
+                    chipReleaseYear.text = releaseDate
+                    chipGenre.text = if (Constants.Genres[genreIds[0]].isNullOrEmpty()) "Unknown Genre" else Constants.Genres[genreIds[0]]
                     glide
                         .load(movie.posterPath)
                         .transition(DrawableTransitionOptions.withCrossFade(200))

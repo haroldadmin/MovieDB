@@ -20,6 +20,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.gone
 import com.kshitijchauhan.haroldadmin.moviedb.utils.hideKeyboard
 import com.kshitijchauhan.haroldadmin.moviedb.utils.visible
+import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_search.*
 import java.util.concurrent.TimeUnit
@@ -66,6 +67,7 @@ class SearchFragment : BaseFragment() {
         rvSearchResults.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = searchAdapter
+            itemAnimator = SlideDownAlphaAnimator()
         }
 
         etSearchBox.setOnFocusChangeListener { v, hasFocus ->

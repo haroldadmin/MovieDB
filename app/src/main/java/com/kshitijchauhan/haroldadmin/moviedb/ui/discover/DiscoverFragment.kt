@@ -9,7 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
@@ -17,6 +17,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.gone
 import com.kshitijchauhan.haroldadmin.moviedb.utils.visible
+import com.mikepenz.itemanimators.AlphaInAnimator
+import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import kotlinx.android.synthetic.main.fragment_discover.*
 
 class DiscoverFragment : BaseFragment() {
@@ -74,11 +76,12 @@ class DiscoverFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val gridLayoutManager = GridLayoutManager(context, 2)
+        val linearLayoutManager = LinearLayoutManager(context)
         moviesAdapter = MoviesAdapter(Glide.with(this), mutableListOf())
         rvMovies.apply {
-            layoutManager = gridLayoutManager
+            layoutManager = linearLayoutManager
             adapter = moviesAdapter
+            itemAnimator = AlphaInAnimator()
         }
     }
 
