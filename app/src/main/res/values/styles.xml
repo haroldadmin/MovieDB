@@ -48,11 +48,6 @@
         <item name="android:textColorHint">@color/textOnSurfaceMediumEmphasis</item>
         <item name="hintTextAppearance">@style/TextAppearance.MaterialComponents.Subtitle1.TextFieldHintTextStyle</item>
         <item name="errorTextAppearance">@style/TextAppearance.MaterialComponents.Caption.TextFieldErrorTextStyle</item>
-        <item name="boxCornerRadiusTopStart">8dp</item>
-        <item name="boxCornerRadiusTopEnd">8dp</item>
-        <item name="boxCornerRadiusBottomStart">8dp</item>
-        <item name="boxCornerRadiusBottomEnd">8dp</item>
-        <item name="android:background">@drawable/shape_searchbox_background</item>
     </style>
 
     <style name="Base.Widget.MaterialComponents.TextInputLayout.SearchBox.Light">
@@ -71,7 +66,8 @@
     </style>
 
     <style name="TextAppearance.MaterialComponents.Subtitle1.TextFieldHintTextStyle.Light">
-        <item name="android:textColor">@color/textOnSecondaryMediumEmphasis</item>
+        <item name="android:textColor">@color/textOnSecondaryHighEmphasis</item>
+        <item name="android:textColorHint">@color/textOnSecondaryMediumEmphasis</item>
     </style>
 
 </resources>

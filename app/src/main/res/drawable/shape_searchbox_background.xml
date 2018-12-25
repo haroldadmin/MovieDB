@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:shape="rectangle">
 
     <corners
@@ -10,8 +11,8 @@
         android:topRightRadius="8dp"/>
 
     <size
-        android:width="180dp"
-        android:height="90dp"/>
+        tools:width="200dp"
+        tools:height="50dp"/>
 
     <solid
         android:color="@color/primaryColor50"/>
