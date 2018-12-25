@@ -37,6 +37,7 @@
     </style>
 
     <style name="Widget.AppCompat.RatingBar.Small.MyRatingBar">
+        <item name="android:isIndicator">true</item>
         <item name="android:colorControlNormal">@color/colorSecondary</item>
         <item name="android:colorControlActivated">@color/colorSecondary</item>
     </style>
@@ -68,6 +69,14 @@
     <style name="TextAppearance.MaterialComponents.Subtitle1.TextFieldHintTextStyle.Light">
         <item name="android:textColor">@color/textOnSecondaryHighEmphasis</item>
         <item name="android:textColorHint">@color/textOnSecondaryMediumEmphasis</item>
+    </style>
+
+    <style name="Widget.MaterialComponents.Chip.Action.MovieInfoChip">
+        <item name="chipBackgroundColor">@color/colorSurfaceLight</item>
+        <item name="android:textColor">@color/textOnPrimaryHighEmphasis</item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body2</item>
+        <!--<item name="chipStrokeColor">@color/colorSurfaceDark</item>-->
+        <!--<item name="chipStrokeWidth">1dp</item>-->
     </style>
 
 </resources>

@@ -8,7 +8,7 @@
     <color name="colorSurfaceLight">#607D8B</color>
     <color name="textOnSurfaceHighEmphasis">#ffffff</color>
     <color name="textOnSurfaceMediumEmphasis">#B3FFFFFF</color>
-    <color name="textOnPrimaryHighEmphasis">#FFFFFF</color>
+    <color name="textOnPrimaryHighEmphasis">#ffffff</color>
     <color name="textOnPrimaryMediumEmphasis">#B3FFFFFF</color>
     <color name="textOnSecondaryHighEmphasis">#000000</color>
     <color name="textOnSecondaryMediumEmphasis">#B3000000</color>
