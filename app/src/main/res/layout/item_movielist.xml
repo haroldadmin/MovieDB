@@ -78,7 +78,10 @@
             android:layout_height="wrap_content"
             app:barrierDirection="top"
             app:constraint_referenced_ids="tvMovieName,chipReleaseYear,chipGenre"
-            tools:layout_editor_absoluteY="200dp" />
+            tools:layout_editor_absoluteY="200dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tvMovieName"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
