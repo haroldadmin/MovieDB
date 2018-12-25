@@ -16,7 +16,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.gone
-import com.kshitijchauhan.haroldadmin.moviedb.utils.postDelayed
 import com.kshitijchauhan.haroldadmin.moviedb.utils.visible
 import kotlinx.android.synthetic.main.fragment_discover.*
 
@@ -47,9 +46,7 @@ class DiscoverFragment : BaseFragment() {
 
         discoverViewModel.apply {
 
-            mainHandler.postDelayed(1000) {
-                getPopularMovies()
-            }
+            getPopularMovies()
 
             discoverViewModel.moviesUpdate.observe(viewLifecycleOwner, Observer {
                 moviesAdapter?.updateList(it)

@@ -1,10 +1,8 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.discover
 
-import android.graphics.drawable.ColorDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
@@ -13,7 +11,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.model.Movie
 import kotlinx.android.synthetic.main.item_moviegrid.view.*
-import kotlin.math.roundToInt
 
 class MoviesAdapter(
     val glide: RequestManager,
@@ -33,6 +30,11 @@ class MoviesAdapter(
 
     fun updateList(pair: Pair<List<Movie>, DiffUtil.DiffResult>) {
         this.moviesList.apply {
+
+            // This is just a hack to prevent a recycler view bug
+            notifyItemRangeRemoved(0, size)
+            // End messy hack
+
             clear()
             addAll(pair.first)
         }.also {
