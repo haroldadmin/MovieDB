@@ -6,12 +6,14 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.model.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.utils.log
 
 class SearchResultsAdapter(private var searchResults: List<Movie>): RecyclerView.Adapter<SearchResultsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        var view = LayoutInflater.from(parent.context).inflate(android.R.layout.simple_list_item_1, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_search_suggestion, parent, false)
         return ViewHolder(view)
     }
 
@@ -22,8 +24,15 @@ class SearchResultsAdapter(private var searchResults: List<Movie>): RecyclerView
     }
 
     fun updateList(update: Pair<List<Movie>, DiffUtil.DiffResult>) {
-        this.searchResults = update.first
+        log("Dispatching updates to search adapter")
         update.second.dispatchUpdatesTo(this)
+        log("Updating adapter list")
+        this.searchResults = update.first
+    }
+
+    fun updateList(newList: List<Movie>) {
+        this.searchResults = newList
+        notifyDataSetChanged()
     }
 
 

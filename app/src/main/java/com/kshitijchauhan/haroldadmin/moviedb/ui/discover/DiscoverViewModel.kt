@@ -41,6 +41,8 @@ class DiscoverViewModel(application: Application): AndroidViewModel(application)
         _isLoading.value = true
         apiManager
             .getPopularMovies()
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
             .map {
                 response -> response.results
             }
@@ -54,8 +56,6 @@ class DiscoverViewModel(application: Application): AndroidViewModel(application)
             }
             .toList()
             .toObservable()
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.computation())
             .compose(RxDiffUtil.calculateDiff { oldList, newList ->
                 MoviesDiffUtil(oldList, newList)
             })

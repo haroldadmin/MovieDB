@@ -12,7 +12,8 @@
     <include layout="@layout/view_searchbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|center_horizontal"/>
+        android:layout_gravity="top|center_horizontal"
+        android:transitionName="searchBox"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSearchResults"
