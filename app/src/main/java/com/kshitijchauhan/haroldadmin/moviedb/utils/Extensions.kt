@@ -1,8 +1,11 @@
 package com.kshitijchauhan.haroldadmin.moviedb.utils
 
+import android.app.Activity
+import android.content.Context
 import android.os.Handler
 import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.transition.Transition
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
@@ -86,4 +89,20 @@ fun Handler.postDelayed(timeInMillis: Long, runnable: () -> Unit) {
     this.postDelayed({
         runnable.invoke()
     }, timeInMillis)
+}
+
+fun View.showKeyboard(context: Context?) {
+    this.requestFocus()
+    val inputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY)
+}
+
+fun Activity.hideKeyboard() {
+    val inputManager = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputManager.hideSoftInputFromWindow(
+        if (this.currentFocus == null) {
+            null
+        } else {
+            this.currentFocus?.windowToken
+        }, InputMethodManager.HIDE_NOT_ALWAYS)
 }
