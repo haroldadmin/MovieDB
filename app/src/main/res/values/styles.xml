@@ -75,8 +75,11 @@
         <item name="chipBackgroundColor">@color/colorSurfaceLight</item>
         <item name="android:textColor">@color/textOnPrimaryHighEmphasis</item>
         <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Body2</item>
-        <!--<item name="chipStrokeColor">@color/colorSurfaceDark</item>-->
-        <!--<item name="chipStrokeWidth">1dp</item>-->
+    </style>
+
+    <style name="Widget.MaterialComponents.Toolbar.MainToolbar">
+        <item name="titleTextAppearance">@style/TextAppearance.MaterialComponents.Headline5</item>
+        <item name="titleTextColor">@color/colorSecondary</item>
     </style>
 
 </resources>

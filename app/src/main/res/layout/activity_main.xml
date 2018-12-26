@@ -15,10 +15,10 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/mainToolbar"
-            style="@style/Widget.MaterialComponents.Toolbar"
+            style="@style/Widget.MaterialComponents.Toolbar.MainToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_round_menu_24px" />
+            app:navigationIcon="@drawable/ic_round_menu_24px"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

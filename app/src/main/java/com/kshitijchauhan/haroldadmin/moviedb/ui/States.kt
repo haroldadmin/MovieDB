@@ -6,5 +6,6 @@ sealed class UIState {
     object AuthScreenState: UIState()
     object DiscoverScreenState: UIState()
     object SearchScreenState: UIState()
+    data class DetailsScreenState(val movieId: Int): UIState()
 
 }

@@ -9,13 +9,13 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
-import com.kshitijchauhan.haroldadmin.moviedb.model.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.search.MovieSearchResult
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import kotlinx.android.synthetic.main.item_movielist.view.*
 
 class MoviesAdapter(
     val glide: RequestManager,
-    private var moviesList: MutableList<Movie>
+    private var moviesList: MutableList<MovieSearchResult>
 ): RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,7 +29,7 @@ class MoviesAdapter(
         holder.bind(moviesList[position])
     }
 
-    fun updateList(pair: Pair<List<Movie>, DiffUtil.DiffResult>) {
+    fun updateList(pair: Pair<List<MovieSearchResult>, DiffUtil.DiffResult>) {
         this.moviesList.apply {
 
             // This is just a hack to prevent a recycler view bug
@@ -45,14 +45,14 @@ class MoviesAdapter(
 
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        fun bind(movie: Movie) {
-            with(movie) {
+        fun bind(movieSearchResult: MovieSearchResult) {
+            with(movieSearchResult) {
                 itemView.apply {
                     tvTitle.text = title
                     chipReleaseYear.text = releaseDate
                     chipGenre.text = if (Constants.Genres[genreIds[0]].isNullOrEmpty()) "Unknown Genre" else Constants.Genres[genreIds[0]]
                     glide
-                        .load(movie.posterPath)
+                        .load(movieSearchResult.posterPath)
                         .transition(DrawableTransitionOptions.withCrossFade(200))
                         .apply(RequestOptions()
                             .centerCrop()

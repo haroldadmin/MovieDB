@@ -11,6 +11,7 @@ import androidx.transition.*
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoginFragment
+import com.kshitijchauhan.haroldadmin.moviedb.ui.details.MovieDetailsFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.discover.DiscoverFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchFragment
 import com.kshitijchauhan.haroldadmin.moviedb.utils.*
@@ -165,6 +166,10 @@ class MainActivity : AppCompatActivity() {
                     exitTransition = exitFade,
                     sharedElement = btSearch,
                     sharedElementTransition = sharedTransitionSet)
+            }
+            is UIState.DetailsScreenState -> {
+                val detailsFragment: MovieDetailsFragment = MovieDetailsFragment.newInstance(state.movieId)
+                replaceFragment(detailsFragment, R.id.fragment_container)
             }
         }.safe
     }

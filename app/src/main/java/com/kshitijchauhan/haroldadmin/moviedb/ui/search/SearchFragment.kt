@@ -13,6 +13,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
+import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.gone
 import com.kshitijchauhan.haroldadmin.moviedb.utils.hideKeyboard
@@ -58,7 +59,10 @@ class SearchFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        searchAdapter = SearchResultsAdapter(mutableListOf())
+        searchAdapter = SearchResultsAdapter(mutableListOf()) { movieId ->
+            showDetails(movieId)
+        }
+
         rvSearchResults.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = searchAdapter
@@ -126,5 +130,9 @@ class SearchFragment : BaseFragment() {
             }
             .takeUntil(onPauseRelay)
             .subscribe()
+    }
+
+    private fun showDetails(movieId: Int) {
+        mainViewModel.updateStateTo(UIState.DetailsScreenState(movieId))
     }
 }

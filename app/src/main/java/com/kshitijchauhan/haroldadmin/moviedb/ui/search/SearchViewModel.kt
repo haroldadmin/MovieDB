@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
-import com.kshitijchauhan.haroldadmin.moviedb.model.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.search.MovieSearchResult
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.utils.RxDiffUtil
 import com.kshitijchauhan.haroldadmin.moviedb.utils.disposeWith
@@ -19,9 +19,9 @@ import javax.inject.Inject
 class SearchViewModel(application: Application) : AndroidViewModel(application) {
 
     private val compositeDisposable = CompositeDisposable()
-    private val _searchUpdate = MutableLiveData<Pair<List<Movie>, DiffUtil.DiffResult>>()
+    private val _searchUpdate = MutableLiveData<Pair<List<MovieSearchResult>, DiffUtil.DiffResult>>()
 
-    val searchUpdate: LiveData<Pair<List<Movie>, DiffUtil.DiffResult>>
+    val searchUpdate: LiveData<Pair<List<MovieSearchResult>, DiffUtil.DiffResult>>
         get() = _searchUpdate
 
     @Inject

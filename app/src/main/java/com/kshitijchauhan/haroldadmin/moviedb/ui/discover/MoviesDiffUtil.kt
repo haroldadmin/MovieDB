@@ -1,10 +1,10 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.discover
 
 import androidx.recyclerview.widget.DiffUtil
-import com.kshitijchauhan.haroldadmin.moviedb.model.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.search.MovieSearchResult
 
-class MoviesDiffUtil(val oldList: List<Movie>,
-                     val newList: List<Movie>): DiffUtil.Callback() {
+class MoviesDiffUtil(val oldList: List<MovieSearchResult>,
+                     val newList: List<MovieSearchResult>): DiffUtil.Callback() {
 
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
         return oldList[oldItemPosition].id == newList[newItemPosition].id

@@ -3,9 +3,9 @@
     <color name="colorPrimary">#263238</color>
     <color name="colorPrimaryDark">#263238</color>
     <color name="colorSecondary">#03dac4</color>
-    <color name="colorSurface">#455A64</color>
+    <color name="colorSurface">#455a64</color>
     <color name="colorSurfaceDark">#263238</color>
-    <color name="colorSurfaceLight">#607D8B</color>
+    <color name="colorSurfaceLight">#607d8b</color>
     <color name="textOnSurfaceHighEmphasis">#ffffff</color>
     <color name="textOnSurfaceMediumEmphasis">#B3FFFFFF</color>
     <color name="textOnPrimaryHighEmphasis">#ffffff</color>

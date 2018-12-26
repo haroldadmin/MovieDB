@@ -35,7 +35,7 @@
             app:layout_constraintTop_toTopOf="@+id/barrier3" />
 
         <TextView
-            android:id="@+id/tvMovieName"
+            android:id="@+id/tvTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -77,11 +77,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:barrierDirection="top"
-            app:constraint_referenced_ids="tvMovieName,chipReleaseYear,chipGenre"
+            app:constraint_referenced_ids="tvTitle,chipReleaseYear,chipGenre"
             tools:layout_editor_absoluteY="200dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/tvMovieName"/>
+            app:layout_constraintBottom_toTopOf="@id/tvTitle"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

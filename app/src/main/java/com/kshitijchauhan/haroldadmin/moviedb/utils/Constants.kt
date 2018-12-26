@@ -20,9 +20,11 @@ object Constants {
     9648  to "Mystery",
     10749  to "Romance",
     878  to "Science Fiction",
-    10770  to "TV Movie",
+    10770  to "TV MovieSearchResult",
     53  to "Thriller",
     10752  to "War",
     37  to "Western"
     )
+
+    val KEY_MOVIE_ID = "movie-id"
 }

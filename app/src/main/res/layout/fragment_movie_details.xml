@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/detailsRootView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorSurfaceDark"
+    tools:context=".ui.details.MovieDetailsFragment">
+
+    <ImageView
+        android:id="@+id/ivPoster"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="8dp"
+        android:elevation="4dp"
+        android:scaleType="fitXY"
+        android:transitionName=""
+        app:layout_constraintBottom_toBottomOf="@id/posterBottomGuideline"
+        app:layout_constraintDimensionRatio=""
+        app:layout_constraintEnd_toStartOf="@+id/posterWidthGuideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars" />
+
+    <ImageView
+        android:id="@+id/ivBackdrop"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:scaleType="centerCrop"
+        android:tint="#88000000"
+        app:layout_constraintBottom_toBottomOf="@id/barrier"
+        app:layout_constraintDimensionRatio="h,"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:src="@tools:sample/backgrounds/scenic" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:elevation="4dp"
+        android:ellipsize="end"
+        android:paddingBottom="8dp"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+        android:textColor="@color/textOnPrimaryHighEmphasis"
+        app:layout_constraintBottom_toTopOf="@+id/posterBottomGuideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ivPoster"
+        app:layout_constraintTop_toTopOf="@+id/ivPoster"
+        app:layout_constraintVertical_bias="0.25"
+        tools:text="Hotel Transylvania 3: Summer Vacation" />
+
+    <TextView
+        android:id="@+id/tvDescription"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:layout_marginTop="8dp"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tvTitle"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cgMovieInfo"
+        tools:text="Lorem ipsum" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/cgMovieInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:elevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/barrier">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipMovieYear"
+            style="@style/Widget.MaterialComponents.Chip.Action.MovieInfoChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="2007" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipMovieGenre"
+            style="@style/Widget.MaterialComponents.Chip.Action.MovieInfoChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Drama" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipMovieRating"
+            style="@style/Widget.MaterialComponents.Chip.Action.MovieInfoChip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:chipIcon="@drawable/ic_round_star_rate_18px"
+            tools:text="7.6" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/posterWidthGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.4" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="ivPoster,tvTitle"
+        tools:layout_editor_absoluteX="384dp"
+        tools:layout_editor_absoluteY="225dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/posterBottomGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

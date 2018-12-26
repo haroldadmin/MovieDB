@@ -29,7 +29,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tvMovieName" />
+            app:layout_constraintTop_toTopOf="@+id/tvTitle" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/groupTextContent"
@@ -37,7 +37,7 @@
         android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/tvMovieName"
+                android:id="@+id/tvTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"

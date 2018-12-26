@@ -8,6 +8,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.transition.Transition
+import com.google.android.material.snackbar.Snackbar
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import io.reactivex.disposables.CompositeDisposable
@@ -105,4 +106,8 @@ fun Activity.hideKeyboard() {
         } else {
             this.currentFocus?.windowToken
         }, InputMethodManager.HIDE_NOT_ALWAYS)
+}
+
+fun View.snackbar(message: String, duration: Int = Snackbar.LENGTH_SHORT) {
+    Snackbar.make(this, message, duration).show()
 }
