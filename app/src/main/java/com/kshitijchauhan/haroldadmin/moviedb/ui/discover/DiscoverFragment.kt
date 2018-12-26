@@ -24,8 +24,6 @@ import kotlinx.android.synthetic.main.fragment_discover.*
 
 class DiscoverFragment : BaseFragment() {
 
-    override val associatedState: UIState = UIState.DiscoverScreenState
-
     private lateinit var mainViewModel: MainViewModel
     private lateinit var discoverViewModel: DiscoverViewModel
     private var moviesAdapter: MoviesAdapter? = null

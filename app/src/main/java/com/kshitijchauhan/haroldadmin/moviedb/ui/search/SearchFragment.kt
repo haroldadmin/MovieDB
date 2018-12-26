@@ -13,7 +13,6 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
-import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.gone
 import com.kshitijchauhan.haroldadmin.moviedb.utils.hideKeyboard
@@ -24,8 +23,6 @@ import kotlinx.android.synthetic.main.fragment_search.*
 import java.util.concurrent.TimeUnit
 
 class SearchFragment : BaseFragment() {
-
-    override val associatedState: UIState = UIState.SearchScreenState
 
     companion object {
         fun newInstance() = SearchFragment()

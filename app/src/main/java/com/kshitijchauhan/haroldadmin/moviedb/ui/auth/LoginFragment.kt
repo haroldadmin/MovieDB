@@ -14,8 +14,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.log
 
 class LoginFragment : BaseFragment() {
 
-    override val associatedState: UIState = UIState.AuthScreenState
-
     private lateinit var mainViewModel: MainViewModel
 
     companion object {

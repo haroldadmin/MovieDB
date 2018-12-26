@@ -14,8 +14,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.log
 
 abstract class BaseFragment: Fragment() {
 
-    abstract val associatedState: UIState
-
     override fun onAttach(context: Context) {
         log("onAttach")
         super.onAttach(context)

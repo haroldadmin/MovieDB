@@ -48,7 +48,7 @@ class MoviesAdapter(
         fun bind(movie: Movie) {
             with(movie) {
                 itemView.apply {
-                    tvMovieName.text = title
+                    tvTitle.text = title
                     chipReleaseYear.text = releaseDate
                     chipGenre.text = if (Constants.Genres[genreIds[0]].isNullOrEmpty()) "Unknown Genre" else Constants.Genres[genreIds[0]]
                     glide

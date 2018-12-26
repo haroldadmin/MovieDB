@@ -14,8 +14,6 @@ import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : BaseFragment() {
 
-    override val associatedState: UIState = UIState.HomeScreenState
-
     private lateinit var mainViewModel: MainViewModel
 
     companion object {
