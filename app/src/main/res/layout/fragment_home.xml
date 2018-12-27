@@ -5,33 +5,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorSurfaceDark"
-    tools:context=".ui.main.HomeFragment">
+    tools:context=".ui.main.HomeFragment"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-
-    <TextView
-        android:id="@+id/tvTitleDiscover"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
-        android:text="@string/app_name"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline2"
-        android:textColor="@color/textOnSurfaceHighEmphasis"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/btDiscover"
         style="@style/AppTheme.ButtonStyleTextView.HomeFragmentButtonTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:clickable="true"
         android:fontFamily="@font/open_sans_light"
         android:text="Discover"
-        app:layout_constraintStart_toStartOf="@+id/tvTitleDiscover"
-        app:layout_constraintTop_toBottomOf="@+id/tvTitleDiscover"
         android:transitionName="discoverTitle"
-        android:clickable="true"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/btSearch"

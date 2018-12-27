@@ -82,4 +82,13 @@
         <item name="titleTextColor">@color/colorSecondary</item>
     </style>
 
+    <style name="TextAppearance.MaterialComponents.Headline3.ExpandedToolbarTitle">
+        <item name="android:textColor">@color/colorSecondary</item>
+    </style>
+
+    <style name="TextAppearance.MaterialComponents.Headline5.CollapsedToolbarTitle">
+        <item name="android:textColor">@color/textOnPrimaryHighEmphasis</item>
+    </style>
+
+
 </resources>

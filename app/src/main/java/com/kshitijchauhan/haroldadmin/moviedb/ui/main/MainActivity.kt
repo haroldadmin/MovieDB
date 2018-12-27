@@ -1,13 +1,14 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
 import android.os.Bundle
-import android.view.Gravity
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
-import androidx.interpolator.view.animation.LinearOutSlowInInterpolator
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.transition.*
+import androidx.transition.ChangeBounds
+import androidx.transition.ChangeTransform
+import androidx.transition.Fade
+import androidx.transition.TransitionSet
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoginFragment
@@ -15,8 +16,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.details.MovieDetailsFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.discover.DiscoverFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchFragment
 import com.kshitijchauhan.haroldadmin.moviedb.utils.*
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.activity_main_alternate.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,8 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(mainToolbar)
         supportActionBar?.apply {
-            setDisplayHomeAsUpEnabled(true)
-            setDisplayShowTitleEnabled(false)
+            title = getString(R.string.app_name)
         }
 
     }
@@ -50,11 +49,12 @@ class MainActivity : AppCompatActivity() {
     private fun handleStateChange(state: UIState) {
         when (state) {
             is UIState.HomeScreenState -> {
-                supportActionBar?.setDisplayShowTitleEnabled(false)
                 replaceFragment(HomeFragment.newInstance(), R.id.fragment_container)
             }
 
             is UIState.AuthScreenState -> {
+
+                mainAppBarLayout.setExpanded(true, true)
 
                 supportActionBar?.apply {
                     setDisplayShowTitleEnabled(true)
@@ -88,17 +88,18 @@ class MainActivity : AppCompatActivity() {
                     LoginFragment.newInstance(),
                     R.id.fragment_container,
                     enterTransition = enterFade,
-                    exitTransition = exitFade,
-                    sharedElement = btAccount,
-                    sharedElementTransition = sharedTransitionSet)
+                    exitTransition = exitFade)
+//                    sharedElement = btAccount,
+//                    sharedElementTransition = sharedTransitionSet)
             }
 
             is UIState.DiscoverScreenState -> {
 
-                supportActionBar?.apply {
-                    setDisplayShowTitleEnabled(true)
+                mainCollapsingToolbarLayout?.apply {
                     title = "Discover"
                 }
+
+
                 val adInterpolator = AccelerateDecelerateInterpolator()
 
                 val enterFade = Fade()
@@ -126,14 +127,15 @@ class MainActivity : AppCompatActivity() {
                 replaceFragment(DiscoverFragment.newInstance(),
                     R.id.fragment_container,
                     enterTransition = enterFade,
-                    exitTransition = exitFade,
-                    sharedElement = btDiscover,
-                    sharedElementTransition = sharedTransitionSet)
+                    exitTransition = exitFade)
+//                    sharedElement = btDiscover,
+//                    sharedElementTransition = sharedTransitionSet)
             }
             UIState.SearchScreenState -> {
 
-                supportActionBar?.apply {
-                    setDisplayShowTitleEnabled(true)
+                mainAppBarLayout.setExpanded(true, true)
+
+                mainCollapsingToolbarLayout?.apply {
                     title = "Search"
                 }
                 val adInterpolator = AccelerateDecelerateInterpolator()
@@ -163,9 +165,9 @@ class MainActivity : AppCompatActivity() {
                 replaceFragment(SearchFragment.newInstance(),
                     R.id.fragment_container,
                     enterTransition = enterFade,
-                    exitTransition = exitFade,
-                    sharedElement = btSearch,
-                    sharedElementTransition = sharedTransitionSet)
+                    exitTransition = exitFade)
+//                    sharedElement = btSearch,
+//                    sharedElementTransition = sharedTransitionSet)
             }
             is UIState.DetailsScreenState -> {
                 val detailsFragment: MovieDetailsFragment = MovieDetailsFragment.newInstance(state.movieId)

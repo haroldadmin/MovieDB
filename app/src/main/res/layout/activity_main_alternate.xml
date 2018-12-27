@@ -1,35 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/homeRootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
 
-    <FrameLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/mainAppBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/mainCollapsingToolbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:expandedTitleMarginStart="16dp"
+            app:expandedTitleTextAppearance="@style/TextAppearance.MaterialComponents.Headline3.ExpandedToolbarTitle"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/mainToolbar"
+                app:titleTextAppearance="@style/TextAppearance.MaterialComponents.Headline5.CollapsedToolbarTitle"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:title="@string/app_name"
+                app:layout_collapseMode="pin"/>
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
         android:background="@color/colorSurfaceDark"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
         android:id="@+id/bottomNavigationView2"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
         app:elevation="4dp"
         app:itemBackground="@color/colorSurface"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/menu_app_destinations"
         app:itemIconTint="@color/bottom_navigation_icons"
-        app:itemTextColor="@color/bottom_navigation_text"/>
+        app:itemTextColor="@color/bottom_navigation_text"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

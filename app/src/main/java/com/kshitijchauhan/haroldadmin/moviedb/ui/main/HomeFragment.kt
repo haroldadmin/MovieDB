@@ -10,6 +10,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.utils.log
+import kotlinx.android.synthetic.main.activity_main_alternate.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class HomeFragment : BaseFragment() {
@@ -24,7 +25,7 @@ class HomeFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
         activity?.apply {
-            (this as AppCompatActivity).supportActionBar?.setDisplayShowTitleEnabled(false)
+            (this as AppCompatActivity).mainCollapsingToolbarLayout?.title = getString(R.string.app_name)
         }
     }
 

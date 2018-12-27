@@ -7,6 +7,7 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat.animate
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -55,23 +56,6 @@ class DiscoverFragment : BaseFragment() {
                 moviesAdapter?.updateList(it)
             })
 
-            discoverViewModel.isLoading.observe(viewLifecycleOwner, Observer { loading ->
-                if (loading) {
-                    progressBar.apply {
-                        visible()
-                        animate()
-                            .alpha(1f)
-                            .duration = 200
-                    }
-                } else {
-                    progressBar.apply {
-                        gone()
-                        animate()
-                            .alpha(0f)
-                            .duration = 200
-                    }
-                }
-            })
         }
     }
 

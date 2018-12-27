@@ -12,6 +12,7 @@ import com.jakewharton.rxbinding2.internal.Notification
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay
 import com.kshitijchauhan.haroldadmin.moviedb.R
+import com.kshitijchauhan.haroldadmin.moviedb.R.id.tvTitleSearch
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
@@ -67,34 +68,6 @@ class SearchFragment : BaseFragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = searchAdapter
             itemAnimator = SlideDownAlphaAnimator()
-        }
-
-        etSearchBox.setOnFocusChangeListener { v, hasFocus ->
-            if (hasFocus) {
-                val set = TransitionSet()
-                set.apply {
-                    addTransition(
-                        ChangeBounds()
-                            .addTarget(R.id.tvTitleSearch)
-                            .addTarget(R.id.searchCard)
-                    )
-                }
-                TransitionManager.beginDelayedTransition(searchRootView, set)
-                tvTitleSearch.gone()
-            } else {
-                val set = TransitionSet()
-                set.apply {
-                    addTransition(
-                        ChangeBounds()
-                            .addTarget(R.id.tvTitleSearch)
-                            .addTarget(R.id.searchCard)
-                            .addTarget(R.id.rvSearchResults)
-                    )
-                }
-                TransitionManager.beginDelayedTransition(searchRootView, set)
-                tvTitleSearch.visible()
-                rvSearchResults.gone()
-            }
         }
 
         searchIcon.setOnClickListener {
