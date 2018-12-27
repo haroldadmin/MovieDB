@@ -78,7 +78,9 @@ class DiscoverFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val linearLayoutManager = LinearLayoutManager(context)
-        moviesAdapter = MoviesAdapter(Glide.with(this), mutableListOf())
+        moviesAdapter = MoviesAdapter(Glide.with(this), mutableListOf()) { id ->
+            mainViewModel.updateStateTo(UIState.DetailsScreenState(id))
+        }
         rvMovies.apply {
             layoutManager = linearLayoutManager
             adapter = moviesAdapter

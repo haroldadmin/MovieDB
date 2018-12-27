@@ -15,7 +15,8 @@ import kotlinx.android.synthetic.main.item_movielist.view.*
 
 class MoviesAdapter(
     val glide: RequestManager,
-    private var moviesList: MutableList<MovieSearchResult>
+    private var moviesList: MutableList<MovieSearchResult>,
+    private val clickListener: (movieId: Int) -> Unit
 ): RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -58,6 +59,10 @@ class MoviesAdapter(
                             .centerCrop()
                         )
                         .into(ivPoster)
+
+                    setOnClickListener {
+                        clickListener.invoke(movieSearchResult.id)
+                    }
                 }
             }
         }
