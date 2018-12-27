@@ -85,7 +85,6 @@ dependencies {
 
     // UI
     implementation "com.mikepenz:itemanimators:1.1.0"
-    implementation "androidx.palette:palette:1.0.0"
 }
 
 apply plugin: 'kotlin-kapt'

@@ -86,36 +86,6 @@ class MovieDetailsFragment : BaseFragment() {
                     .centerCrop()
             )
             .load(movie.backdropPath)
-//            .listener(object : RequestListener<Bitmap> {
-//                override fun onLoadFailed(
-//                    e: GlideException?,
-//                    model: Any?,
-//                    target: Target<Bitmap>?,
-//                    isFirstResource: Boolean
-//                ): Boolean {
-//                    view?.snackbar("Loading backdrop failed")
-//                    return false
-//                }
-//
-//                override fun onResourceReady(
-//                    resource: Bitmap?,
-//                    model: Any?,
-//                    target: Target<Bitmap>?,
-//                    dataSource: DataSource?,
-//                    isFirstResource: Boolean
-//                ): Boolean {
-//                    Single
-//                        .fromCallable {
-//                            val palette = Palette.from(resource!!).generate()
-//                            colourizeViews(palette)
-//                        }
-//                        .subscribeOn(Schedulers.computation())
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribe()
-//                        .disposeWith(compositeDisposable)
-//                    return false
-//                }
-//            })
             .into(ivBackdrop)
 
         tvTitle.text = movie.title
@@ -124,24 +94,6 @@ class MovieDetailsFragment : BaseFragment() {
         chipMovieRating.text = String.format("%.2f", movie.voteAverage)
         tvDescription.text = movie.overview
     }
-
-//    private fun colourizeViews(palette: Palette) {
-//        val vibrant = palette.vibrantSwatch
-//        palette.getDarkVibrantColor(ContextCompat.getColor(context!!, R.color.colorSurfaceDark))
-//            .also {
-//                detailsRootView.setBackgroundColor(it)
-//            }
-//        palette.getLightVibrantColor(ContextCompat.getColor(context!!, R.color.colorSurfaceDark))
-//            .also {
-//                (activity as AppCompatActivity).supportActionBar
-//                    ?.apply {
-//                        setBackgroundDrawable(ColorDrawable(it))
-//                    }
-//            }
-//        vibrant?.rgb?.let {
-//            detailsRootView.setBackgroundColor(it)
-//        }
-//    }
 
     override fun onStop() {
         super.onStop()
