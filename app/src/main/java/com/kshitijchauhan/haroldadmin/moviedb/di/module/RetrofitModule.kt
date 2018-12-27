@@ -29,11 +29,11 @@ class RetrofitModule {
     @AppScope
     @Provides
     fun provideHttpClient(apiKeyInterceptor: ApiKeyInterceptor,
-                          interceptor: HttpLoggingInterceptor,
+                          loggingInterceptor: HttpLoggingInterceptor,
                           cache: Cache): OkHttpClient =
         OkHttpClient.Builder()
             .addInterceptor(apiKeyInterceptor)
-            .addInterceptor(interceptor)
+            .addInterceptor(loggingInterceptor)
             .cache(cache)
             .build()
 

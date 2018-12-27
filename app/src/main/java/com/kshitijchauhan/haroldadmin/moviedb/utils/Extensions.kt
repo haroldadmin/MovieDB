@@ -111,3 +111,9 @@ fun Activity.hideKeyboard() {
 fun View.snackbar(message: String, duration: Int = Snackbar.LENGTH_SHORT) {
     Snackbar.make(this, message, duration).show()
 }
+
+fun Context.getNumberOfColumns(itemWidth: Int): Int {
+    val metrics = this.resources.displayMetrics
+    val dpWidth = metrics.widthPixels / metrics.density
+    return dpWidth.div(itemWidth).toInt()
+}

@@ -1,5 +1,7 @@
 package com.kshitijchauhan.haroldadmin.moviedb.remote
 
+import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
+
 object Config {
 
     const val BASE_URL: String = "https://api.themoviedb.org/"
@@ -8,8 +10,8 @@ object Config {
 
     const val BASE_IMAGE_URL: String = "https://image.tmdb.org/t/p/"
 
-    const val DEFAULT_LOGO_SIZE: String = "w780"
+    const val DEFAULT_BACKDROP_SIZE: String = "w780"
 
-    const val DEFAULT_POSTER_SIZE: String = "w500"
+    const val DEFAULT_POSTER_SIZE: String = "w342"
 
 }

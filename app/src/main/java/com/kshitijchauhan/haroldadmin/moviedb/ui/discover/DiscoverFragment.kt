@@ -53,6 +53,7 @@ class DiscoverFragment : BaseFragment() {
             }
 
             discoverViewModel.moviesUpdate.observe(viewLifecycleOwner, Observer {
+                println("Updating list on discover adapter")
                 moviesAdapter?.updateList(it)
             })
 

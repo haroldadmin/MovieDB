@@ -20,6 +20,6 @@
         tools:listitem="@layout/item_search_suggestion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_searchbox_background"/>
+        android:background="@drawable/shape_searchbox_background" />
 
 </LinearLayout>

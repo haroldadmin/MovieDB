@@ -8,51 +8,32 @@
     tools:context=".ui.main.HomeFragment"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-
-    <TextView
-        android:id="@+id/btDiscover"
-        style="@style/AppTheme.ButtonStyleTextView.HomeFragmentButtonTextView"
-        android:layout_width="wrap_content"
+    <include
+        android:id="@+id/searchBox"
+        layout="@layout/view_searchbox"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:clickable="true"
-        android:fontFamily="@font/open_sans_light"
-        android:text="Discover"
-        android:transitionName="discoverTitle"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/btSearch"
-        style="@style/AppTheme.ButtonStyleTextView.HomeFragmentButtonTextView"
-        android:layout_width="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/popularMoviesRecyclerView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Search"
-        app:layout_constraintStart_toStartOf="@+id/btDiscover"
-        app:layout_constraintTop_toBottomOf="@+id/btDiscover"
-        android:clickable="true"
-        android:transitionName="@string/searchTitleTransName"/>
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchBox"
+        tools:itemCount="5"
+        tools:listitem="@layout/item_moviegrid"
+        tools:spanCount="2" />
 
-    <TextView
-        android:id="@+id/btFavourites"
-        style="@style/AppTheme.ButtonStyleTextView.HomeFragmentButtonTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Favourites"
-        app:layout_constraintStart_toStartOf="@+id/btSearch"
-        app:layout_constraintTop_toBottomOf="@+id/btSearch"
-        android:clickable="true"/>
-
-    <TextView
-        android:id="@+id/btAccount"
-        style="@style/AppTheme.ButtonStyleTextView.HomeFragmentButtonTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-1dp"
-        android:text="Your Account"
-        app:layout_constraintStart_toStartOf="@+id/btFavourites"
-        app:layout_constraintTop_toBottomOf="@+id/btFavourites"
-        android:transitionName="@string/loginTitleTransitionName"
-        android:clickable="true"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

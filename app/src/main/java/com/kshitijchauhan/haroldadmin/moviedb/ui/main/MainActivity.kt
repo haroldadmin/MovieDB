@@ -1,7 +1,9 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.animation.AccelerateDecelerateInterpolator
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -9,6 +11,7 @@ import androidx.transition.ChangeBounds
 import androidx.transition.ChangeTransform
 import androidx.transition.Fade
 import androidx.transition.TransitionSet
+import com.google.android.material.snackbar.Snackbar
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoginFragment
@@ -44,6 +47,22 @@ class MainActivity : AppCompatActivity() {
             title = getString(R.string.app_name)
         }
 
+        mainNavView.setOnNavigationItemSelectedListener { item ->
+            when(item.itemId) {
+                R.id.menuHome -> {
+                    replaceFragment(HomeFragment.newInstance(), R.id.fragment_container)
+                    true
+                }
+                R.id.menuLibrary -> {
+                    replaceFragment(DiscoverFragment.newInstance(), R.id.fragment_container)
+                    true
+                }
+                else -> {
+                    Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show()
+                    true
+                }
+            }
+        }
     }
 
     private fun handleStateChange(state: UIState) {

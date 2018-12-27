@@ -8,6 +8,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.di.module.ContextModule
 import com.kshitijchauhan.haroldadmin.moviedb.di.module.RetrofitModule
 import com.kshitijchauhan.haroldadmin.moviedb.ui.details.MovieDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.discover.DiscoverViewModel
+import com.kshitijchauhan.haroldadmin.moviedb.ui.main.HomeViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchViewModel
 import dagger.Component
 
@@ -24,5 +25,7 @@ interface AppComponent {
     fun inject(searchViewModel: SearchViewModel)
 
     fun inject(movieDetailsViewModel: MovieDetailsViewModel)
+
+    fun inject(homeViewModel: HomeViewModel)
 
 }

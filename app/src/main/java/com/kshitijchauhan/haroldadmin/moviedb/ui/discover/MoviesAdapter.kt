@@ -47,6 +47,8 @@ class MoviesAdapter(
 
     inner class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         fun bind(movieSearchResult: MovieSearchResult) {
+            println("Poster: ${movieSearchResult.posterPath}")
+            println("Backdrop: ${movieSearchResult.backdropPath}")
             with(movieSearchResult) {
                 itemView.apply {
                     tvTitle.text = title

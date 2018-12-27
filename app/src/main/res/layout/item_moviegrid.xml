@@ -1,70 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="175dp"
-    android:layout_height="200dp"
-    android:orientation="vertical"
-    app:cardCornerRadius="8dp"
-    android:layout_margin="8dp">
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:id="@+id/ivPoster"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            tools:srcCompat="@tools:sample/backgrounds/scenic" />
-
-        <View
-            android:id="@+id/transluscentBg"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.8"
-            android:background="@color/primaryColor50"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/tvTitle" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/groupTextContent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/tvTitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:paddingTop="8dp"
-                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                android:textColor="@color/colorSecondary"
-                app:layout_constraintBottom_toTopOf="@+id/rbMovieRating"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:text="TextView" />
-
-        <RatingBar
-            android:id="@+id/rbMovieRating"
-            style="@style/Widget.AppCompat.RatingBar.Small.MyRatingBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:rating="3.5" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    </FrameLayout>
-</com.google.android.material.card.MaterialCardView>
+    android:id="@+id/ivPoster"
+    android:layout_width="150dp"
+    android:layout_height="225dp"
+    android:scaleType="fitXY"
+    tools:srcCompat="@tools:sample/avatars" />
