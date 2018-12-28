@@ -13,6 +13,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.visible
 import kotlinx.android.synthetic.main.activity_main_alternate.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlin.math.roundToInt
@@ -37,6 +39,10 @@ class HomeFragment : BaseFragment() {
             getPopularMovies()
 
             getTopRatedMovies()
+
+            isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
+                if (isLoading) progressBar.visible() else progressBar.gone()
+            })
 
             popularMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
                 popularMoviesAdapter.updateList(newList)

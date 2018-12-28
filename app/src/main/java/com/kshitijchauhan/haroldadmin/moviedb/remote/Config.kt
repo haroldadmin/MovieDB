@@ -14,4 +14,6 @@ object Config {
 
     const val DEFAULT_POSTER_SIZE: String = "w342"
 
+    const val SMALL_POSTER_SIZE: String = "w185"
+
 }

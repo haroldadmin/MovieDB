@@ -3,6 +3,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
@@ -16,8 +17,10 @@ import javax.inject.Inject
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val _isLoading = MutableLiveData<Boolean>()
+    private val isPopularMoviesLoading = MutableLiveData<Boolean>()
+    private val isTrendingMoviesLoading = MutableLiveData<Boolean>()
     private val compositeDisposable = CompositeDisposable()
+    private val _isLoading = MediatorLiveData<Boolean>()
     private val _popularMoviesUpdate = MutableLiveData<List<GeneralMovieResponse>>()
     private val _topRatedMoviesUpdate = MutableLiveData<List<GeneralMovieResponse>>()
 
@@ -25,7 +28,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     lateinit var apiManager: ApiManager
 
     val isLoading: LiveData<Boolean>
-        get() = _isLoading
+        get() = isPopularMoviesLoading
 
     val popularMoviesUpdate: LiveData<List<GeneralMovieResponse>>
         get() = _popularMoviesUpdate
@@ -37,10 +40,18 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         (application as MovieDBApplication)
             .appComponent
             .inject(this)
+
+        _isLoading.addSource(isPopularMoviesLoading) { isLoading ->
+            _isLoading.value = isLoading || (_isLoading.value ?: false)
+        }
+
+        _isLoading.addSource(isTrendingMoviesLoading) { isLoading ->
+            _isLoading.value = isLoading || (_isLoading.value ?: false)
+        }
     }
 
     fun getPopularMovies() {
-        _isLoading.value = true
+        isPopularMoviesLoading.value = true
         apiManager
             .getPopularMovies()
             .subscribeOn(Schedulers.io())
@@ -52,14 +63,14 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 Observable.fromIterable(list)
             }
             .map { movie ->
-                movie.posterPath = "${Config.BASE_IMAGE_URL}${Config.DEFAULT_POSTER_SIZE}${movie.posterPath}"
+                movie.posterPath = "${Config.BASE_IMAGE_URL}${Config.SMALL_POSTER_SIZE}${movie.posterPath}"
                 movie.voteAverage = movie.voteAverage.div(10.0).times(5)
                 movie.releaseDate = movie.releaseDate.split("-")[0]
                 movie
             }
             .toList()
             .doOnSuccess {
-                _isLoading.postValue(false)
+                isPopularMoviesLoading.postValue(false)
                 _popularMoviesUpdate.postValue(it)
             }
             .subscribe()
@@ -67,7 +78,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun getTopRatedMovies() {
-        _isLoading.value = true
+        isTrendingMoviesLoading.value = true
         apiManager
             .getTopRatedMovies()
             .subscribeOn(Schedulers.io())
@@ -79,14 +90,14 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 Observable.fromIterable(list)
             }
             .map { movie ->
-                movie.posterPath = "${Config.BASE_IMAGE_URL}${Config.DEFAULT_POSTER_SIZE}${movie.posterPath}"
+                movie.posterPath = "${Config.BASE_IMAGE_URL}${Config.SMALL_POSTER_SIZE}${movie.posterPath}"
                 movie.voteAverage = movie.voteAverage.div(10.0).times(5)
                 movie.releaseDate = movie.releaseDate.split("-")[0]
                 movie
             }
             .toList()
             .doOnSuccess {
-                _isLoading.postValue(false)
+                isTrendingMoviesLoading.postValue(false)
                 _topRatedMoviesUpdate.postValue(it)
             }
             .subscribe()
