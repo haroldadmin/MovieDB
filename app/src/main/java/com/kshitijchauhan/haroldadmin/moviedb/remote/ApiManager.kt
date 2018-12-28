@@ -16,9 +16,11 @@ class ApiManager @Inject constructor(
 
     fun createGuestSession() = authenticationService.getGuestSessionToken()
 
-    fun getPopularMovies() = discoveryService.discoverMovies()
+    fun getPopularMovies() = discoveryService.getPopularMovies()
 
     fun search(query: String) = searchService.searchForMovie(query)
 
     fun getMovieDetails(movieId: Int) = movieService.getMovieDetails(movieId)
+
+    fun getTopRatedMovies() = discoveryService.getTopRatedMovies()
 }

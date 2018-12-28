@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.os.Handler
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +14,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import kotlin.math.roundToInt
 
 fun AppCompatActivity.app(): MovieDBApplication = this.application as MovieDBApplication
 
@@ -116,4 +118,8 @@ fun Context.getNumberOfColumns(itemWidth: Int): Int {
     val metrics = this.resources.displayMetrics
     val dpWidth = metrics.widthPixels / metrics.density
     return dpWidth.div(itemWidth).toInt()
+}
+
+fun Context.dpToPx(dp: Float): Float {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, this.resources.displayMetrics)
 }

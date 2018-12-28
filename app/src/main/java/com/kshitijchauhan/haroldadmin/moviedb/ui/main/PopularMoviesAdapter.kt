@@ -13,7 +13,8 @@ import kotlinx.android.synthetic.main.item_moviegrid.view.*
 
 class PopularMoviesAdapter(
     private var moviesList: List<MovieSearchResult>,
-    private val glide: RequestManager
+    private val glide: RequestManager,
+    private val onClick: (movieId: Int) -> Unit
 ) : RecyclerView.Adapter<PopularMoviesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -40,6 +41,8 @@ class PopularMoviesAdapter(
                     .centerCrop()
                 )
                 .into(itemView.ivPoster)
+
+            itemView.setOnClickListener { onClick.invoke(movie.id) }
         }
     }
 
