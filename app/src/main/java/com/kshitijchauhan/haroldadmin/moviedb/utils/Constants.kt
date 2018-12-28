@@ -20,7 +20,7 @@ object Constants {
         9648 to "Mystery",
         10749 to "Romance",
         878 to "Science Fiction",
-        10770 to "TV MovieSearchResult",
+        10770 to "TV GeneralMovieResponse",
         53 to "Thriller",
         10752 to "War",
         37 to "Western"

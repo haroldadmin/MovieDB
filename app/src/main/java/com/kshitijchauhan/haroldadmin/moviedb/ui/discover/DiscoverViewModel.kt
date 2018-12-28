@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.search.MovieSearchResult
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.common.GeneralMovieResponse
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.remote.Config
 import com.kshitijchauhan.haroldadmin.moviedb.utils.RxDiffUtil
@@ -21,11 +21,11 @@ class DiscoverViewModel(application: Application): AndroidViewModel(application)
     @Inject
     lateinit var apiManager: ApiManager
 
-    private val _moviesUpdate = MutableLiveData<Pair<List<MovieSearchResult>, DiffUtil.DiffResult>>()
+    private val _moviesUpdate = MutableLiveData<Pair<List<GeneralMovieResponse>, DiffUtil.DiffResult>>()
     private val _isLoading = MutableLiveData<Boolean>()
     private val compositeDisposable = CompositeDisposable()
 
-    val moviesUpdate: LiveData<Pair<List<MovieSearchResult>, DiffUtil.DiffResult>>
+    val moviesUpdate: LiveData<Pair<List<GeneralMovieResponse>, DiffUtil.DiffResult>>
         get() = _moviesUpdate
 
     val isLoading: LiveData<Boolean>

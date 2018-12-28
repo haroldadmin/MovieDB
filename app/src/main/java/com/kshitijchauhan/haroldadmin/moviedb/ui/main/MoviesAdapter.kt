@@ -8,11 +8,11 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.search.MovieSearchResult
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.common.GeneralMovieResponse
 import kotlinx.android.synthetic.main.item_moviegrid.view.*
 
 class MoviesAdapter(
-    private var moviesList: List<MovieSearchResult>,
+    private var moviesList: List<GeneralMovieResponse>,
     private val glide: RequestManager,
     private val onClick: (movieId: Int) -> Unit
 ) : RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
@@ -28,13 +28,13 @@ class MoviesAdapter(
         holder.bind(moviesList[position])
     }
 
-    fun updateList(newList: List<MovieSearchResult>) {
+    fun updateList(newList: List<GeneralMovieResponse>) {
         this.moviesList = newList
         notifyDataSetChanged()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(movie: MovieSearchResult) {
+        fun bind(movie: GeneralMovieResponse) {
             glide.load(movie.posterPath)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .apply(RequestOptions()

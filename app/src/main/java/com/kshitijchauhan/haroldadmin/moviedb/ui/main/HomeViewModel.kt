@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.remote.Config
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.search.MovieSearchResult
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.common.GeneralMovieResponse
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -18,8 +18,8 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _isLoading = MutableLiveData<Boolean>()
     private val compositeDisposable = CompositeDisposable()
-    private val _popularMoviesUpdate = MutableLiveData<List<MovieSearchResult>>()
-    private val _topRatedMoviesUpdate = MutableLiveData<List<MovieSearchResult>>()
+    private val _popularMoviesUpdate = MutableLiveData<List<GeneralMovieResponse>>()
+    private val _topRatedMoviesUpdate = MutableLiveData<List<GeneralMovieResponse>>()
 
     @Inject
     lateinit var apiManager: ApiManager
@@ -27,10 +27,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     val isLoading: LiveData<Boolean>
         get() = _isLoading
 
-    val popularMoviesUpdate: LiveData<List<MovieSearchResult>>
+    val popularMoviesUpdate: LiveData<List<GeneralMovieResponse>>
         get() = _popularMoviesUpdate
 
-    val topRatedMoviesUpdate: LiveData<List<MovieSearchResult>>
+    val topRatedMoviesUpdate: LiveData<List<GeneralMovieResponse>>
         get() = _topRatedMoviesUpdate
 
     init {
