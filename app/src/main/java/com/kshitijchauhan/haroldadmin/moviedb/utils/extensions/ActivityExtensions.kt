@@ -1,27 +1,15 @@
-package com.kshitijchauhan.haroldadmin.moviedb.utils
+package com.kshitijchauhan.haroldadmin.moviedb.utils.extensions
 
 import android.app.Activity
 import android.content.Context
-import android.os.Handler
-import android.util.Log
-import android.util.TypedValue
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.transition.Transition
-import com.google.android.material.snackbar.Snackbar
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.disposables.Disposable
-import kotlin.math.roundToInt
 
 fun AppCompatActivity.app(): MovieDBApplication = this.application as MovieDBApplication
-
-fun Any.log(message: String) {
-    if (this !is BaseFragment) Log.d(this::class.java.simpleName, message)
-}
-
 /**
  * This method is used to replace the current nextFragment in the Activity
  * with the given new Fragment. It has a safeguard against adding the same
@@ -38,13 +26,16 @@ fun Any.log(message: String) {
  * @param sharedElementTransition Shared element transition between the fragments
  * @param sharedElement Shared Element to be used for sharedElementTransition
  */
-inline fun <reified T: BaseFragment> AppCompatActivity.replaceFragment(nextFragment: T, containerId: Int,
-                                                                       addToBackStack: Boolean = true,
-                                                                       backStackName: String? = null,
-                                                                       enterTransition: Transition? = null,
-                                                                       exitTransition: Transition? = null,
-                                                                       sharedElementTransition: Transition? = null,
-                                                                       sharedElement: View? = null) {
+inline fun <reified T : BaseFragment> AppCompatActivity.replaceFragment(
+    nextFragment: T,
+    containerId: Int,
+    addToBackStack: Boolean = true,
+    backStackName: String? = null,
+    enterTransition: Transition? = null,
+    exitTransition: Transition? = null,
+    sharedElementTransition: Transition? = null,
+    sharedElement: View? = null
+) {
     val currentFragment = this.supportFragmentManager
         .findFragmentById(containerId)
 
@@ -72,34 +63,6 @@ inline fun <reified T: BaseFragment> AppCompatActivity.replaceFragment(nextFragm
     ft.commit()
 }
 
-fun Disposable.disposeWith(compositeDisposable: CompositeDisposable) = compositeDisposable.add(this)
-
-val Unit?.safe get() = Unit
-
-fun View.visible() {
-    this.visibility = View.VISIBLE
-}
-
-fun View.invisible() {
-    this.visibility = View.INVISIBLE
-}
-
-fun View.gone() {
-    this.visibility = View.GONE
-}
-
-fun Handler.postDelayed(timeInMillis: Long, runnable: () -> Unit) {
-    this.postDelayed({
-        runnable.invoke()
-    }, timeInMillis)
-}
-
-fun View.showKeyboard(context: Context?) {
-    this.requestFocus()
-    val inputMethodManager = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY)
-}
-
 fun Activity.hideKeyboard() {
     val inputManager = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     inputManager.hideSoftInputFromWindow(
@@ -107,19 +70,6 @@ fun Activity.hideKeyboard() {
             null
         } else {
             this.currentFocus?.windowToken
-        }, InputMethodManager.HIDE_NOT_ALWAYS)
-}
-
-fun View.snackbar(message: String, duration: Int = Snackbar.LENGTH_SHORT) {
-    Snackbar.make(this, message, duration).show()
-}
-
-fun Context.getNumberOfColumns(itemWidth: Int): Int {
-    val metrics = this.resources.displayMetrics
-    val dpWidth = metrics.widthPixels / metrics.density
-    return dpWidth.div(itemWidth).toInt()
-}
-
-fun Context.dpToPx(dp: Float): Float {
-    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, this.resources.displayMetrics)
+        }, InputMethodManager.HIDE_NOT_ALWAYS
+    )
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
@@ -15,6 +16,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.android.synthetic.main.activity_main_alternate.*
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 
 
@@ -55,6 +57,11 @@ class MovieDetailsFragment : BaseFragment() {
     }
 
     private fun updateView(movie: Movie) {
+
+        (activity as AppCompatActivity)
+            .mainCollapsingToolbarLayout
+            .title = movie.title
+
         Glide.with(this)
             .load(movie.posterPath)
             .transition(DrawableTransitionOptions.withCrossFade())

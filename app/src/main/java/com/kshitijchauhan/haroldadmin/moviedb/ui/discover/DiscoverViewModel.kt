@@ -10,7 +10,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.remote.service.search.MovieSearchR
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.remote.Config
 import com.kshitijchauhan.haroldadmin.moviedb.utils.RxDiffUtil
-import com.kshitijchauhan.haroldadmin.moviedb.utils.disposeWith
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers

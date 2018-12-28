@@ -1,7 +1,6 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -11,7 +10,6 @@ import androidx.transition.ChangeBounds
 import androidx.transition.ChangeTransform
 import androidx.transition.Fade
 import androidx.transition.TransitionSet
-import com.google.android.material.snackbar.Snackbar
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoginFragment
@@ -19,6 +17,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.details.MovieDetailsFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.discover.DiscoverFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchFragment
 import com.kshitijchauhan.haroldadmin.moviedb.utils.*
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.replaceFragment
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 import kotlinx.android.synthetic.main.activity_main_alternate.*
 
 class MainActivity : AppCompatActivity() {
@@ -48,17 +48,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         mainNavView.setOnNavigationItemSelectedListener { item ->
-            when(item.itemId) {
+            when (item.itemId) {
                 R.id.menuHome -> {
+                    mainViewModel.updateStateTo(UIState.HomeScreenState)
                     replaceFragment(HomeFragment.newInstance(), R.id.fragment_container)
                     true
                 }
                 R.id.menuLibrary -> {
-                    replaceFragment(DiscoverFragment.newInstance(), R.id.fragment_container)
+                    mainViewModel.updateStateTo(UIState.DiscoverScreenState)
                     true
                 }
                 else -> {
-                    Toast.makeText(this, "Not implemented", Toast.LENGTH_SHORT).show()
+                    mainViewModel.updateStateTo(UIState.AuthScreenState)
                     true
                 }
             }
@@ -66,50 +67,46 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleStateChange(state: UIState) {
+
+        val adInterpolator = AccelerateDecelerateInterpolator()
+
+        val enterFade = Fade()
+        enterFade.apply {
+            duration = 300
+            interpolator = adInterpolator
+        }
+
+        val exitFade = Fade()
+        exitFade.apply {
+            duration = 300
+            interpolator = adInterpolator
+        }
+
         when (state) {
             is UIState.HomeScreenState -> {
-                replaceFragment(HomeFragment.newInstance(), R.id.fragment_container)
+
+                mainCollapsingToolbarLayout?.apply {
+                    title = "MovieDB"
+                }
+
+                replaceFragment(HomeFragment.newInstance(),
+                    R.id.fragment_container,
+                    enterTransition = enterFade,
+                    exitTransition = exitFade)
             }
 
             is UIState.AuthScreenState -> {
 
-                mainAppBarLayout.setExpanded(true, true)
-
-                supportActionBar?.apply {
-                    setDisplayShowTitleEnabled(true)
+                mainCollapsingToolbarLayout?.apply {
                     title = "Your Account"
                 }
 
-                val adInterpolator = AccelerateDecelerateInterpolator()
-
-                val enterFade = Fade()
-                enterFade.apply {
-                    duration = 300
-                    interpolator = adInterpolator
-                }
-
-                val exitFade = Fade()
-                exitFade.apply {
-                    duration = 300
-                    interpolator = adInterpolator
-                }
-
-                val sharedTransitionSet = TransitionSet()
-                sharedTransitionSet.apply {
-                    ordering = TransitionSet.ORDERING_TOGETHER
-                    addTransition(TextSizeTransition())
-                    addTransition(ChangeBounds())
-                    addTransition(ChangeTransform())
-                    interpolator = adInterpolator
-                    duration = 300
-                }
                 replaceFragment(
                     LoginFragment.newInstance(),
                     R.id.fragment_container,
                     enterTransition = enterFade,
-                    exitTransition = exitFade)
-//                    sharedElement = btAccount,
-//                    sharedElementTransition = sharedTransitionSet)
+                    exitTransition = exitFade
+                )
             }
 
             is UIState.DiscoverScreenState -> {
@@ -118,80 +115,36 @@ class MainActivity : AppCompatActivity() {
                     title = "Discover"
                 }
 
-
-                val adInterpolator = AccelerateDecelerateInterpolator()
-
-                val enterFade = Fade()
-                enterFade.apply {
-                    duration = 300
-                    interpolator = adInterpolator
-                }
-
-                val exitFade = Fade()
-                exitFade.apply {
-                    duration = 300
-                    interpolator = adInterpolator
-                }
-
-                val sharedTransitionSet = TransitionSet()
-                sharedTransitionSet.apply {
-                    ordering = TransitionSet.ORDERING_TOGETHER
-                    addTransition(TextSizeTransition())
-                    addTransition(ChangeBounds())
-                    addTransition(ChangeTransform())
-                    interpolator = adInterpolator
-                    duration = 300
-                }
-
-                replaceFragment(DiscoverFragment.newInstance(),
+                replaceFragment(
+                    DiscoverFragment.newInstance(),
                     R.id.fragment_container,
                     enterTransition = enterFade,
-                    exitTransition = exitFade)
-//                    sharedElement = btDiscover,
-//                    sharedElementTransition = sharedTransitionSet)
+                    exitTransition = exitFade
+                )
             }
-            UIState.SearchScreenState -> {
-
-                mainAppBarLayout.setExpanded(true, true)
+            is UIState.SearchScreenState -> {
 
                 mainCollapsingToolbarLayout?.apply {
                     title = "Search"
                 }
-                val adInterpolator = AccelerateDecelerateInterpolator()
 
-                val enterFade = Fade()
-                enterFade.apply {
-                    duration = 300
-                    interpolator = adInterpolator
-                }
+                replaceFragment(
+                    SearchFragment.newInstance(),
+                    R.id.fragment_container,
+                    enterTransition = enterFade,
+                    exitTransition = exitFade
+                )
+            }
 
-                val exitFade = Fade()
-                exitFade.apply {
-                    duration = 300
-                    interpolator = adInterpolator
-                }
-
-                val sharedTransitionSet = TransitionSet()
-                sharedTransitionSet.apply {
-                    ordering = TransitionSet.ORDERING_TOGETHER
-                    addTransition(TextSizeTransition())
-                    addTransition(ChangeBounds())
-                    addTransition(ChangeTransform())
-                    interpolator = adInterpolator
-                    duration = 300
-                }
-
-                replaceFragment(SearchFragment.newInstance(),
+            is UIState.DetailsScreenState -> {
+                replaceFragment(
+                    MovieDetailsFragment.newInstance(state.movieId),
                     R.id.fragment_container,
                     enterTransition = enterFade,
                     exitTransition = exitFade)
-//                    sharedElement = btSearch,
-//                    sharedElementTransition = sharedTransitionSet)
-            }
-            is UIState.DetailsScreenState -> {
-                val detailsFragment: MovieDetailsFragment = MovieDetailsFragment.newInstance(state.movieId)
-                replaceFragment(detailsFragment, R.id.fragment_container)
             }
         }.safe
+
+        mainAppBarLayout.setExpanded(true, true)
     }
 }

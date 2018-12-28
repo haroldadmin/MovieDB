@@ -15,9 +15,9 @@ import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.utils.gone
-import com.kshitijchauhan.haroldadmin.moviedb.utils.hideKeyboard
-import com.kshitijchauhan.haroldadmin.moviedb.utils.visible
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.hideKeyboard
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.visible
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_search.*

@@ -8,7 +8,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.remote.Config
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.Movie
-import com.kshitijchauhan.haroldadmin.moviedb.utils.disposeWith
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject

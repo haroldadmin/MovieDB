@@ -7,19 +7,15 @@ import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat.animate
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.kshitijchauhan.haroldadmin.moviedb.R
-import com.kshitijchauhan.haroldadmin.moviedb.R.id.rvMovies
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.utils.gone
-import com.kshitijchauhan.haroldadmin.moviedb.utils.postDelayed
-import com.kshitijchauhan.haroldadmin.moviedb.utils.visible
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.postDelayed
 import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_discover.*
 

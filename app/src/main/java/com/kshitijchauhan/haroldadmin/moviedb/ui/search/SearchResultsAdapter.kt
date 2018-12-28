@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.search.MovieSearchResult
-import com.kshitijchauhan.haroldadmin.moviedb.utils.log
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 
 class SearchResultsAdapter(private var searchResults: MutableList<MovieSearchResult>, val onItemClick: (movieId: Int) -> Unit) :
     RecyclerView.Adapter<SearchResultsAdapter.ViewHolder>() {

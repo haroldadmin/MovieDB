@@ -7,7 +7,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SharedPreferencesDelegate
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
-import com.kshitijchauhan.haroldadmin.moviedb.utils.log
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 
 class MainViewModel(application: Application): AndroidViewModel(application) {
 

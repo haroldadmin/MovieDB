@@ -12,9 +12,7 @@ import com.bumptech.glide.Glide
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
-import com.kshitijchauhan.haroldadmin.moviedb.utils.dpToPx
-import com.kshitijchauhan.haroldadmin.moviedb.utils.getNumberOfColumns
-import com.kshitijchauhan.haroldadmin.moviedb.utils.log
+import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import kotlinx.android.synthetic.main.activity_main_alternate.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlin.math.roundToInt
@@ -23,8 +21,8 @@ class HomeFragment : BaseFragment() {
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var homeViewModel: HomeViewModel
-    private lateinit var popularMoviesAdapter: PopularMoviesAdapter
-    private lateinit var topRatedMoviesAdapter: PopularMoviesAdapter
+    private lateinit var popularMoviesAdapter: MoviesAdapter
+    private lateinit var topRatedMoviesAdapter: MoviesAdapter
 
     companion object {
         fun newInstance() = HomeFragment()
@@ -33,53 +31,68 @@ class HomeFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
-        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
-        homeViewModel.getPopularMovies()
-        homeViewModel.getTopRatedMovies()
+        initViewModels()
+
+        homeViewModel.apply {
+            getPopularMovies()
+
+            getTopRatedMovies()
+
+            popularMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
+                popularMoviesAdapter.updateList(newList)
+            })
+
+            topRatedMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
+                topRatedMoviesAdapter.updateList(newList)
+            })
+        }
 
         activity?.apply {
             (this as AppCompatActivity).mainCollapsingToolbarLayout?.title = getString(R.string.app_name)
         }
-
-        homeViewModel.popularMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
-            popularMoviesAdapter.updateList(newList)
-        })
-
-        homeViewModel.topRatedMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
-            topRatedMoviesAdapter.updateList(newList)
-        })
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        log("onCreateView")
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        popularMoviesAdapter = PopularMoviesAdapter(emptyList(), Glide.with(this)) { id ->
+
+        val columns = getNumberOfColumns(resources.getDimension(R.dimen.movie_grid_poster_width))
+        val space = resources.getDimension(R.dimen.movie_grid_item_space)
+
+        popularMoviesAdapter = MoviesAdapter(emptyList(), Glide.with(this)) { id ->
             mainViewModel.updateStateTo(UIState.DetailsScreenState(id))
         }
-        topRatedMoviesAdapter = PopularMoviesAdapter(emptyList(), Glide.with(this)) { id ->
+
+        topRatedMoviesAdapter = MoviesAdapter(emptyList(), Glide.with(this)) { id ->
             mainViewModel.updateStateTo(UIState.DetailsScreenState(id))
         }
+
         popularMoviesRecyclerView.apply {
-            val columns = context.getNumberOfColumns(100)
-            val space = context.dpToPx(1f)
             layoutManager = GridLayoutManager(context, columns)
-            addItemDecoration(GridItemDecoration(space.roundToInt()))
+            addItemDecoration(EqualSpaceGridItemDecoration((space).roundToInt()))
             adapter = popularMoviesAdapter
         }
+
         topRatedMoviesRecyclerView.apply {
-            val columns = context.getNumberOfColumns(100)
-            val space = context.dpToPx(1f)
             layoutManager = GridLayoutManager(context, columns)
-            addItemDecoration(GridItemDecoration(space.roundToInt()))
+            addItemDecoration(EqualSpaceGridItemDecoration((space).roundToInt()))
             adapter = topRatedMoviesAdapter
         }
+    }
+
+    private fun initViewModels() {
+        mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
+        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+    }
+
+    private fun getNumberOfColumns(itemWidthPx: Float): Int {
+        val screenWidth = resources.displayMetrics.widthPixels
+        return screenWidth.div(itemWidthPx).toInt()
     }
 }

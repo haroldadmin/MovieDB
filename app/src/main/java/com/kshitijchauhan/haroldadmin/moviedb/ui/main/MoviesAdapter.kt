@@ -11,11 +11,11 @@ import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.search.MovieSearchResult
 import kotlinx.android.synthetic.main.item_moviegrid.view.*
 
-class PopularMoviesAdapter(
+class MoviesAdapter(
     private var moviesList: List<MovieSearchResult>,
     private val glide: RequestManager,
     private val onClick: (movieId: Int) -> Unit
-) : RecyclerView.Adapter<PopularMoviesAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_moviegrid, parent, false)
