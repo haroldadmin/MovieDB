@@ -7,7 +7,7 @@
     android:elevation="4dp"
     app:cardBackgroundColor="@color/colorSurface"
     app:cardCornerRadius="8dp"
-    tools:layout_margin="8dp">
+    android:transitionName="@string/searchBoxTransName">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -27,6 +27,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etSearchBox"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"

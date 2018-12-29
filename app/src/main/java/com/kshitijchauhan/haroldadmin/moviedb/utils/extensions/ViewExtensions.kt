@@ -29,3 +29,11 @@ fun View.showKeyboard(context: Context?) {
 fun View.snackbar(message: String, duration: Int = Snackbar.LENGTH_SHORT) {
     Snackbar.make(this, message, duration).show()
 }
+
+fun View.disabled() {
+    this.isEnabled = false
+}
+
+fun View.enabled() {
+    this.isEnabled = true
+}

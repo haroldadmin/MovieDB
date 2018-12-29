@@ -2,7 +2,6 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
 import android.os.Bundle
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -17,6 +16,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.*
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.replaceFragment
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 import kotlinx.android.synthetic.main.activity_main_alternate.*
+import kotlinx.android.synthetic.main.fragment_home.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -125,11 +125,21 @@ class MainActivity : AppCompatActivity() {
                     title = "Search"
                 }
 
+                mainAppBarLayout.setExpanded(false, true)
+
+                val transitionSet = TransitionSet()
+                transitionSet.apply {
+                    addTransition(TransitionInflater.from(this@MainActivity).inflateTransition(android.R.transition.move))
+                    duration = 500
+                }
+
                 replaceFragment(
                     SearchFragment.newInstance(),
                     R.id.fragment_container,
                     enterTransition = enterFade,
-                    exitTransition = exitFade
+                    exitTransition = exitFade,
+                    sharedElement = searchBox,
+                    sharedElementTransition = transitionSet
                 )
             }
 
@@ -151,6 +161,6 @@ class MainActivity : AppCompatActivity() {
             }
         }.safe
 
-        mainAppBarLayout.setExpanded(true, true)
+//        mainAppBarLayout.setExpanded(true, true)
     }
 }
