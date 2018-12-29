@@ -17,10 +17,13 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.hideKeyboard
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.showKeyboard
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.visible
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.android.synthetic.main.view_searchbox.*
+import kotlinx.android.synthetic.main.view_searchbox.view.*
 import java.util.concurrent.TimeUnit
 
 class SearchFragment : BaseFragment() {
@@ -58,6 +61,11 @@ class SearchFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        searchBox.etSearchBox.apply {
+            requestFocus()
+            showKeyboard(context)
+        }
 
         searchAdapter = SearchResultsAdapter(mutableListOf()) { movieId ->
             showDetails(movieId)
