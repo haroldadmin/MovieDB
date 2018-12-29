@@ -54,7 +54,7 @@ class HomeFragment : BaseFragment() {
         }
 
         activity?.apply {
-            (this as AppCompatActivity).mainCollapsingToolbarLayout?.title = getString(R.string.app_name)
+            mainCollapsingToolbarLayout?.title = getString(R.string.app_name)
         }
     }
 
@@ -71,12 +71,12 @@ class HomeFragment : BaseFragment() {
         val columns = getNumberOfColumns(resources.getDimension(R.dimen.movie_grid_poster_width))
         val space = resources.getDimension(R.dimen.movie_grid_item_space)
 
-        popularMoviesAdapter = MoviesAdapter(emptyList(), Glide.with(this)) { id ->
-            mainViewModel.updateStateTo(UIState.DetailsScreenState(id))
+        popularMoviesAdapter = MoviesAdapter(emptyList(), Glide.with(this)) { id, transitionName, sharedView ->
+            mainViewModel.updateStateTo(UIState.DetailsScreenState(id, transitionName, sharedView))
         }
 
-        topRatedMoviesAdapter = MoviesAdapter(emptyList(), Glide.with(this)) { id ->
-            mainViewModel.updateStateTo(UIState.DetailsScreenState(id))
+        topRatedMoviesAdapter = MoviesAdapter(emptyList(), Glide.with(this)) { id, transitionName, sharedView ->
+            mainViewModel.updateStateTo(UIState.DetailsScreenState(id, transitionName, sharedView))
         }
 
         popularMoviesRecyclerView.apply {

@@ -56,4 +56,6 @@ object Constants {
     )
 
     val KEY_MOVIE_ID = "movie-id"
+
+    val KEY_TRANSITION_NAME = "transition-name"
 }

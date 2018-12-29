@@ -34,7 +34,8 @@ inline fun <reified T : BaseFragment> AppCompatActivity.replaceFragment(
     enterTransition: Transition? = null,
     exitTransition: Transition? = null,
     sharedElementTransition: Transition? = null,
-    sharedElement: View? = null
+    sharedElement: View? = null,
+    transitionName: String? = null
 ) {
     val currentFragment = this.supportFragmentManager
         .findFragmentById(containerId)
@@ -58,7 +59,11 @@ inline fun <reified T : BaseFragment> AppCompatActivity.replaceFragment(
         ft.addToBackStack(backStackName)
     }
 
-    sharedElement?.let { ft.addSharedElement(sharedElement, sharedElement.transitionName) }
+    if (transitionName == null) {
+        sharedElement?.let { ft.addSharedElement(sharedElement, sharedElement.transitionName) }
+    } else {
+        sharedElement?.let { ft.addSharedElement(sharedElement, transitionName)}
+    }
 
     ft.commit()
 }

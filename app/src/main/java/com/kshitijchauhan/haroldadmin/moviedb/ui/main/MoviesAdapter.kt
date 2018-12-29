@@ -3,6 +3,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -14,7 +15,7 @@ import kotlinx.android.synthetic.main.item_moviegrid.view.*
 class MoviesAdapter(
     private var moviesList: List<GeneralMovieResponse>,
     private val glide: RequestManager,
-    private val onClick: (movieId: Int) -> Unit
+    private val onClick: (movieId: Int, transitionName: String, sharedView: View) -> Unit
 ) : RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -34,15 +35,26 @@ class MoviesAdapter(
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        private var transitionName: String = ""
+
         fun bind(movie: GeneralMovieResponse) {
             glide.load(movie.posterPath)
                 .transition(DrawableTransitionOptions.withCrossFade())
-                .apply(RequestOptions()
-                    .centerCrop()
+                .apply(
+                    RequestOptions()
+                        .centerCrop()
                 )
                 .into(itemView.ivPoster)
 
-            itemView.setOnClickListener { onClick.invoke(movie.id) }
+            transitionName = "poster-${movie.id}"
+                .also { name ->
+                    ViewCompat.setTransitionName(itemView, name)
+                }
+
+            itemView.setOnClickListener {
+                onClick.invoke(movie.id, transitionName, itemView)
+            }
         }
     }
 

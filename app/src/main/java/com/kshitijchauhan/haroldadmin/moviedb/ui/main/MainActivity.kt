@@ -6,10 +6,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.transition.ChangeBounds
-import androidx.transition.ChangeTransform
-import androidx.transition.Fade
-import androidx.transition.TransitionSet
+import androidx.transition.*
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoginFragment
@@ -137,11 +134,20 @@ class MainActivity : AppCompatActivity() {
             }
 
             is UIState.DetailsScreenState -> {
+
+                val transitionSet = TransitionSet()
+                transitionSet.apply {
+                    addTransition(TransitionInflater.from(this@MainActivity).inflateTransition(android.R.transition.move))
+                    duration = 300
+                }
+
                 replaceFragment(
-                    MovieDetailsFragment.newInstance(state.movieId),
+                    MovieDetailsFragment.newInstance(state.movieId, state.transitionName ?: ""),
                     R.id.fragment_container,
-                    enterTransition = enterFade,
-                    exitTransition = exitFade)
+//                    enterTransition = enterFade,
+//                    exitTransition = exitFade,
+                    sharedElementTransition = transitionSet,
+                    sharedElement = state.sharedView)
             }
         }.safe
 
