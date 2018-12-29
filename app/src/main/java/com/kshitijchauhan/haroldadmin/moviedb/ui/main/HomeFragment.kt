@@ -36,9 +36,14 @@ class HomeFragment : BaseFragment() {
         initViewModels()
 
         homeViewModel.apply {
-            getPopularMovies()
 
-            getTopRatedMovies()
+            if (popularMoviesUpdate.value == null) {
+                getPopularMovies()
+            }
+
+            if (topRatedMoviesUpdate.value == null) {
+                getTopRatedMovies()
+            }
 
             isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
                 if (isLoading) progressBar.visible() else progressBar.gone()
