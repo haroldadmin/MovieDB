@@ -46,7 +46,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:paddingBottom="?attr/actionBarSize"
+        android:clipToPadding="false"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         style="@style/Widget.MaterialComponents.BottomNavigationView.Colored"
@@ -58,6 +60,7 @@
         app:itemBackground="@color/colorSurface"
         app:menu="@menu/menu_app_destinations"
         app:itemIconTint="@color/bottom_navigation_icons"
-        app:itemTextColor="@color/bottom_navigation_text" />
+        app:itemTextColor="@color/bottom_navigation_text"
+        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
