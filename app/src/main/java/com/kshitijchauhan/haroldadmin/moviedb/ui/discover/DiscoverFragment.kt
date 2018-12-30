@@ -2,8 +2,6 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.discover
 
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +13,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getMainHandler
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.postDelayed
 import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_discover.*
@@ -24,7 +23,6 @@ class DiscoverFragment : BaseFragment() {
     private lateinit var mainViewModel: MainViewModel
     private lateinit var discoverViewModel: DiscoverViewModel
     private var moviesAdapter: MoviesAdapter? = null
-    private val mainHandler = Handler(Looper.getMainLooper())
 
     companion object {
         fun newInstance() = DiscoverFragment()
@@ -43,13 +41,15 @@ class DiscoverFragment : BaseFragment() {
         discoverViewModel = ViewModelProviders.of(this).get(DiscoverViewModel::class.java)
 
         discoverViewModel.apply {
-
-            mainHandler.postDelayed(500) {
+            mainViewModel.setProgressBarVisible(true)
+            getMainHandler().postDelayed(500) {
+                // To avoid lag
+                // TODO Fix this later
                 getPopularMovies()
             }
 
             discoverViewModel.moviesUpdate.observe(viewLifecycleOwner, Observer {
-                println("Updating list on discover adapter")
+                mainViewModel.setProgressBarVisible(false)
                 moviesAdapter?.updateList(it)
             })
 

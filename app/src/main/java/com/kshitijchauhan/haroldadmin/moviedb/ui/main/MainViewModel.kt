@@ -3,18 +3,19 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
+import androidx.lifecycle.MutableLiveData
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SharedPreferencesDelegate
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 
-class MainViewModel(application: Application): AndroidViewModel(application) {
+class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _state = SingleLiveEvent<UIState>()
     private val _snackbar = SingleLiveEvent<String>()
     private val _bottomNavSelectedIconId = SingleLiveEvent<Int>()
+    private val _progressBar = MutableLiveData<Boolean>()
     private var _isAuthenticated by SharedPreferencesDelegate(application, Constants.KEY_IS_AUTHENTICATED, false)
     private var _sessionId by SharedPreferencesDelegate(application, Constants.KEY_SESSION_ID, "")
 
@@ -33,7 +34,10 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
     val bottomNavSelectedItemId: LiveData<Int>
         get() = _bottomNavSelectedIconId
 
-    fun <T: UIState> updateStateTo(state: T) {
+    val progressBar: LiveData<Boolean>
+        get() = _progressBar
+
+    fun <T : UIState> updateStateTo(state: T) {
         log("Updating view to: ${state::class.java.simpleName}")
         _state.postValue(state)
     }
@@ -52,6 +56,10 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 
     fun setBottomNavSelectedItemId(id: Int) {
         _bottomNavSelectedIconId.value = id
+    }
+
+    fun setProgressBarVisible(status: Boolean) {
+        _progressBar.value = status
     }
 
     fun peekState() = _state.value

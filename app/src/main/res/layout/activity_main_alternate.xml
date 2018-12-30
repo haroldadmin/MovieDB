@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/homeRootView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,8 +17,8 @@
             android:id="@+id/mainToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-            app:title="@string/app_name"/>
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:title="@string/app_name" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -49,5 +48,14 @@
         app:itemTextColor="@color/bottom_navigation_text"
         app:layout_behavior="com.kshitijchauhan.haroldadmin.moviedb.utils.ScrollAwareBottomNavBehaviour"
         app:menu="@menu/menu_app_destinations" />
+
+    <ProgressBar
+        android:id="@+id/mainProgressBar"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:layout_gravity="top"
+        app:layout_anchor="@id/mainNavView" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -30,3 +30,7 @@ fun Context.getNumberOfColumns(itemWidth: Float): Int {
 }
 
 fun Any?.getMainHandler() = Handler(Looper.getMainLooper())
+
+fun Float.dpToPx(context: Context): Float {
+    return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, context.resources.displayMetrics)
+}

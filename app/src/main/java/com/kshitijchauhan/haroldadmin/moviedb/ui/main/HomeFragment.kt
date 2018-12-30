@@ -15,8 +15,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.visible
 import kotlinx.android.synthetic.main.activity_main_alternate.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.view_searchbox.view.*
@@ -43,22 +41,22 @@ class HomeFragment : BaseFragment() {
         homeViewModel.apply {
 
             if (popularMoviesUpdate.value == null) {
+                mainViewModel.setProgressBarVisible(true)
                 getPopularMovies()
             }
 
             if (topRatedMoviesUpdate.value == null) {
+                mainViewModel.setProgressBarVisible(true)
                 getTopRatedMovies()
             }
 
-            isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
-                if (isLoading) progressBar.visible() else progressBar.gone()
-            })
-
             popularMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
+                mainViewModel.setProgressBarVisible(false)
                 popularMoviesAdapter.updateList(newList)
             })
 
             topRatedMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
+                mainViewModel.setProgressBarVisible(false)
                 topRatedMoviesAdapter.updateList(newList)
             })
         }

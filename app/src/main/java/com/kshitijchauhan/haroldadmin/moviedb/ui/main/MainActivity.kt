@@ -5,18 +5,19 @@ import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.transition.*
+import androidx.transition.Fade
+import androidx.transition.TransitionInflater
+import androidx.transition.TransitionSet
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
-import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoggedOutFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AccountFragment
+import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoggedOutFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.details.MovieDetailsFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.discover.DiscoverFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchFragment
-import com.kshitijchauhan.haroldadmin.moviedb.utils.*
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.replaceFragment
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.snackbar
+import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
+import com.kshitijchauhan.haroldadmin.moviedb.utils.SharedPreferencesDelegate
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.*
 import kotlinx.android.synthetic.main.activity_main_alternate.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -41,6 +42,10 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel.bottomNavSelectedItemId.observe(this, Observer { id ->
             mainNavView.selectedItemId = id
+        })
+
+        mainViewModel.progressBar.observe(this, Observer { isVisible ->
+            if (isVisible) mainProgressBar.visible() else mainProgressBar.gone()
         })
 
         savedInstanceState ?: replaceFragment(
@@ -201,7 +206,8 @@ class MainActivity : AppCompatActivity() {
 //                    enterTransition = enterFade,
 //                    exitTransition = exitFade,
                     sharedElementTransition = transitionSet,
-                    sharedElement = state.sharedView)
+                    sharedElement = state.sharedView
+                )
             }
         }.safe
 

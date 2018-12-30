@@ -2,8 +2,6 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.auth
 
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,17 +10,17 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.transition.*
+import androidx.transition.TransitionManager
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.auth.CreateSessionRequest
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
-import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.*
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.visible
 import kotlinx.android.synthetic.main.activity_main_alternate.*
 import kotlinx.android.synthetic.main.fragment_logged_out.*
-import java.lang.IllegalStateException
 
 class LoggedOutFragment : BaseFragment() {
 
@@ -61,11 +59,13 @@ class LoggedOutFragment : BaseFragment() {
                     url?.let {
                         log("Loading this url in webview: $it")
                     }
+                    mainViewModel.setProgressBarVisible(true)
                     super.onPageStarted(view, url, favicon)
                 }
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
+                    mainViewModel.setProgressBarVisible(false)
                     if (url?.contains("allow") == true) {
                         handleAuthorizationSuccessful(
                             authenticationViewModel.requestToken.value

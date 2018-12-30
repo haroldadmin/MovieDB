@@ -6,9 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.DiffUtil
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.common.GeneralMovieResponse
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.remote.Config
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.common.GeneralMovieResponse
 import com.kshitijchauhan.haroldadmin.moviedb.utils.RxDiffUtil
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import io.reactivex.Observable
@@ -16,20 +16,16 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class DiscoverViewModel(application: Application): AndroidViewModel(application) {
+class DiscoverViewModel(application: Application) : AndroidViewModel(application) {
 
     @Inject
     lateinit var apiManager: ApiManager
 
     private val _moviesUpdate = MutableLiveData<Pair<List<GeneralMovieResponse>, DiffUtil.DiffResult>>()
-    private val _isLoading = MutableLiveData<Boolean>()
     private val compositeDisposable = CompositeDisposable()
 
     val moviesUpdate: LiveData<Pair<List<GeneralMovieResponse>, DiffUtil.DiffResult>>
         get() = _moviesUpdate
-
-    val isLoading: LiveData<Boolean>
-        get() = _isLoading
 
     init {
         (application as MovieDBApplication)
@@ -38,13 +34,12 @@ class DiscoverViewModel(application: Application): AndroidViewModel(application)
     }
 
     fun getPopularMovies() {
-        _isLoading.value = true
         apiManager
             .getPopularMovies()
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
-            .map {
-                response -> response.results
+            .map { response ->
+                response.results
             }
             .flatMapObservable { list ->
                 Observable.fromIterable(list)
@@ -61,7 +56,6 @@ class DiscoverViewModel(application: Application): AndroidViewModel(application)
                 MoviesDiffUtil(oldList, newList)
             })
             .doOnNext {
-                _isLoading.postValue(false)
                 _moviesUpdate.postValue(it)
             }
             .subscribe()

@@ -3,7 +3,6 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
@@ -20,15 +19,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val isPopularMoviesLoading = MutableLiveData<Boolean>()
     private val isTrendingMoviesLoading = MutableLiveData<Boolean>()
     private val compositeDisposable = CompositeDisposable()
-    private val _isLoading = MediatorLiveData<Boolean>()
     private val _popularMoviesUpdate = MutableLiveData<List<GeneralMovieResponse>>()
     private val _topRatedMoviesUpdate = MutableLiveData<List<GeneralMovieResponse>>()
 
     @Inject
     lateinit var apiManager: ApiManager
-
-    val isLoading: LiveData<Boolean>
-        get() = isPopularMoviesLoading
 
     val popularMoviesUpdate: LiveData<List<GeneralMovieResponse>>
         get() = _popularMoviesUpdate
@@ -40,14 +35,6 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         (application as MovieDBApplication)
             .appComponent
             .inject(this)
-
-        _isLoading.addSource(isPopularMoviesLoading) { isLoading ->
-            _isLoading.value = isLoading || (_isLoading.value ?: false)
-        }
-
-        _isLoading.addSource(isTrendingMoviesLoading) { isLoading ->
-            _isLoading.value = isLoading || (_isLoading.value ?: false)
-        }
     }
 
     fun getPopularMovies() {
