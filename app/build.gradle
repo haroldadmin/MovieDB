@@ -86,6 +86,7 @@ dependencies {
 
     // UI
     implementation "com.mikepenz:itemanimators:1.1.0"
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
 }
 
 apply plugin: 'kotlin-kapt'

@@ -3,6 +3,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SharedPreferencesDelegate
@@ -39,6 +40,10 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 
     fun setAuthenticationStatus(status: Boolean) {
         _isAuthenticated = status
+    }
+
+    fun setSessionId(sessionId: String) {
+        _sessionId = sessionId
     }
 
     fun peekState() = _state.value

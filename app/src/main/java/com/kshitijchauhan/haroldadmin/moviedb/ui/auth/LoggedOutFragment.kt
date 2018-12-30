@@ -13,15 +13,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.transition.*
+import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.auth.CreateSessionRequest
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.postDelayed
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.visible
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.*
 import kotlinx.android.synthetic.main.activity_main_alternate.*
 import kotlinx.android.synthetic.main.fragment_logged_out.*
 import java.lang.IllegalStateException
@@ -105,12 +103,12 @@ class LoggedOutFragment : BaseFragment() {
         loadingGroup.visible()
 
         authenticationViewModel.authSuccess.observe(viewLifecycleOwner, Observer {
-            Handler(Looper.getMainLooper()).postDelayed(1000) {
-                mainViewModel.apply {
-                    setAuthenticationStatus(true)
-                    showSnackbar("Login successful!")
-                    updateStateTo(UIState.HomeScreenState)
-                }
+            // We need a new instance of sessionId Interceptor
+            (activity?.application as MovieDBApplication).rebuildAppComponent()
+
+            mainViewModel.apply {
+                showSnackbar("Login Successful!")
+                fragmentManager?.popBackStack()
             }
         })
     }

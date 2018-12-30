@@ -2,6 +2,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.utils.extensions
 
 import android.content.Context
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
@@ -27,3 +28,5 @@ fun Context.getNumberOfColumns(itemWidth: Float): Int {
     val dpWidth = metrics.widthPixels / metrics.density
     return dpWidth.div(itemWidth).toInt()
 }
+
+fun Any?.getMainHandler() = Handler(Looper.getMainLooper())

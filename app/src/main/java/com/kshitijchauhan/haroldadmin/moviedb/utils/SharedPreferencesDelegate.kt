@@ -11,10 +11,14 @@ class SharedPreferencesDelegate<T>(private val context: Context, private val key
     private val prefs: SharedPreferences by lazy { context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE) }
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
+        log("Request received from: ${thisRef?.javaClass?.simpleName}")
+        log("Retrieving value for: ${property.name}")
         return findPreferences(key, defaultValue)
     }
 
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
+        log("Request received from: ${thisRef?.javaClass?.simpleName}")
+        log("Saving value for: ${property.name}")
         savePreference(key, value)
     }
 
@@ -30,6 +34,7 @@ class SharedPreferencesDelegate<T>(private val context: Context, private val key
                 is String -> getString(key, defaultValue)
                 else -> throw IllegalArgumentException()
             }
+            log("Retrieved value: $result")
             return result as T
         }
     }
@@ -47,5 +52,6 @@ class SharedPreferencesDelegate<T>(private val context: Context, private val key
                 else -> throw IllegalArgumentException()
             }.apply()
         }
+        log("Saved value: $value")
     }
 }

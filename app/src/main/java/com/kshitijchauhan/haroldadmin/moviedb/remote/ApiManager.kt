@@ -1,6 +1,7 @@
 package com.kshitijchauhan.haroldadmin.moviedb.remote
 
 import com.kshitijchauhan.haroldadmin.moviedb.di.AppScope
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AccountService
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.auth.AuthenticationService
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.auth.CreateSessionRequest
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.discover.DiscoveryService
@@ -13,7 +14,8 @@ class ApiManager @Inject constructor(
     private val authenticationService: AuthenticationService,
     private val discoveryService: DiscoveryService,
     private val searchService: SearchService,
-    private val movieService: MovieService) {
+    private val movieService: MovieService,
+    private val accountService: AccountService) {
 
     fun createGuestSession() = authenticationService.getGuestSessionToken()
 
@@ -28,4 +30,6 @@ class ApiManager @Inject constructor(
     fun getRequestToken() = authenticationService.getRequestToken()
 
     fun createSession(request: CreateSessionRequest) = authenticationService.createNewSession(request)
+
+    fun getAccountDetails() = accountService.getAccountDetails()
 }

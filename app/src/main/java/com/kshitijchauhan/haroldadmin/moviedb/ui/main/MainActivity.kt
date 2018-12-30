@@ -9,12 +9,11 @@ import androidx.transition.*
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoggedOutFragment
-import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoginFragment
+import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AccountFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.details.MovieDetailsFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.discover.DiscoverFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchFragment
 import com.kshitijchauhan.haroldadmin.moviedb.utils.*
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.replaceFragment
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.snackbar
@@ -127,7 +126,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 replaceFragment(
-                    LoginFragment.newInstance(),
+                    AccountFragment.newInstance(),
                     R.id.fragment_container,
                     enterTransition = enterFade,
                     exitTransition = exitFade

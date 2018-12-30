@@ -12,7 +12,7 @@
     <color name="textOnPrimaryMediumEmphasis">#B3FFFFFF</color>
     <color name="textOnSecondaryHighEmphasis">#000000</color>
     <color name="textOnSecondaryMediumEmphasis">#B3000000</color>
-    <color name="colorError">#B00020</color>
+    <color name="colorError">#b00020</color>
     <color name="onPrimaryActivated">#FFFFFF</color>
     <color name="primaryColor50">#ECEFF1</color>
 </resources>
