@@ -50,6 +50,7 @@ class AuthenticationViewModel(application: Application): AndroidViewModel(applic
                 }
             }
             .subscribe()
+            .disposeWith(compositeDisposable)
     }
 
     fun createSession(request: CreateSessionRequest) {
@@ -63,5 +64,11 @@ class AuthenticationViewModel(application: Application): AndroidViewModel(applic
                 _authSuccess.value = true
             }
             .subscribe()
+            .disposeWith(compositeDisposable)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        compositeDisposable.dispose()
     }
 }
