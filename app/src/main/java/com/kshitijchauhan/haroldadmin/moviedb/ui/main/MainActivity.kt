@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
         when (state) {
             is UIState.HomeScreenState -> {
 
-                mainCollapsingToolbarLayout?.apply {
+                mainToolbar?.apply {
                     title = "MovieDB"
                 }
 
@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
 
             is UIState.UnauthenticatedScreenState -> {
 
-                mainCollapsingToolbarLayout?.apply {
+                mainToolbar?.apply {
                     title = "Login"
                 }
 
@@ -129,7 +129,7 @@ class MainActivity : AppCompatActivity() {
 
             is UIState.AuthenticatedScreenState -> {
 
-                mainCollapsingToolbarLayout?.apply {
+                mainToolbar?.apply {
                     title = "Your Account"
                 }
 
@@ -145,7 +145,7 @@ class MainActivity : AppCompatActivity() {
 
             is UIState.DiscoverScreenState -> {
 
-                mainCollapsingToolbarLayout?.apply {
+                mainToolbar?.apply {
                     title = "Discover"
                 }
 
@@ -161,13 +161,13 @@ class MainActivity : AppCompatActivity() {
 
             is UIState.SearchScreenState -> {
 
-                mainCollapsingToolbarLayout?.apply {
+                mainToolbar?.apply {
                     title = "Search"
                 }
 
                 mainNavView.selectedItemId = R.id.menuHome
 
-                mainAppBarLayout.setExpanded(false, true)
+//                mainAppBarLayout.setExpanded(false, true)
 
                 val transitionSet = TransitionSet()
                 transitionSet.apply {

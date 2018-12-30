@@ -73,7 +73,7 @@ class MovieDetailsFragment : BaseFragment() {
     private fun updateView(movie: Movie) {
 
         (activity as AppCompatActivity)
-            .mainCollapsingToolbarLayout
+            .mainToolbar
             .title = movie.title
 
         Glide.with(this)

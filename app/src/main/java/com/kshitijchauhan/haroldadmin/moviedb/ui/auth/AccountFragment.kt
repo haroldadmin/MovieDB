@@ -46,7 +46,7 @@ class AccountFragment : BaseFragment() {
         authenticationViewModel = ViewModelProviders.of(this).get(AuthenticationViewModel::class.java)
 
         (activity as AppCompatActivity)
-            .mainCollapsingToolbarLayout
+            .mainToolbar
             .title = "Your Account"
 
         authenticationViewModel.getAccountDetails()

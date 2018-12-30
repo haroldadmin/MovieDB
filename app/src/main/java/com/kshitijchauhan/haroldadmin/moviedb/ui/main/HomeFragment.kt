@@ -64,7 +64,7 @@ class HomeFragment : BaseFragment() {
         }
 
         activity?.apply {
-            mainCollapsingToolbarLayout?.title = getString(R.string.app_name)
+            mainToolbar?.title = getString(R.string.app_name)
         }
     }
 
