@@ -8,13 +8,16 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.transition.*
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
+import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoggedOutFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoginFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.details.MovieDetailsFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.discover.DiscoverFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchFragment
 import com.kshitijchauhan.haroldadmin.moviedb.utils.*
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.replaceFragment
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.snackbar
 import kotlinx.android.synthetic.main.activity_main_alternate.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
@@ -31,6 +34,10 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel.state.observe(this, Observer { pair ->
             handleStateChange(pair)
+        })
+
+        mainViewModel.snackbar.observe(this, Observer { message ->
+            homeRootView.snackbar(message)
         })
 
         savedInstanceState ?: replaceFragment(
@@ -55,10 +62,15 @@ class MainActivity : AppCompatActivity() {
                     mainViewModel.updateStateTo(UIState.DiscoverScreenState)
                     true
                 }
-                else -> {
-                    mainViewModel.updateStateTo(UIState.AuthScreenState)
+                R.id.menuAccount -> {
+                    if (mainViewModel.isAuthenticated) {
+                        mainViewModel.updateStateTo(UIState.AuthenticatedScreenState)
+                    } else {
+                        mainViewModel.updateStateTo(UIState.UnauthenticatedScreenState)
+                    }
                     true
                 }
+                else -> throw IllegalStateException("Unknown screen state")
             }
         }
     }
@@ -86,13 +98,29 @@ class MainActivity : AppCompatActivity() {
                     title = "MovieDB"
                 }
 
-                replaceFragment(HomeFragment.newInstance(),
+                replaceFragment(
+                    HomeFragment.newInstance(),
                     R.id.fragment_container,
                     enterTransition = enterFade,
-                    exitTransition = exitFade)
+                    exitTransition = exitFade
+                )
             }
 
-            is UIState.AuthScreenState -> {
+            is UIState.UnauthenticatedScreenState -> {
+
+                mainCollapsingToolbarLayout?.apply {
+                    title = "Login"
+                }
+
+                replaceFragment(
+                    LoggedOutFragment.newInstance(),
+                    R.id.fragment_container,
+                    enterTransition = enterFade,
+                    exitTransition = exitFade
+                )
+            }
+
+            is UIState.AuthenticatedScreenState -> {
 
                 mainCollapsingToolbarLayout?.apply {
                     title = "Your Account"
@@ -119,6 +147,7 @@ class MainActivity : AppCompatActivity() {
                     exitTransition = exitFade
                 )
             }
+
             is UIState.SearchScreenState -> {
 
                 mainCollapsingToolbarLayout?.apply {

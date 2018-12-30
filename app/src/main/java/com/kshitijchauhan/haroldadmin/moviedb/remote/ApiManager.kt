@@ -2,6 +2,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.remote
 
 import com.kshitijchauhan.haroldadmin.moviedb.di.AppScope
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.auth.AuthenticationService
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.auth.CreateSessionRequest
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.discover.DiscoveryService
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.MovieService
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.search.SearchService
@@ -23,4 +24,8 @@ class ApiManager @Inject constructor(
     fun getMovieDetails(movieId: Int) = movieService.getMovieDetails(movieId)
 
     fun getTopRatedMovies() = discoveryService.getTopRatedMovies()
+
+    fun getRequestToken() = authenticationService.getRequestToken()
+
+    fun createSession(request: CreateSessionRequest) = authenticationService.createNewSession(request)
 }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import com.kshitijchauhan.haroldadmin.moviedb.R
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import kotlin.reflect.KProperty
 
 class SharedPreferencesDelegate<T>(private val context: Context, private val key: String, private val defaultValue: T) {

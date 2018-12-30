@@ -12,14 +12,33 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 class MainViewModel(application: Application): AndroidViewModel(application) {
 
     private val _state = SingleLiveEvent<UIState>()
-    private var sessionId by SharedPreferencesDelegate(getApplication(), Constants.KEY_SESSION_ID, "")
+    private val _snackbar = SingleLiveEvent<String>()
+    private var _isAuthenticated by SharedPreferencesDelegate(application, Constants.KEY_IS_AUTHENTICATED, false)
+    private var _sessionId by SharedPreferencesDelegate(application, Constants.KEY_SESSION_ID, "")
 
     val state: LiveData<UIState>
         get() = _state
 
-    fun updateStateTo(state: UIState) {
-        log("Updating view to: ${UIState::class.java.simpleName}")
+    val isAuthenticated: Boolean
+        get() = _isAuthenticated
+
+    val sessionId: String
+        get() = _sessionId
+
+    val snackbar: LiveData<String>
+        get() = _snackbar
+
+    fun <T: UIState> updateStateTo(state: T) {
+        log("Updating view to: ${state::class.java.simpleName}")
         _state.postValue(state)
+    }
+
+    fun showSnackbar(message: String) {
+        _snackbar.postValue(message)
+    }
+
+    fun setAuthenticationStatus(status: Boolean) {
+        _isAuthenticated = status
     }
 
     fun peekState() = _state.value

@@ -61,6 +61,6 @@
         app:menu="@menu/menu_app_destinations"
         app:itemIconTint="@color/bottom_navigation_icons"
         app:itemTextColor="@color/bottom_navigation_text"
-        app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"/>
+        app:layout_behavior="com.kshitijchauhan.haroldadmin.moviedb.utils.ScrollAwareBottomNavBehaviour"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

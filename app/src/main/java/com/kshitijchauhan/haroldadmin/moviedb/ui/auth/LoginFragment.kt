@@ -16,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_main_alternate.*
 class LoginFragment : BaseFragment() {
 
     private lateinit var mainViewModel: MainViewModel
+    private lateinit var authenticationViewModel: AuthenticationViewModel
 
     companion object {
         fun newInstance() = LoginFragment()
@@ -31,7 +32,9 @@ class LoginFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
+        authenticationViewModel = ViewModelProviders.of(this).get(AuthenticationViewModel::class.java)
 
         (activity as AppCompatActivity)
             .mainCollapsingToolbarLayout
