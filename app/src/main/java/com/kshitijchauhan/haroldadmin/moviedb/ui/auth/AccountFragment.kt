@@ -62,10 +62,15 @@ class AccountFragment : BaseFragment() {
             mainViewModel.apply {
                 setAuthenticationStatus(false)
                 setSessionId("")
+                // TODO Move this responsibility to viewmodel
                 // We need a new instance of sessionId Interceptor
                 (activity?.application as MovieDBApplication).rebuildAppComponent()
                 showSnackbar("Logged out successfully!")
-                fragmentManager?.popBackStack()
+                setBottomNavSelectedItemId(R.id.menuHome)
+                // TODO Move this responsibility to activity
+                repeat(fragmentManager?.backStackEntryCount ?: 0) {
+                    fragmentManager?.popBackStack()
+                }
             }
         }
     }

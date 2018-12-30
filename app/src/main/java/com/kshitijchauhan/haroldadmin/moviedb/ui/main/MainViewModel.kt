@@ -14,6 +14,7 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 
     private val _state = SingleLiveEvent<UIState>()
     private val _snackbar = SingleLiveEvent<String>()
+    private val _bottomNavSelectedIconId = SingleLiveEvent<Int>()
     private var _isAuthenticated by SharedPreferencesDelegate(application, Constants.KEY_IS_AUTHENTICATED, false)
     private var _sessionId by SharedPreferencesDelegate(application, Constants.KEY_SESSION_ID, "")
 
@@ -28,6 +29,9 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 
     val snackbar: LiveData<String>
         get() = _snackbar
+
+    val bottomNavSelectedItemId: LiveData<Int>
+        get() = _bottomNavSelectedIconId
 
     fun <T: UIState> updateStateTo(state: T) {
         log("Updating view to: ${state::class.java.simpleName}")
@@ -44,6 +48,10 @@ class MainViewModel(application: Application): AndroidViewModel(application) {
 
     fun setSessionId(sessionId: String) {
         _sessionId = sessionId
+    }
+
+    fun setBottomNavSelectedItemId(id: Int) {
+        _bottomNavSelectedIconId.value = id
     }
 
     fun peekState() = _state.value

@@ -39,6 +39,10 @@ class MainActivity : AppCompatActivity() {
             homeRootView.snackbar(message)
         })
 
+        mainViewModel.bottomNavSelectedItemId.observe(this, Observer { id ->
+            mainNavView.selectedItemId = id
+        })
+
         savedInstanceState ?: replaceFragment(
             HomeFragment.newInstance(),
             R.id.fragment_container,
@@ -97,6 +101,8 @@ class MainActivity : AppCompatActivity() {
                     title = "MovieDB"
                 }
 
+                mainNavView.selectedItemId = R.id.menuHome
+
                 replaceFragment(
                     HomeFragment.newInstance(),
                     R.id.fragment_container,
@@ -110,6 +116,8 @@ class MainActivity : AppCompatActivity() {
                 mainCollapsingToolbarLayout?.apply {
                     title = "Login"
                 }
+
+                mainNavView.selectedItemId = R.id.menuAccount
 
                 replaceFragment(
                     LoggedOutFragment.newInstance(),
@@ -125,6 +133,8 @@ class MainActivity : AppCompatActivity() {
                     title = "Your Account"
                 }
 
+                mainNavView.selectedItemId = R.id.menuAccount
+
                 replaceFragment(
                     AccountFragment.newInstance(),
                     R.id.fragment_container,
@@ -139,6 +149,8 @@ class MainActivity : AppCompatActivity() {
                     title = "Discover"
                 }
 
+                mainNavView.selectedItemId = R.id.menuLibrary
+
                 replaceFragment(
                     DiscoverFragment.newInstance(),
                     R.id.fragment_container,
@@ -152,6 +164,8 @@ class MainActivity : AppCompatActivity() {
                 mainCollapsingToolbarLayout?.apply {
                     title = "Search"
                 }
+
+                mainNavView.selectedItemId = R.id.menuHome
 
                 mainAppBarLayout.setExpanded(false, true)
 
@@ -172,6 +186,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             is UIState.DetailsScreenState -> {
+
+                mainNavView.selectedItemId = R.id.menuHome
 
                 val transitionSet = TransitionSet()
                 transitionSet.apply {

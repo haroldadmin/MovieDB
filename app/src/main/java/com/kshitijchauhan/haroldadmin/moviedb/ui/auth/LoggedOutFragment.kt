@@ -104,11 +104,16 @@ class LoggedOutFragment : BaseFragment() {
 
         authenticationViewModel.authSuccess.observe(viewLifecycleOwner, Observer {
             // We need a new instance of sessionId Interceptor
+            // TODO Move this responsibility to viewmodel
             (activity?.application as MovieDBApplication).rebuildAppComponent()
 
             mainViewModel.apply {
                 showSnackbar("Login Successful!")
-                fragmentManager?.popBackStack()
+                setBottomNavSelectedItemId(R.id.menuHome)
+                // TODO Move this responsibility to activity
+                repeat(fragmentManager?.backStackEntryCount ?: 0) {
+                    fragmentManager?.popBackStack()
+                }
             }
         })
     }
