@@ -106,8 +106,6 @@ class MainActivity : AppCompatActivity() {
                     title = "MovieDB"
                 }
 
-                mainNavView.selectedItemId = R.id.menuHome
-
                 replaceFragment(
                     HomeFragment.newInstance(),
                     R.id.fragment_container,
@@ -122,8 +120,6 @@ class MainActivity : AppCompatActivity() {
                     title = "Login"
                 }
 
-                mainNavView.selectedItemId = R.id.menuAccount
-
                 replaceFragment(
                     LoggedOutFragment.newInstance(),
                     R.id.fragment_container,
@@ -137,8 +133,6 @@ class MainActivity : AppCompatActivity() {
                 mainToolbar?.apply {
                     title = "Your Account"
                 }
-
-                mainNavView.selectedItemId = R.id.menuAccount
 
                 replaceFragment(
                     AccountFragment.newInstance(),
@@ -169,10 +163,6 @@ class MainActivity : AppCompatActivity() {
                 mainToolbar?.apply {
                     title = "Search"
                 }
-
-                mainNavView.selectedItemId = R.id.menuHome
-
-//                mainAppBarLayout.setExpanded(false, true)
 
                 val transitionSet = TransitionSet()
                 transitionSet.apply {
