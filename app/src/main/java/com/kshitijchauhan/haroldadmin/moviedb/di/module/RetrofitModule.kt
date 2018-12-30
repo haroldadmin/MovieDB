@@ -4,6 +4,7 @@ import android.content.Context
 import com.kshitijchauhan.haroldadmin.moviedb.di.AppScope
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiKeyInterceptor
 import com.kshitijchauhan.haroldadmin.moviedb.remote.Config
+import com.kshitijchauhan.haroldadmin.moviedb.remote.SessionIdInterceptor
 import dagger.Module
 import dagger.Provides
 import okhttp3.Cache
@@ -14,7 +15,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 @Module(includes = [ContextModule::class])
-class RetrofitModule {
+class RetrofitModule(val sessionId: String, val apiKey: String) {
 
     @AppScope
     @Provides
@@ -29,10 +30,12 @@ class RetrofitModule {
     @AppScope
     @Provides
     fun provideHttpClient(apiKeyInterceptor: ApiKeyInterceptor,
+                          sessionIdInterceptor: SessionIdInterceptor,
                           loggingInterceptor: HttpLoggingInterceptor,
                           cache: Cache): OkHttpClient =
         OkHttpClient.Builder()
             .addInterceptor(apiKeyInterceptor)
+            .addInterceptor(sessionIdInterceptor)
             .addInterceptor(loggingInterceptor)
             .cache(cache)
             .build()
@@ -47,7 +50,12 @@ class RetrofitModule {
     @AppScope
     @Provides
     fun provideApiKeyInterceptor(): ApiKeyInterceptor =
-        ApiKeyInterceptor()
+        ApiKeyInterceptor(apiKey)
+
+    @AppScope
+    @Provides
+    fun provideSessionIdInterceptor(): SessionIdInterceptor =
+        SessionIdInterceptor(sessionId)
 
     @AppScope
     @Provides
