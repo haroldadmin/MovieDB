@@ -68,4 +68,4 @@ fastlane/readme.md
 
 .DS_Store
 .idea
-
+app/release/

@@ -19,3 +19,12 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+-dontwarn javax.annotation.Nullable
+-dontwarn javax.annotation.ParametersAreNonnullByDefault
+-dontwarn javax.annotation.Nonnull
+-dontwarn javax.annotation.meta.TypeQualifierDefault
+-dontwarn javax.annotation.concurrent.GuardedBy
+-dontwarn com.squareup.okhttp3.**
+-dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
+-dontwarn okhttp3.internal.platform.*

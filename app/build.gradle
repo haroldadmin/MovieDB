@@ -24,7 +24,8 @@ android {
             }
         }
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             if (project.hasProperty('MovieDB_ApiKey')) {
                 buildConfigField('String', 'API_KEY', MovieDB_ApiKey)
