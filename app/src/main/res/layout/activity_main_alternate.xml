@@ -49,13 +49,15 @@
         app:layout_behavior="com.kshitijchauhan.haroldadmin.moviedb.utils.ScrollAwareBottomNavBehaviour"
         app:menu="@menu/menu_app_destinations" />
 
-    <ProgressBar
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
         android:id="@+id/mainProgressBar"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="6dp"
+        app:mpb_progressStyle="horizontal"
         android:indeterminate="true"
         android:layout_gravity="top"
-        app:layout_anchor="@id/mainNavView" />
+        app:layout_anchor="@id/mainNavView"
+        app:mpb_useIntrinsicPadding="false"/>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
