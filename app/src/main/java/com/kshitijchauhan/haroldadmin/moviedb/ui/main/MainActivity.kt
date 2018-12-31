@@ -182,8 +182,6 @@ class MainActivity : AppCompatActivity() {
 
             is UIState.DetailsScreenState -> {
 
-                mainNavView.selectedItemId = R.id.menuHome
-
                 val transitionSet = TransitionSet()
                 transitionSet.apply {
                     addTransition(TransitionInflater.from(this@MainActivity).inflateTransition(android.R.transition.move))
@@ -200,7 +198,5 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }.safe
-
-//        mainAppBarLayout.setExpanded(true, true)
     }
 }
