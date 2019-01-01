@@ -17,8 +17,10 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.discover.DiscoverFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchFragment
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SharedPreferencesDelegate
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.replaceFragment
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.*
-import kotlinx.android.synthetic.main.activity_main_alternate.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class MainActivity : AppCompatActivity() {
@@ -28,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main_alternate)
+        setContentView(R.layout.activity_main)
 
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
 

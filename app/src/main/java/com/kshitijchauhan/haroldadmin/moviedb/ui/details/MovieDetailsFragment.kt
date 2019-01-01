@@ -21,7 +21,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.activity_main_alternate.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
 

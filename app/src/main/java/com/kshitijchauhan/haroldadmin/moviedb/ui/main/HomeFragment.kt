@@ -15,7 +15,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
-import kotlinx.android.synthetic.main.activity_main_alternate.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.view_searchbox.view.*
 import kotlin.math.roundToInt

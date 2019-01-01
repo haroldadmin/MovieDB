@@ -19,7 +19,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getMainHandler
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.postDelayed
-import kotlinx.android.synthetic.main.activity_main_alternate.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_account.*
 
 class AccountFragment : BaseFragment() {
