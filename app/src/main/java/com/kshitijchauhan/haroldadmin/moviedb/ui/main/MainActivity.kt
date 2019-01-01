@@ -160,8 +160,6 @@ class MainActivity : AppCompatActivity() {
                     title = "Discover"
                 }
 
-                mainNavView.selectedItemId = R.id.menuLibrary
-
                 replaceFragment(
                     DiscoverFragment.newInstance(),
                     R.id.fragment_container,
