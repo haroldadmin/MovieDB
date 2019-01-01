@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -19,9 +18,9 @@ import com.bumptech.glide.request.target.Target
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
+import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import io.reactivex.disposables.CompositeDisposable
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
 
@@ -42,7 +41,8 @@ class MovieDetailsFragment : BaseFragment() {
         }
     }
 
-    private lateinit var viewModel: MovieDetailsViewModel
+    private lateinit var movieDetailsViewModel: MovieDetailsViewModel
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,21 +60,20 @@ class MovieDetailsFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(MovieDetailsViewModel::class.java)
+        mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
+        movieDetailsViewModel = ViewModelProviders.of(this).get(MovieDetailsViewModel::class.java)
         arguments?.getInt(Constants.KEY_MOVIE_ID)?.let { id ->
-            viewModel.getMovieDetails(id)
+            movieDetailsViewModel.getMovieDetails(id)
         }
 
-        viewModel.movieDetails.observe(viewLifecycleOwner, Observer { movie ->
+        movieDetailsViewModel.movieDetails.observe(viewLifecycleOwner, Observer { movie ->
             updateView(movie)
         })
     }
 
     private fun updateView(movie: Movie) {
 
-        (activity as AppCompatActivity)
-            .mainToolbar
-            .title = movie.title
+        mainViewModel.updateToolbarTitle(movie.title)
 
         Glide.with(this)
             .load(movie.posterPath)

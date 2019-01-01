@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.transition.TransitionManager
-import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.auth.CreateSessionRequest
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
@@ -44,9 +43,7 @@ class LoggedOutFragment : BaseFragment() {
         mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
         authenticationViewModel = ViewModelProviders.of(this).get(AuthenticationViewModel::class.java)
 
-        (activity as AppCompatActivity)
-            .mainToolbar
-            .title = "Login"
+        mainViewModel.updateToolbarTitle("Login")
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -103,17 +100,13 @@ class LoggedOutFragment : BaseFragment() {
         loadingGroup.visible()
 
         authenticationViewModel.authSuccess.observe(viewLifecycleOwner, Observer {
-            // We need a new instance of sessionId Interceptor
-            // TODO Move this responsibility to viewmodel
-            (activity?.application as MovieDBApplication).rebuildAppComponent()
-
             mainViewModel.apply {
+                // We need a new instance of sessionId Interceptor
+                rebuildAppComponent()
+
                 showSnackbar("Login Successful!")
-                setBottomNavSelectedItemId(R.id.menuHome)
-                // TODO Move this responsibility to activity
-                repeat(fragmentManager?.backStackEntryCount ?: 0) {
-                    fragmentManager?.popBackStack()
-                }
+
+                signalClearBackstack()
             }
         })
     }

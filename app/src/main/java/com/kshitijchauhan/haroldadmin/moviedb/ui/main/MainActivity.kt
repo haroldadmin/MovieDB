@@ -50,6 +50,16 @@ class MainActivity : AppCompatActivity() {
             if (isVisible) mainProgressBar.visible() else mainProgressBar.gone()
         })
 
+        mainViewModel.clearBackStack.observe(this, Observer {
+            supportFragmentManager.clearBackStack()
+        })
+
+        mainViewModel.toolbarTitle.observe(this, Observer { newTitle ->
+            supportActionBar?.apply {
+                title = newTitle
+            }
+        })
+
         savedInstanceState ?: replaceFragment(
             HomeFragment.newInstance(),
             R.id.fragment_container,
@@ -104,7 +114,7 @@ class MainActivity : AppCompatActivity() {
         when (state) {
             is UIState.HomeScreenState -> {
 
-                mainToolbar?.apply {
+                supportActionBar?.apply {
                     title = "MovieDB"
                 }
 
@@ -118,7 +128,7 @@ class MainActivity : AppCompatActivity() {
 
             is UIState.UnauthenticatedScreenState -> {
 
-                mainToolbar?.apply {
+                supportActionBar?.apply {
                     title = "Login"
                 }
 
@@ -132,7 +142,7 @@ class MainActivity : AppCompatActivity() {
 
             is UIState.AuthenticatedScreenState -> {
 
-                mainToolbar?.apply {
+                supportActionBar?.apply {
                     title = "Your Account"
                 }
 
@@ -146,7 +156,7 @@ class MainActivity : AppCompatActivity() {
 
             is UIState.DiscoverScreenState -> {
 
-                mainToolbar?.apply {
+                supportActionBar?.apply {
                     title = "Discover"
                 }
 
@@ -162,7 +172,7 @@ class MainActivity : AppCompatActivity() {
 
             is UIState.SearchScreenState -> {
 
-                mainToolbar?.apply {
+                supportActionBar?.apply {
                     title = "Search"
                 }
 

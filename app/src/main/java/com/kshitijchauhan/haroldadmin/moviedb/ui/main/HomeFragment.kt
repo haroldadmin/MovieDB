@@ -61,9 +61,7 @@ class HomeFragment : BaseFragment() {
             })
         }
 
-        activity?.apply {
-            mainToolbar?.title = getString(R.string.app_name)
-        }
+        mainViewModel.updateToolbarTitle(getString(R.string.app_name))
     }
 
     override fun onCreateView(

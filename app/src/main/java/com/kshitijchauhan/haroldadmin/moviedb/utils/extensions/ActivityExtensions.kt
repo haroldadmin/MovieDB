@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
 import androidx.transition.Transition
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
@@ -77,4 +78,8 @@ fun Activity.hideKeyboard() {
             this.currentFocus?.windowToken
         }, InputMethodManager.HIDE_NOT_ALWAYS
     )
+}
+
+fun FragmentManager.clearBackStack() = repeat(this.backStackEntryCount) {
+    this.popBackStack()
 }

@@ -5,21 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
-import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AccountDetailsResponse
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getMainHandler
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.postDelayed
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_account.*
 
 class AccountFragment : BaseFragment() {
@@ -45,9 +40,7 @@ class AccountFragment : BaseFragment() {
         mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
         authenticationViewModel = ViewModelProviders.of(this).get(AuthenticationViewModel::class.java)
 
-        (activity as AppCompatActivity)
-            .mainToolbar
-            .title = "Your Account"
+        mainViewModel.updateToolbarTitle("Your Account")
 
         authenticationViewModel.getAccountDetails()
 
@@ -62,15 +55,10 @@ class AccountFragment : BaseFragment() {
             mainViewModel.apply {
                 setAuthenticationStatus(false)
                 setSessionId("")
-                // TODO Move this responsibility to viewmodel
                 // We need a new instance of sessionId Interceptor
-                (activity?.application as MovieDBApplication).rebuildAppComponent()
+                rebuildAppComponent()
                 showSnackbar("Logged out successfully!")
-                setBottomNavSelectedItemId(R.id.menuHome)
-                // TODO Move this responsibility to activity
-                repeat(fragmentManager?.backStackEntryCount ?: 0) {
-                    fragmentManager?.popBackStack()
-                }
+                signalClearBackstack()
             }
         }
     }
