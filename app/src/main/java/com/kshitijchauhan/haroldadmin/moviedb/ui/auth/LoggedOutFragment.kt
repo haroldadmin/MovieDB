@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.transition.Fade
@@ -87,13 +88,14 @@ class LoggedOutFragment : BaseFragment() {
                         .addTarget(ivKey)
                         .addTarget(tvInfo)
                         .addTarget(btLogin)
-                        .setDuration(200)
+                        .setDuration(300)
                 )
                 addTransition(
                     Slide(Gravity.BOTTOM)
                         .addTarget(authWebView)
-                        .setDuration(200)
+                        .setDuration(300)
                 )
+                interpolator = FastOutSlowInInterpolator()
             }
 
             TransitionManager.beginDelayedTransition(container, transition)
