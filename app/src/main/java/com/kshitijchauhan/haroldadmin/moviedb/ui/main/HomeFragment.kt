@@ -24,7 +24,7 @@ class HomeFragment : BaseFragment() {
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var homeViewModel: HomeViewModel
-    private lateinit var popularMoviesAdapter: MoviesAdapter
+    private lateinit var popularMoviesAdapter: MoviesListAdapter
     private lateinit var topRatedMoviesAdapter: MoviesAdapter
 
     private val onPause: PublishRelay<Any> = PublishRelay.create()
@@ -52,7 +52,7 @@ class HomeFragment : BaseFragment() {
 
             popularMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
                 mainViewModel.setProgressBarVisible(false)
-                popularMoviesAdapter.updateList(newList)
+                popularMoviesAdapter.submitList(newList)
             })
 
             topRatedMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
@@ -74,7 +74,7 @@ class HomeFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        popularMoviesAdapter = MoviesAdapter(emptyList(), Glide.with(this)) { id, transitionName, sharedView ->
+        popularMoviesAdapter = MoviesListAdapter(Glide.with(this)) { id, transitionName, sharedView ->
             mainViewModel.updateStateTo(UIState.DetailsScreenState(id, transitionName, sharedView))
         }
 
