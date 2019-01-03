@@ -16,6 +16,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.MoviesListAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.view_searchbox.view.*
 import kotlin.math.roundToInt
@@ -107,7 +108,7 @@ class HomeFragment : BaseFragment() {
     }
 
     private fun setupRecyclerViews() {
-        val columns = getNumberOfColumns(resources.getDimension(R.dimen.movie_grid_poster_width))
+        val columns = resources.getDimension(R.dimen.movie_grid_poster_width).getNumberOfColumns(context!!)
         val space = resources.getDimension(R.dimen.movie_grid_item_space)
 
         popularMoviesRecyclerView.apply {
@@ -121,11 +122,6 @@ class HomeFragment : BaseFragment() {
             addItemDecoration(EqualSpaceGridItemDecoration((space).roundToInt()))
             adapter = topRatedMoviesAdapter
         }
-    }
-
-    private fun getNumberOfColumns(itemWidthPx: Float): Int {
-        val screenWidth = resources.displayMetrics.widthPixels
-        return screenWidth.div(itemWidthPx).toInt()
     }
 
     override fun onPause() {

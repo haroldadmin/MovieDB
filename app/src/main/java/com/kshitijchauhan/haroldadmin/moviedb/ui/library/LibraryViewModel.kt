@@ -1,15 +1,14 @@
-package com.kshitijchauhan.haroldadmin.moviedb.ui.main
+package com.kshitijchauhan.haroldadmin.moviedb.ui.library
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
-import com.kshitijchauhan.haroldadmin.moviedb.remote.Config
 import com.kshitijchauhan.haroldadmin.moviedb.ui.MovieItemType
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.MovieGridItem
-import com.kshitijchauhan.haroldadmin.moviedb.ui.main.model.MovieTypes
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getPosterUrl
 import io.reactivex.Observable
@@ -17,33 +16,46 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
+class LibraryViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val isPopularMoviesLoading = MutableLiveData<Boolean>()
-    private val isTopRatedMoviesLoading = MutableLiveData<Boolean>()
+    private val _isFavouritesLoading = MutableLiveData<Boolean>()
+    private val _isWatchlistLoading = MutableLiveData<Boolean>()
+    private val _isLoading = MediatorLiveData<Boolean>()
+    private val _favouriteMoviesUpdate = MutableLiveData<List<MovieGridItem>>()
+    private val _watchlistedMoviesUpdate = MutableLiveData<List<MovieGridItem>>()
     private val compositeDisposable = CompositeDisposable()
-    private val _popularMoviesUpdate = MutableLiveData<List<MovieGridItem>>()
-    private val _topRatedMoviesUpdate = MutableLiveData<List<MovieGridItem>>()
 
     @Inject
-    lateinit var apiManager: ApiManager
+    private lateinit var apiManager: ApiManager
 
-    val popularMoviesUpdate: LiveData<List<MovieGridItem>>
-        get() = _popularMoviesUpdate
+    val favouriteMoviesUpdate: LiveData<List<MovieGridItem>>
+        get() = _favouriteMoviesUpdate
 
-    val topRatedMoviesUpdate: LiveData<List<MovieGridItem>>
-        get() = _topRatedMoviesUpdate
+    val watchListMoviesUpdate: LiveData<List<MovieGridItem>>
+        get() = _watchlistedMoviesUpdate
+
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
 
     init {
-        (application as MovieDBApplication)
+        getApplication<MovieDBApplication>()
             .appComponent
             .inject(this)
+
+        _isLoading.apply {
+            addSource(_isFavouritesLoading) { isLoading ->
+                _isLoading.value = (_isLoading.value ?: false) || isLoading
+            }
+            addSource(_isWatchlistLoading) { isLoading ->
+                _isLoading.value = (_isLoading.value ?: false) || isLoading
+            }
+        }
     }
 
-    fun getPopularMovies() {
-        isPopularMoviesLoading.value = true
+    fun getFavouriteMoves(accountId: Int) {
+        _isFavouritesLoading.value = true
         apiManager
-            .getPopularMovies()
+            .getFavouriteMovies(accountId)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
             .map { response ->
@@ -58,23 +70,23 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                         id,
                         title,
                         getPosterUrl(posterPath),
-                        MovieItemType.MovieType.Popular
+                        MovieItemType.LibraryType.Favourite
                     )
                 }
             }
             .toList()
             .doOnSuccess {
-                isPopularMoviesLoading.postValue(false)
-                _popularMoviesUpdate.postValue(it)
+                _isFavouritesLoading.postValue(false)
+                _favouriteMoviesUpdate.postValue(it)
             }
             .subscribe()
             .disposeWith(compositeDisposable)
     }
 
-    fun getTopRatedMovies() {
-        isTopRatedMoviesLoading.value = true
+    fun getWatchlistedeMovies(accountId: Int) {
+        _isFavouritesLoading.value = true
         apiManager
-            .getTopRatedMovies()
+            .getMoviesWatchList(accountId)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
             .map { response ->
@@ -84,19 +96,19 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 Observable.fromIterable(list)
             }
             .map { movie ->
-                with (movie) {
+                with(movie) {
                     MovieGridItem(
                         id,
                         title,
                         getPosterUrl(posterPath),
-                        MovieItemType.MovieType.TopRated
+                        MovieItemType.LibraryType.Watchlisted
                     )
                 }
             }
             .toList()
             .doOnSuccess {
-                isTopRatedMoviesLoading.postValue(false)
-                _topRatedMoviesUpdate.postValue(it)
+                _isWatchlistLoading.postValue(false)
+                _watchlistedMoviesUpdate.postValue(it)
             }
             .subscribe()
             .disposeWith(compositeDisposable)

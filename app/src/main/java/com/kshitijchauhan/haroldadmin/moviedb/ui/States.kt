@@ -14,3 +14,14 @@ sealed class UIState {
     object UnauthenticatedScreenState: UIState()
 
 }
+
+sealed class MovieItemType {
+    sealed class MovieType: MovieItemType() {
+        object Popular: MovieType()
+        object TopRated: MovieType()
+    }
+    sealed class LibraryType: MovieItemType() {
+        object Favourite: LibraryType()
+        object Watchlisted: LibraryType()
+    }
+}

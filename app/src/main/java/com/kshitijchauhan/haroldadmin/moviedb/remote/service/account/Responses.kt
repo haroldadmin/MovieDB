@@ -24,13 +24,13 @@ data class AccountDetailsResponse(
 @Parcelize
 data class MovieWatchlistResponse(
     @field:Json(name="page") val page: Int,
-    @field:Json(name="results") val result: List<GeneralMovieResponse>,
+    @field:Json(name="results") val results: List<GeneralMovieResponse>,
     @field:Json(name="total_pages") val totalPages: Int,
     @field:Json(name="total_results") val totalResults: Int): Parcelable
 
 @Parcelize
 data class FavouriteMoviesResponse(
     @field:Json(name="page") val page: Int,
-    @field:Json(name="results") val result: List<GeneralMovieResponse>,
+    @field:Json(name="results") val results: List<GeneralMovieResponse>,
     @field:Json(name="total_pages") val totalPages: Int,
     @field:Json(name="total_results") val totalResults: Int): Parcelable

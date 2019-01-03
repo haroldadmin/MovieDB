@@ -1,7 +1,6 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.common
 
 import androidx.recyclerview.widget.DiffUtil
-import com.kshitijchauhan.haroldadmin.moviedb.ui.main.model.MovieGridItem
 
 class MoviesDiffUtil: DiffUtil.ItemCallback<MovieGridItem>() {
     override fun areItemsTheSame(oldItem: MovieGridItem, newItem: MovieGridItem): Boolean {
