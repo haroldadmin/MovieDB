@@ -14,8 +14,8 @@ import com.jakewharton.rxrelay2.PublishRelay
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.MoviesListAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.view_searchbox.view.*
 import kotlin.math.roundToInt
@@ -25,7 +25,7 @@ class HomeFragment : BaseFragment() {
     private lateinit var mainViewModel: MainViewModel
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var popularMoviesAdapter: MoviesListAdapter
-    private lateinit var topRatedMoviesAdapter: MoviesAdapter
+    private lateinit var topRatedMoviesAdapter: MoviesListAdapter
 
     private val onPause: PublishRelay<Any> = PublishRelay.create()
 
@@ -57,7 +57,7 @@ class HomeFragment : BaseFragment() {
 
             topRatedMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
                 mainViewModel.setProgressBarVisible(false)
-                topRatedMoviesAdapter.updateList(newList)
+                topRatedMoviesAdapter.submitList(newList)
             })
         }
 
@@ -74,13 +74,15 @@ class HomeFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        popularMoviesAdapter = MoviesListAdapter(Glide.with(this)) { id, transitionName, sharedView ->
-            mainViewModel.updateStateTo(UIState.DetailsScreenState(id, transitionName, sharedView))
-        }
+        popularMoviesAdapter =
+                MoviesListAdapter(Glide.with(this)) { id, transitionName, sharedView ->
+                    mainViewModel.updateStateTo(UIState.DetailsScreenState(id, transitionName, sharedView))
+                }
 
-        topRatedMoviesAdapter = MoviesAdapter(emptyList(), Glide.with(this)) { id, transitionName, sharedView ->
-            mainViewModel.updateStateTo(UIState.DetailsScreenState(id, transitionName, sharedView))
-        }
+        topRatedMoviesAdapter =
+                MoviesListAdapter(Glide.with(this)) { id, transitionName, sharedView ->
+                    mainViewModel.updateStateTo(UIState.DetailsScreenState(id, transitionName, sharedView))
+                }
 
         setupRecyclerViews()
         setupSearchBox()

@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.ui.main
+package com.kshitijchauhan.haroldadmin.moviedb.ui.common
 
 import androidx.recyclerview.widget.DiffUtil
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.model.MovieGridItem

@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.ui.main
+package com.kshitijchauhan.haroldadmin.moviedb.ui.common
 
 import android.view.LayoutInflater
 import android.view.View
