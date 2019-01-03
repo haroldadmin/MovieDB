@@ -7,7 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.remote.Config
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.common.GeneralMovieResponse
+import com.kshitijchauhan.haroldadmin.moviedb.ui.main.model.MovieGridItem
+import com.kshitijchauhan.haroldadmin.moviedb.ui.main.model.MovieTypes
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
@@ -17,18 +18,18 @@ import javax.inject.Inject
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
 
     private val isPopularMoviesLoading = MutableLiveData<Boolean>()
-    private val isTrendingMoviesLoading = MutableLiveData<Boolean>()
+    private val isTopRatedMoviesLoading = MutableLiveData<Boolean>()
     private val compositeDisposable = CompositeDisposable()
-    private val _popularMoviesUpdate = MutableLiveData<List<GeneralMovieResponse>>()
-    private val _topRatedMoviesUpdate = MutableLiveData<List<GeneralMovieResponse>>()
+    private val _popularMoviesUpdate = MutableLiveData<List<MovieGridItem>>()
+    private val _topRatedMoviesUpdate = MutableLiveData<List<MovieGridItem>>()
 
     @Inject
     lateinit var apiManager: ApiManager
 
-    val popularMoviesUpdate: LiveData<List<GeneralMovieResponse>>
+    val popularMoviesUpdate: LiveData<List<MovieGridItem>>
         get() = _popularMoviesUpdate
 
-    val topRatedMoviesUpdate: LiveData<List<GeneralMovieResponse>>
+    val topRatedMoviesUpdate: LiveData<List<MovieGridItem>>
         get() = _topRatedMoviesUpdate
 
     init {
@@ -50,10 +51,9 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 Observable.fromIterable(list)
             }
             .map { movie ->
-                movie.posterPath = "${Config.BASE_IMAGE_URL}${Config.SMALL_POSTER_SIZE}${movie.posterPath}"
-                movie.voteAverage = movie.voteAverage.div(10.0).times(5)
-                movie.releaseDate = movie.releaseDate.split("-")[0]
-                movie
+                with(movie) {
+                    MovieGridItem(id, title, getPosterUrl(posterPath), MovieTypes.POPULAR)
+                }
             }
             .toList()
             .doOnSuccess {
@@ -65,7 +65,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun getTopRatedMovies() {
-        isTrendingMoviesLoading.value = true
+        isTopRatedMoviesLoading.value = true
         apiManager
             .getTopRatedMovies()
             .subscribeOn(Schedulers.io())
@@ -77,14 +77,13 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
                 Observable.fromIterable(list)
             }
             .map { movie ->
-                movie.posterPath = "${Config.BASE_IMAGE_URL}${Config.SMALL_POSTER_SIZE}${movie.posterPath}"
-                movie.voteAverage = movie.voteAverage.div(10.0).times(5)
-                movie.releaseDate = movie.releaseDate.split("-")[0]
-                movie
+                with (movie) {
+                    MovieGridItem(id, title, getPosterUrl(posterPath), MovieTypes.TOP_RATED)
+                }
             }
             .toList()
             .doOnSuccess {
-                isTrendingMoviesLoading.postValue(false)
+                isTopRatedMoviesLoading.postValue(false)
                 _topRatedMoviesUpdate.postValue(it)
             }
             .subscribe()
@@ -94,5 +93,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.dispose()
+    }
+
+    private fun getPosterUrl(posterPath: String?): String {
+        return posterPath?.let {
+            "${Config.BASE_IMAGE_URL}${Config.SMALL_POSTER_SIZE}$it"
+        } ?: ""
     }
 }

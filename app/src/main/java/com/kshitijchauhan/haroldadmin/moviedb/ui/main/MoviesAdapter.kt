@@ -10,10 +10,11 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.common.GeneralMovieResponse
+import com.kshitijchauhan.haroldadmin.moviedb.ui.main.model.MovieGridItem
 import kotlinx.android.synthetic.main.item_moviegrid.view.*
 
 class MoviesAdapter(
-    private var moviesList: List<GeneralMovieResponse>,
+    private var moviesList: List<MovieGridItem>,
     private val glide: RequestManager,
     private val onClick: (movieId: Int, transitionName: String, sharedView: View) -> Unit
 ) : RecyclerView.Adapter<MoviesAdapter.ViewHolder>() {
@@ -29,7 +30,7 @@ class MoviesAdapter(
         holder.bind(moviesList[position])
     }
 
-    fun updateList(newList: List<GeneralMovieResponse>) {
+    fun updateList(newList: List<MovieGridItem>) {
         this.moviesList = newList
         notifyDataSetChanged()
     }
@@ -38,7 +39,7 @@ class MoviesAdapter(
 
         private var transitionName: String = ""
 
-        fun bind(movie: GeneralMovieResponse) {
+        fun bind(movie: MovieGridItem) {
             glide.load(movie.posterPath)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .apply(
