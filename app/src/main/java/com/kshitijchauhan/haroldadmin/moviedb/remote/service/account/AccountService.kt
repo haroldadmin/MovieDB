@@ -13,4 +13,6 @@ interface AccountService {
     @GET("${Config.API_VERSION}/account/{accountId}/watchlist/movies")
     fun getMoviesWatchList(@Path("accountId") accountId: Int): Single<MovieWatchlistResponse>
 
+    @GET("${Config.API_VERSION}/account/{accountId}/watchlist/movies")
+    fun getFavouriteMovies(@Path("accountId") accountId: Int): Single<FavouriteMoviesResponse>
 }

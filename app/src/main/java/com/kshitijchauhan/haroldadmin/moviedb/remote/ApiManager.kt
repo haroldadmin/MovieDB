@@ -34,4 +34,6 @@ class ApiManager @Inject constructor(
     fun getAccountDetails() = accountService.getAccountDetails()
 
     fun getMoviesWatchList(accountId: Int) = accountService.getMoviesWatchList(accountId)
+
+    fun getFavouriteMovies(accountId: Int) = accountService.getFavouriteMovies(accountId)
 }
