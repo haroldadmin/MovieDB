@@ -1,6 +1,7 @@
 package com.kshitijchauhan.haroldadmin.moviedb.remote.service.account
 
 import android.os.Parcelable
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.common.GeneralMovieResponse
 import com.squareup.moshi.Json
 import kotlinx.android.parcel.Parcelize
 
@@ -19,3 +20,10 @@ data class AccountDetailsResponse(
     @field:Json(name="name") val name: String,
     @field:Json(name="include_adult") val includeAdult: Boolean,
     @field:Json(name="username") val username: String): Parcelable
+
+@Parcelize
+data class MovieWatchlistResponse(
+    @field:Json(name="page") val page: Int,
+    @field:Json(name="results") val result: List<GeneralMovieResponse>,
+    @field:Json(name="total_pages") val totalPages: Int,
+    @field:Json(name="total_results") val totalResults: Int): Parcelable

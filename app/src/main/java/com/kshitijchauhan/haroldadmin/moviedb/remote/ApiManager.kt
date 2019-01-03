@@ -32,4 +32,6 @@ class ApiManager @Inject constructor(
     fun createSession(request: CreateSessionRequest) = authenticationService.createNewSession(request)
 
     fun getAccountDetails() = accountService.getAccountDetails()
+
+    fun getMoviesWatchList(accountId: Int) = accountService.getMoviesWatchList(accountId)
 }
