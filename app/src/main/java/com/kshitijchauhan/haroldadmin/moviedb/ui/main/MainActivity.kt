@@ -15,17 +15,12 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoggedOutFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.details.MovieDetailsFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.discover.DiscoverFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchFragment
-import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
-import com.kshitijchauhan.haroldadmin.moviedb.utils.SharedPreferencesDelegate
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.replaceFragment
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var sessionId by SharedPreferencesDelegate(this, Constants.KEY_SESSION_ID, "")
     private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -201,8 +196,8 @@ class MainActivity : AppCompatActivity() {
                 replaceFragment(
                     MovieDetailsFragment.newInstance(state.movieId, state.transitionName ?: ""),
                     R.id.fragment_container,
-//                    enterTransition = enterFade,
-//                    exitTransition = exitFade,
+                    enterTransition = enterFade,
+                    exitTransition = exitFade,
                     sharedElementTransition = transitionSet,
                     sharedElement = state.sharedView
                 )
