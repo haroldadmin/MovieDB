@@ -52,14 +52,17 @@ class AccountFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         btLogout.setOnClickListener {
-            mainViewModel.apply {
-                setAuthenticationStatus(false)
-                setSessionId("")
-                // We need a new instance of sessionId Interceptor
-                rebuildAppComponent()
-                showSnackbar("Logged out successfully!")
-                signalClearBackstack()
-            }
+            handleLogout()
+        }
+    }
+
+    private fun handleLogout() {
+        authenticationViewModel.setNewSessionIdToInterceptor("")
+        mainViewModel.apply {
+            setAuthenticationStatus(false)
+            setSessionId("")
+            showSnackbar("Logged out successfully!")
+            signalClearBackstack()
         }
     }
 

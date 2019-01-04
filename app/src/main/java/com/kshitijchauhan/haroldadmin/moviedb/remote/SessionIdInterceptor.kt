@@ -24,4 +24,8 @@ class SessionIdInterceptor(private var sessionId: String): Interceptor {
                 return chain.proceed(newRequest)
             }
     }
+
+    fun setSessionId(newId: String) {
+        this.sessionId = newId
+    }
 }

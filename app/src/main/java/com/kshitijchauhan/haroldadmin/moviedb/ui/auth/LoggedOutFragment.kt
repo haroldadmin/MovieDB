@@ -138,11 +138,7 @@ class LoggedOutFragment : BaseFragment() {
 
         authenticationViewModel.authSuccess.observe(viewLifecycleOwner, Observer {
             mainViewModel.apply {
-                // We need a new instance of sessionId Interceptor
-                rebuildAppComponent()
-
                 showSnackbar("Login Successful!")
-
                 signalClearBackstack()
             }
         })

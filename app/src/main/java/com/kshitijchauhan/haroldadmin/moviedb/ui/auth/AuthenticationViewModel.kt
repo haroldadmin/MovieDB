@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
+import com.kshitijchauhan.haroldadmin.moviedb.remote.SessionIdInterceptor
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AccountDetailsResponse
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.auth.CreateSessionRequest
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
@@ -38,6 +39,9 @@ class AuthenticationViewModel(application: Application): AndroidViewModel(applic
     @Inject
     lateinit var apiManager: ApiManager
 
+    @Inject
+    lateinit var sessionIdInterceptor: SessionIdInterceptor
+
     init {
         getApplication<MovieDBApplication>()
             .appComponent
@@ -65,6 +69,7 @@ class AuthenticationViewModel(application: Application): AndroidViewModel(applic
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSuccess { response ->
                 sessionId = response.sessionId
+                setNewSessionIdToInterceptor(response.sessionId)
                 isAuthenticated = true
                 _authSuccess.value = true
             }
@@ -82,6 +87,10 @@ class AuthenticationViewModel(application: Application): AndroidViewModel(applic
             }
             .subscribe()
             .disposeWith(compositeDisposable)
+    }
+
+    fun setNewSessionIdToInterceptor(newId: String) {
+        sessionIdInterceptor.setSessionId(newId)
     }
 
     override fun onCleared() {
