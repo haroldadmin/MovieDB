@@ -60,4 +60,6 @@ object Constants {
     val KEY_TRANSITION_NAME = "transition-name"
 
     val KEY_IS_AUTHENTICATED: String = "isAuthenticated"
+
+    val KEY_ACCOUNT_ID: String = "accountId"
 }

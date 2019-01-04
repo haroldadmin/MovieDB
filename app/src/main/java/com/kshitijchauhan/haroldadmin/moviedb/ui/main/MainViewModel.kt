@@ -18,9 +18,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val _bottomNavSelectedIconId = SingleLiveEvent<Int>()
     private val _clearBackStack = SingleLiveEvent<Unit>()
     private val _toolbarTitle = SingleLiveEvent<String>()
+//    TODO: Change this implementation from a boolean to a stack so that progress bar only hides when the loading stack is empty
     private val _progressBar = MutableLiveData<Boolean>()
     private var _isAuthenticated by SharedPreferencesDelegate(application, Constants.KEY_IS_AUTHENTICATED, false)
     private var _sessionId by SharedPreferencesDelegate(application, Constants.KEY_SESSION_ID, "")
+    private var _accountId by SharedPreferencesDelegate(application, Constants.KEY_ACCOUNT_ID, -1)
 
     val state: LiveData<UIState>
         get() = _state
@@ -30,6 +32,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val sessionId: String
         get() = _sessionId
+
+    val accountId: Int
+        get() = _accountId
 
     val snackbar: LiveData<String>
         get() = _snackbar
@@ -79,5 +84,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun updateToolbarTitle(title: String) {
         _toolbarTitle.value = title
+    }
+
+    fun setAccountId(newId: Int) {
+        _accountId = newId
     }
 }

@@ -26,7 +26,7 @@ class LibraryViewModel(application: Application) : AndroidViewModel(application)
     private val compositeDisposable = CompositeDisposable()
 
     @Inject
-    private lateinit var apiManager: ApiManager
+    lateinit var apiManager: ApiManager
 
     val favouriteMoviesUpdate: LiveData<List<MovieGridItem>>
         get() = _favouriteMoviesUpdate

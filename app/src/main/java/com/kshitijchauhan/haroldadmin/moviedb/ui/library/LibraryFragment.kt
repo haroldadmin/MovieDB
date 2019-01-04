@@ -4,21 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.transition.TransitionManager
 import com.bumptech.glide.Glide
 import com.kshitijchauhan.haroldadmin.moviedb.R
+import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.MoviesListAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.visible
 import kotlinx.android.synthetic.main.fragment_library.*
 import kotlin.math.roundToInt
 
-class LibraryFragment : Fragment() {
+class LibraryFragment : BaseFragment() {
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var libraryViewModel: LibraryViewModel
@@ -41,35 +44,49 @@ class LibraryFragment : Fragment() {
         mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
         libraryViewModel = ViewModelProviders.of(this).get(LibraryViewModel::class.java)
 
-        libraryViewModel.apply {
+        if (mainViewModel.isAuthenticated) {
+            libraryViewModel.apply {
 
-            if (favouriteMoviesUpdate.value == null) {
-                getFavouriteMoves(TODO())
+                if (favouriteMoviesUpdate.value == null) {
+                    mainViewModel.setProgressBarVisible(true)
+                    getFavouriteMoves(mainViewModel.accountId)
+                }
+
+                if (watchListMoviesUpdate.value == null) {
+                    mainViewModel.setProgressBarVisible(true)
+                    getWatchlistedeMovies(mainViewModel.accountId)
+                }
+
+                favouriteMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
+                    mainViewModel.setProgressBarVisible(false)
+                    favouriteMoviesAdapter.submitList(newList)
+                })
+
+                watchListMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
+                    mainViewModel.setProgressBarVisible(false)
+                    watchListedMoviesAdapter.submitList(newList)
+                })
             }
-
-            if (watchListMoviesUpdate.value == null) {
-                getWatchlistedeMovies(TODO())
-            }
-
-            favouriteMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
-                favouriteMoviesAdapter.submitList(newList)
-            })
-
-            watchListMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
-                watchListedMoviesAdapter.submitList(newList)
-            })
-
-            isLoading.observe(viewLifecycleOwner, Observer { isLoading ->
-                mainViewModel.setProgressBarVisible(isLoading)
-            })
         }
 
         mainViewModel.updateToolbarTitle("Library")
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onStart() {
+        super.onStart()
+        if (mainViewModel.isAuthenticated) {
+            TransitionManager.beginDelayedTransition(libraryContainer)
+            infoGroup.gone()
+            moviesGroup.visible()
+            setupRecyclerViews()
+        } else {
+            TransitionManager.beginDelayedTransition(libraryContainer)
+            moviesGroup.gone()
+            infoGroup.visible()
+        }
+    }
 
+    private fun setupRecyclerViews() {
         val columns = resources.getDimension(R.dimen.movie_grid_poster_width).getNumberOfColumns(context!!)
         val space = resources.getDimension(R.dimen.movie_grid_item_space)
 

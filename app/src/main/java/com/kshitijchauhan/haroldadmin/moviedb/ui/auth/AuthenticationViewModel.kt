@@ -18,7 +18,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class AuthenticationViewModel(application: Application): AndroidViewModel(application) {
+class AuthenticationViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _requestToken = MutableLiveData<String>()
     private val _authSuccess = SingleLiveEvent<Boolean>()
@@ -26,6 +26,7 @@ class AuthenticationViewModel(application: Application): AndroidViewModel(applic
     private val compositeDisposable = CompositeDisposable()
     private var sessionId by SharedPreferencesDelegate(application, Constants.KEY_SESSION_ID, "")
     private var isAuthenticated by SharedPreferencesDelegate(application, Constants.KEY_IS_AUTHENTICATED, false)
+    private var accountId by SharedPreferencesDelegate(application, Constants.KEY_ACCOUNT_ID, -1)
 
     val requestToken: LiveData<String>
         get() = _requestToken
@@ -66,12 +67,18 @@ class AuthenticationViewModel(application: Application): AndroidViewModel(applic
         apiManager
             .createSession(request)
             .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSuccess { response ->
+            .observeOn(Schedulers.computation())
+            .toObservable()
+            .doOnNext { response ->
                 sessionId = response.sessionId
                 setNewSessionIdToInterceptor(response.sessionId)
                 isAuthenticated = true
-                _authSuccess.value = true
+            }
+            .switchMapSingle {
+                apiManager.getAccountDetails()
+            }
+            .doOnNext {
+                _authSuccess.postValue(true)
             }
             .subscribe()
             .disposeWith(compositeDisposable)
@@ -83,6 +90,7 @@ class AuthenticationViewModel(application: Application): AndroidViewModel(applic
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
             .doOnSuccess { response ->
+                accountId = response.id
                 _accountDetails.postValue(response)
             }
             .subscribe()
