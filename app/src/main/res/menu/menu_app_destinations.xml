@@ -9,6 +9,12 @@
         android:id="@+id/menuLibrary"
         android:icon="@drawable/ic_round_view_carousel_24px"
         android:title="Library" />
+
+    <item
+        android:id="@+id/menuDiscover"
+        android:icon="@drawable/ic_round_local_movies_24px"
+        android:title="Discover"/>
+
     <item
         android:id="@+id/menuAccount"
         android:icon="@drawable/ic_round_account_circle_24px"

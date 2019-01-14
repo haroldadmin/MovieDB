@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.menuLibrary -> {
-                    mainViewModel.updateStateTo(UIState.DiscoverScreenState)
+                    mainViewModel.updateStateTo(UIState.LibraryScreenState)
                     true
                 }
                 R.id.menuAccount -> {
@@ -84,6 +84,10 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         mainViewModel.updateStateTo(UIState.UnauthenticatedScreenState)
                     }
+                    true
+                }
+                R.id.menuDiscover -> {
+                    mainViewModel.updateStateTo(UIState.DiscoverScreenState)
                     true
                 }
                 else -> throw IllegalStateException("Unknown screen state")
@@ -157,7 +161,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 replaceFragment(
-                    LibraryFragment.newInstance(),
+                    DiscoverFragment.newInstance(),
                     R.id.fragment_container,
                     enterTransition = enterFade,
                     exitTransition = exitFade
@@ -201,6 +205,18 @@ class MainActivity : AppCompatActivity() {
                     exitTransition = exitFade,
                     sharedElementTransition = transitionSet,
                     sharedElement = state.sharedView
+                )
+            }
+            UIState.LibraryScreenState -> {
+                supportActionBar?.apply {
+                    title = "Library"
+                }
+
+                replaceFragment(
+                    LibraryFragment.newInstance(),
+                    R.id.fragment_container,
+                    enterTransition = enterFade,
+                    exitTransition = exitFade
                 )
             }
         }.safe

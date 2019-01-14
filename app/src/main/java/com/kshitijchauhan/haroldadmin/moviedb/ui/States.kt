@@ -5,6 +5,7 @@ import android.view.View
 sealed class UIState {
 
     object HomeScreenState: UIState()
+    object LibraryScreenState: UIState()
     object DiscoverScreenState: UIState()
     object SearchScreenState: UIState()
     data class DetailsScreenState(val movieId: Int,
