@@ -14,6 +14,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AccountFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoggedOutFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.details.MovieDetailsFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.discover.DiscoverFragment
+import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchFragment
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -156,7 +157,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 replaceFragment(
-                    DiscoverFragment.newInstance(),
+                    LibraryFragment.newInstance(),
                     R.id.fragment_container,
                     enterTransition = enterFade,
                     exitTransition = exitFade

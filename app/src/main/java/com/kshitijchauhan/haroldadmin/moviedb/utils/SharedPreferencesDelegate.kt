@@ -10,12 +10,14 @@ import kotlin.reflect.KProperty
 class SharedPreferencesDelegate<T>(private val context: Context, private val key: String, private val defaultValue: T) {
     private val prefs: SharedPreferences by lazy { context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE) }
 
+    // TODO Cache most recent value in memory
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
         log("Request received from: ${thisRef?.javaClass?.simpleName}")
         log("Retrieving value for: ${property.name}")
         return findPreferences(key, defaultValue)
     }
 
+    // TODO Invalidate cached value whenever a new value is set
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
         log("Request received from: ${thisRef?.javaClass?.simpleName}")
         log("Saving value for: ${property.name}")
