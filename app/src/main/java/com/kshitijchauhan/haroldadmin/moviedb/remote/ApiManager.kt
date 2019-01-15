@@ -2,6 +2,8 @@ package com.kshitijchauhan.haroldadmin.moviedb.remote
 
 import com.kshitijchauhan.haroldadmin.moviedb.di.AppScope
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AccountService
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AddMediaToWatchlistRequest
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.MarkMediaAsFavoriteRequest
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.auth.AuthenticationService
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.auth.CreateSessionRequest
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.discover.DiscoveryService
@@ -36,4 +38,10 @@ class ApiManager @Inject constructor(
     fun getMoviesWatchList(accountId: Int) = accountService.getMoviesWatchList(accountId)
 
     fun getFavouriteMovies(accountId: Int) = accountService.getFavouriteMovies(accountId)
+
+    fun markMediaAsFavorite(accountId: Int, request: MarkMediaAsFavoriteRequest) =
+            accountService.markMediaAsFavorite(accountId, request)
+
+    fun addMediaToWatchlist(accountId: Int, request: AddMediaToWatchlistRequest) =
+            accountService.addMediaToWatchlist(accountId, request)
 }

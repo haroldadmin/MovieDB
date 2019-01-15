@@ -16,10 +16,14 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.kshitijchauhan.haroldadmin.moviedb.R
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AddMediaToWatchlistRequest
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.MarkMediaAsFavoriteRequest
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.MediaTypes
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disabled
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
@@ -60,14 +64,34 @@ class MovieDetailsFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
         movieDetailsViewModel = ViewModelProviders.of(this).get(MovieDetailsViewModel::class.java)
+
         arguments?.getInt(Constants.KEY_MOVIE_ID)?.let { id ->
             movieDetailsViewModel.getMovieDetails(id)
         }
 
         movieDetailsViewModel.movieDetails.observe(viewLifecycleOwner, Observer { movie ->
             updateView(movie)
+        })
+
+        movieDetailsViewModel.markAsFavoriteSuccess.observe(viewLifecycleOwner, Observer { isSuccessful ->
+            if (isSuccessful) {
+                // TODO Change button state to red instead of disabling it
+                // TODO Add ability to remove from favourites
+                btMarkAsFavourite.text = "Favourited"
+                btMarkAsFavourite.disabled()
+                mainViewModel.setProgressBarVisible(false)
+            }
+        })
+
+        movieDetailsViewModel.addToWatchlistSuccess.observe(viewLifecycleOwner, Observer { isSuccessful ->
+            // TODO Change button state to red instead of disabling it
+            // TODO Add ability to remove from watchlist
+            btAddToWatchlist.text = "Watchlisted"
+            btAddToWatchlist.disabled()
+            mainViewModel.setProgressBarVisible(false)
         })
     }
 
@@ -121,6 +145,23 @@ class MovieDetailsFragment : BaseFragment() {
         chipMovieGenre.text = movie.genres[0].name
         chipMovieRating.text = String.format("%.2f", movie.voteAverage)
         tvDescription.text = movie.overview
+        btMarkAsFavourite.setOnClickListener {
+            val request = MarkMediaAsFavoriteRequest(
+                MediaTypes.MOVIE.mediaName,
+                movie.id,
+                true
+            )
+            movieDetailsViewModel.markMovieAsFavorite(mainViewModel.accountId, request)
+            mainViewModel.setProgressBarVisible(true)
+        }
+        btAddToWatchlist.setOnClickListener {
+            val request=  AddMediaToWatchlistRequest(
+                MediaTypes.MOVIE.mediaName,
+                movie.id,
+                true
+            )
+            movieDetailsViewModel.addMovieToWatchList(mainViewModel.accountId, request)
+        }
     }
 
     override fun onStop() {
