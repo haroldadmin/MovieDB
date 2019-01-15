@@ -13,6 +13,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AccountDetailsResponse
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
+import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import kotlinx.android.synthetic.main.fragment_account.*
@@ -21,6 +22,12 @@ class AccountFragment : BaseFragment() {
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var authenticationViewModel: AuthenticationViewModel
+
+    override val associatedUIState: UIState = UIState.AccountScreenState.AuthenticatedScreenState
+
+    override fun notifyBottomNavManager() {
+        mainViewModel.bottomNavManager.setBottomNavActiveState(this.associatedUIState)
+    }
 
     companion object {
         fun newInstance() = AccountFragment()

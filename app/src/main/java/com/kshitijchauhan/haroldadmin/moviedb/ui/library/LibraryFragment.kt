@@ -28,6 +28,12 @@ class LibraryFragment : BaseFragment() {
     private lateinit var favouriteMoviesAdapter: MoviesListAdapter
     private lateinit var watchListedMoviesAdapter: MoviesListAdapter
 
+    override val associatedUIState: UIState = UIState.LibraryScreenState
+
+    override fun notifyBottomNavManager() {
+        mainViewModel.bottomNavManager.setBottomNavActiveState(this.associatedUIState)
+    }
+
     companion object {
         fun newInstance() = LibraryFragment()
     }

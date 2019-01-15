@@ -6,16 +6,27 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SharedPreferencesDelegate
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
+import javax.inject.Inject
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
+    @Inject
+    lateinit var bottomNavManager: BottomNavManager
+
+    init {
+        getApplication<MovieDBApplication>()
+            .appComponent
+            .inject(this)
+    }
+
     private val _state = SingleLiveEvent<UIState>()
     private val _snackbar = SingleLiveEvent<String>()
-    private val _bottomNavSelectedIconId = SingleLiveEvent<Int>()
+//    private val _bottomNavSelectedIconId = SingleLiveEvent<Int>()
     private val _clearBackStack = SingleLiveEvent<Unit>()
     private val _toolbarTitle = SingleLiveEvent<String>()
 //    TODO: Change this implementation from a boolean to a stack so that progress bar only hides when the loading stack is empty
@@ -39,8 +50,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val snackbar: LiveData<String>
         get() = _snackbar
 
-    val bottomNavSelectedItemId: LiveData<Int>
-        get() = _bottomNavSelectedIconId
+//    val bottomNavSelectedItemId: LiveData<Int>
+//        get() = _bottomNavSelectedIconId
 
     val progressBar: LiveData<Boolean>
         get() = _progressBar
@@ -68,9 +79,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _sessionId = sessionId
     }
 
-    fun setBottomNavSelectedItemId(id: Int) {
-        _bottomNavSelectedIconId.value = id
-    }
+//    fun setBottomNavSelectedItemId(id: Int) {
+//        _bottomNavSelectedIconId.value = id
+//    }
 
     fun setProgressBarVisible(status: Boolean) {
         _progressBar.value = status
@@ -88,5 +99,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun setAccountId(newId: Int) {
         _accountId = newId
+    }
+
+    fun updateBottomNavManagerState(state: UIState) {
+        this.bottomNavManager.setBottomNavActiveState(state)
     }
 }

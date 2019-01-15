@@ -30,6 +30,12 @@ class HomeFragment : BaseFragment() {
 
     private val onPause: PublishRelay<Any> = PublishRelay.create()
 
+    override val associatedUIState: UIState = UIState.HomeScreenState
+
+    override fun notifyBottomNavManager() {
+        mainViewModel.bottomNavManager.setBottomNavActiveState(this.associatedUIState)
+    }
+
     companion object {
         fun newInstance() = HomeFragment()
     }

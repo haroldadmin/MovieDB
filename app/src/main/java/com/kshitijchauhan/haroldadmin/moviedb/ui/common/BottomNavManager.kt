@@ -5,9 +5,11 @@ import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 
-class BottomNavManager(private val bottomNavigationView: BottomNavigationView) {
+class BottomNavManager {
 
-    fun setBottomNavState(state: UIState) {
+    lateinit var bottomNavigationView: BottomNavigationView
+
+    fun setBottomNavActiveState(state: UIState) {
         when (state) {
             UIState.HomeScreenState -> {
                 bottomNavigationView.menu.findItem(R.id.menuHome).setChecked(true)
@@ -31,6 +33,10 @@ class BottomNavManager(private val bottomNavigationView: BottomNavigationView) {
                 bottomNavigationView.menu.findItem(R.id.menuAccount).setChecked(true)
             }
         }.safe
+    }
+
+    fun setBottomNavView(bottomNavigationView: BottomNavigationView) {
+        this.bottomNavigationView = bottomNavigationView
     }
 
 }

@@ -38,6 +38,10 @@ class SearchFragment : BaseFragment() {
     private lateinit var searchViewModel: SearchViewModel
     private lateinit var searchAdapter: SearchResultsAdapter
 
+    override val associatedUIState: UIState = UIState.SearchScreenState
+
+    override fun notifyBottomNavManager() { return }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

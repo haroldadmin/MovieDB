@@ -18,6 +18,7 @@ import androidx.transition.TransitionSet
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.auth.CreateSessionRequest
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
+import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
@@ -28,6 +29,12 @@ class LoggedOutFragment : BaseFragment() {
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var authenticationViewModel: AuthenticationViewModel
+
+    override val associatedUIState: UIState = UIState.AccountScreenState.UnauthenticatedScreenState
+
+    override fun notifyBottomNavManager() {
+        mainViewModel.bottomNavManager.setBottomNavActiveState(this.associatedUIState)
+    }
 
     companion object {
         fun newInstance() = LoggedOutFragment()

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.transition.Fade
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionSet
+import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AccountFragment
@@ -25,10 +26,17 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mainViewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        (application as MovieDBApplication)
+            .appComponent
+            .inject(this)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+
+        mainViewModel.bottomNavManager.setBottomNavView(mainNavView)
 
         mainViewModel.state.observe(this, Observer { pair ->
             handleStateChange(pair)
@@ -36,10 +44,6 @@ class MainActivity : AppCompatActivity() {
 
         mainViewModel.snackbar.observe(this, Observer { message ->
             homeRootView.snackbar(message)
-        })
-
-        mainViewModel.bottomNavSelectedItemId.observe(this, Observer { id ->
-            mainNavView.selectedItemId = id
         })
 
         mainViewModel.progressBar.observe(this, Observer { isVisible ->
@@ -67,11 +71,10 @@ class MainActivity : AppCompatActivity() {
             title = getString(R.string.app_name)
         }
 
-        mainNavView.setOnNavigationItemSelectedListener { item ->
+        mainViewModel.bottomNavManager.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.menuHome -> {
                     mainViewModel.updateStateTo(UIState.HomeScreenState)
-                    replaceFragment(HomeFragment.newInstance(), R.id.fragment_container)
                     true
                 }
                 R.id.menuLibrary -> {
@@ -80,9 +83,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.menuAccount -> {
                     if (mainViewModel.isAuthenticated) {
-                        mainViewModel.updateStateTo(UIState.AuthenticatedScreenState)
+                        mainViewModel.updateStateTo(UIState.AccountScreenState.AuthenticatedScreenState)
                     } else {
-                        mainViewModel.updateStateTo(UIState.UnauthenticatedScreenState)
+                        mainViewModel.updateStateTo(UIState.AccountScreenState.UnauthenticatedScreenState)
                     }
                     true
                 }
@@ -126,7 +129,7 @@ class MainActivity : AppCompatActivity() {
                 )
             }
 
-            is UIState.UnauthenticatedScreenState -> {
+            is UIState.AccountScreenState.UnauthenticatedScreenState -> {
 
                 supportActionBar?.apply {
                     title = "Login"
@@ -140,7 +143,7 @@ class MainActivity : AppCompatActivity() {
                 )
             }
 
-            is UIState.AuthenticatedScreenState -> {
+            is UIState.AccountScreenState.AuthenticatedScreenState -> {
 
                 supportActionBar?.apply {
                     title = "Your Account"

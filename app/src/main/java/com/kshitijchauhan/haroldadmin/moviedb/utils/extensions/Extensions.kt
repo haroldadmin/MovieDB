@@ -12,7 +12,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 fun Any.log(message: String) {
-    if (this !is BaseFragment) Log.d(this::class.java.simpleName, message)
+     Log.d(this::class.java.simpleName, message)
 }
 
 fun Disposable.disposeWith(compositeDisposable: CompositeDisposable) = compositeDisposable.add(this)

@@ -24,6 +24,12 @@ class DiscoverFragment : BaseFragment() {
     private lateinit var discoverViewModel: DiscoverViewModel
     private var moviesAdapter: MoviesAdapter? = null
 
+    override val associatedUIState: UIState = UIState.DiscoverScreenState
+
+    override fun notifyBottomNavManager() {
+        mainViewModel.bottomNavManager.setBottomNavActiveState(this.associatedUIState)
+    }
+
     companion object {
         fun newInstance() = DiscoverFragment()
     }

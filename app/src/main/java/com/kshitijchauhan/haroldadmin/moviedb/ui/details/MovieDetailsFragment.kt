@@ -21,6 +21,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.MarkMediaAs
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.MediaTypes
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
+import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disabled
@@ -32,6 +33,13 @@ import kotlinx.android.synthetic.main.fragment_movie_details.view.*
 class MovieDetailsFragment : BaseFragment() {
 
     private val compositeDisposable = CompositeDisposable()
+
+    override val associatedUIState: UIState = UIState.DetailsScreenState(this.arguments?.getInt(Constants.KEY_MOVIE_ID) ?: -1)
+
+    override fun notifyBottomNavManager() {
+        mainViewModel.bottomNavManager.setBottomNavActiveState(this.associatedUIState)
+    }
+
 
     companion object {
         fun newInstance(movieId: Int, transitionName: String): MovieDetailsFragment {

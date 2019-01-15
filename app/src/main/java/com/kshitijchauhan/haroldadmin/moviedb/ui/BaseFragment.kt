@@ -10,6 +10,10 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 
 abstract class BaseFragment: Fragment() {
 
+    protected abstract val associatedUIState: UIState
+
+    protected abstract fun notifyBottomNavManager()
+
     override fun onAttach(context: Context) {
         log("onAttach")
         super.onAttach(context)
@@ -37,6 +41,7 @@ abstract class BaseFragment: Fragment() {
 
     override fun onResume() {
         log("onResume")
+        notifyBottomNavManager()
         super.onResume()
     }
 
