@@ -45,6 +45,11 @@ class LibraryFragment : BaseFragment() {
         return inflater.inflate(R.layout.fragment_library, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupRecyclerViews()
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
@@ -84,7 +89,6 @@ class LibraryFragment : BaseFragment() {
             TransitionManager.beginDelayedTransition(libraryContainer)
             infoGroup.gone()
             moviesGroup.visible()
-            setupRecyclerViews()
         } else {
             TransitionManager.beginDelayedTransition(libraryContainer)
             moviesGroup.gone()
