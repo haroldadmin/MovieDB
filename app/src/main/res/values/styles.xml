@@ -90,5 +90,9 @@
         <item name="android:textColor">@color/textOnPrimaryHighEmphasis</item>
     </style>
 
+    <style name="TextAppearance.MaterialComponents.Body2.EmptyViewTextStyle">
+        <item name="android:textColor">@color/textOnPrimaryMediumEmphasis</item>
+        <item name="android:textStyle">italic</item>
+    </style>
 
 </resources>
