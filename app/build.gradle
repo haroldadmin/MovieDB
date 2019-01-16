@@ -52,7 +52,7 @@ dependencies {
 
     // Android
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha01'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation 'com.google.android.material:material:1.0.0'
@@ -61,17 +61,17 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.0'
     implementation "com.squareup.retrofit2:converter-moshi:2.4.0"
 
     // DI
-    implementation 'com.google.dagger:dagger:2.18'
+    implementation 'com.google.dagger:dagger:2.19'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0-alpha1'
-    kapt 'com.google.dagger:dagger-compiler:2.18'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0-alpha01'
+    kapt 'com.google.dagger:dagger-compiler:2.19'
 
     // Rx
-    implementation "io.reactivex.rxjava2:rxjava:2.2.4"
+    implementation "io.reactivex.rxjava2:rxjava:2.2.5"
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
     implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.0'
