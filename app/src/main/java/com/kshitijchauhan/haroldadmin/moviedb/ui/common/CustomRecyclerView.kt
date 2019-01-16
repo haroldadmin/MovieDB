@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.visible
 
 
@@ -67,12 +68,16 @@ class CustomRecyclerView @JvmOverloads constructor(
         emptyView?.let { eV ->
             adapter?.let {
                 if (it.itemCount == 0) {
-                    eV.visible()
                     this.gone()
-                } else {
-                    eV.gone()
-                    this.visible()
+                    eV.visible()
+                    return
                 }
+                /*
+                It is important to hide the empty view after making the recyclew view visible, because otherwise
+                the empty view does not disappear even after the list is populated
+                 */
+                this.visible()
+                eV.gone()
             }
         }
     }

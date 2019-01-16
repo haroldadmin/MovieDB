@@ -109,17 +109,17 @@ class LibraryFragment : BaseFragment() {
         }
 
         rvFavourites.apply {
+            setEmptyView(emptyViewFavourites)
             layoutManager = GridLayoutManager(context, columns)
             addItemDecoration(EqualSpaceGridItemDecoration(space.roundToInt()))
             adapter = favouriteMoviesAdapter
-            setEmptyView(emptyViewFavourites)
         }
 
         rvWatchlist.apply {
+            setEmptyView(emptyViewWatchlist)
             layoutManager = GridLayoutManager(context, columns)
             addItemDecoration(EqualSpaceGridItemDecoration(space.roundToInt()))
             adapter = watchListedMoviesAdapter
-            setEmptyView(emptyViewWatchlist)
         }
     }
 
