@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
@@ -70,6 +71,10 @@ class LibraryFragment : BaseFragment() {
 
                 favouriteMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
                     mainViewModel.setProgressBarVisible(false)
+                    if (favouriteMoviesAdapter.itemCount == 0) {
+                        // The RecyclerView was previously empty so we need to change the constraints of watchlist header
+                        changeConstraintsOfWatchlistHeader()
+                    }
                     favouriteMoviesAdapter.submitList(newList)
                 })
 
@@ -121,6 +126,24 @@ class LibraryFragment : BaseFragment() {
             addItemDecoration(EqualSpaceGridItemDecoration(space.roundToInt()))
             adapter = watchListedMoviesAdapter
         }
+    }
+
+    /**
+     * When the favourites recycler view is empty, its visibility is GONE. The watchlist header in this case is
+     * constrained to the bottom of emptyViewFavourites. However, when items appear in the recycler view, then we need
+     * to change this constraint because emptyViewFavourites will be View.GONE and watchlist header will need to be
+     * constrained to the bottom of rvFavourites
+     */
+    private fun changeConstraintsOfWatchlistHeader() {
+        val initialConstraintSet = ConstraintSet()
+        val finalConstraintSet = ConstraintSet()
+        with (libraryContainer) {
+            initialConstraintSet.clone(this)
+            finalConstraintSet.clone(this)
+        }
+        finalConstraintSet.connect(R.id.tvWatchlist, ConstraintSet.TOP, R.id.rvFavourites, ConstraintSet.BOTTOM)
+        TransitionManager.beginDelayedTransition(libraryContainer)
+        finalConstraintSet.applyTo(libraryContainer)
     }
 
 }
