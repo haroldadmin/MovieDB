@@ -7,10 +7,15 @@ import androidx.lifecycle.MutableLiveData
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.ProgressBarManager
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.ProgressBarNotification
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SharedPreferencesDelegate
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
+import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
@@ -18,19 +23,28 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     @Inject
     lateinit var bottomNavManager: BottomNavManager
 
+    @Inject
+    lateinit var progressBarManager: ProgressBarManager
+
+    private val compositeDisposable = CompositeDisposable()
+
     init {
         getApplication<MovieDBApplication>()
             .appComponent
             .inject(this)
+
+        progressBarManager.getProgressBarRelay()
+            .subscribe { notification ->
+                _progressBarNotification.value = notification
+            }
+            .disposeWith(compositeDisposable)
     }
 
     private val _state = SingleLiveEvent<UIState>()
     private val _snackbar = SingleLiveEvent<String>()
-//    private val _bottomNavSelectedIconId = SingleLiveEvent<Int>()
     private val _clearBackStack = SingleLiveEvent<Unit>()
     private val _toolbarTitle = SingleLiveEvent<String>()
-//    TODO: Change this implementation from a boolean to a stack so that progress bar only hides when the loading stack is empty
-    private val _progressBar = MutableLiveData<Boolean>()
+    private val _progressBarNotification = MutableLiveData<ProgressBarNotification>()
     private var _isAuthenticated by SharedPreferencesDelegate(application, Constants.KEY_IS_AUTHENTICATED, false)
     private var _sessionId by SharedPreferencesDelegate(application, Constants.KEY_SESSION_ID, "")
     private var _accountId by SharedPreferencesDelegate(application, Constants.KEY_ACCOUNT_ID, -1)
@@ -50,11 +64,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val snackbar: LiveData<String>
         get() = _snackbar
 
-//    val bottomNavSelectedItemId: LiveData<Int>
-//        get() = _bottomNavSelectedIconId
-
-    val progressBar: LiveData<Boolean>
-        get() = _progressBar
+    val progressBarNotification: LiveData<ProgressBarNotification>
+        get() = _progressBarNotification
 
     val clearBackStack: LiveData<Unit>
         get() = _clearBackStack
@@ -79,17 +90,19 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         _sessionId = sessionId
     }
 
-//    fun setBottomNavSelectedItemId(id: Int) {
-//        _bottomNavSelectedIconId.value = id
-//    }
+    fun addLoadingTask(task: LoadingTask) {
+        progressBarManager.addTask(task)
+    }
 
-    fun setProgressBarVisible(status: Boolean) {
-        _progressBar.value = status
+    fun completeLoadingTask(tag: String) {
+        progressBarManager.completeTaskByTag(tag)
+    }
+
+    fun findLoadingTask(tag: String): LoadingTask? {
+        return progressBarManager.findTaskByTag(tag)
     }
 
     fun peekState() = _state.value
-
-    fun rebuildAppComponent() = getApplication<MovieDBApplication>().rebuildAppComponent()
 
     fun signalClearBackstack() = _clearBackStack.call()
 

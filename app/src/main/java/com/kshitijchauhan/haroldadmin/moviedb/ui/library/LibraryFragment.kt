@@ -13,6 +13,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.MoviesListAdapter
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
@@ -22,6 +23,9 @@ import kotlinx.android.synthetic.main.fragment_library.*
 import kotlin.math.roundToInt
 
 class LibraryFragment : BaseFragment() {
+
+    private val TASK_LOAD_FAVOURITE_MOVIES = "load-favourite-movies"
+    private val TASK_LOAD_WATCHLISTED_MOVIES = "load-watchlisted-movies"
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var libraryViewModel: LibraryViewModel
@@ -59,17 +63,17 @@ class LibraryFragment : BaseFragment() {
             libraryViewModel.apply {
 
                 if (favouriteMoviesUpdate.value == null) {
-                    mainViewModel.setProgressBarVisible(true)
+                    mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_FAVOURITE_MOVIES))
                     getFavouriteMoves(mainViewModel.accountId)
                 }
 
                 if (watchListMoviesUpdate.value == null) {
-                    mainViewModel.setProgressBarVisible(true)
+                    mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_WATCHLISTED_MOVIES))
                     getWatchlistedeMovies(mainViewModel.accountId)
                 }
 
                 favouriteMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
-                    mainViewModel.setProgressBarVisible(false)
+                    mainViewModel.completeLoadingTask(TASK_LOAD_FAVOURITE_MOVIES)
                     /**
                      * If the adapter was unpopulated before, the empty view will be removed, the recycler view's new
                      * items will appear. If the new items are not empty, then the watchlist recycler view and its header
@@ -81,7 +85,7 @@ class LibraryFragment : BaseFragment() {
                 })
 
                 watchListMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
-                    mainViewModel.setProgressBarVisible(false)
+                    mainViewModel.completeLoadingTask(TASK_LOAD_WATCHLISTED_MOVIES)
                     watchListedMoviesAdapter.submitList(newList)
                 })
             }

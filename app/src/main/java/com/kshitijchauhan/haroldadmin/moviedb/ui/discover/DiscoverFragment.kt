@@ -12,13 +12,14 @@ import com.bumptech.glide.Glide
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getMainHandler
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.postDelayed
 import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_discover.*
 
 class DiscoverFragment : BaseFragment() {
+
+    private val TASK_LOAD_DISCOVER_MOVIES = "load-discover-movies"
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var discoverViewModel: DiscoverViewModel
@@ -47,18 +48,13 @@ class DiscoverFragment : BaseFragment() {
         discoverViewModel = ViewModelProviders.of(this).get(DiscoverViewModel::class.java)
 
         discoverViewModel.apply {
-            mainViewModel.setProgressBarVisible(true)
-            getMainHandler().postDelayed(500) {
-                // To avoid lag
-                // TODO Fix this later
-                getPopularMovies()
-            }
+            mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_DISCOVER_MOVIES))
+            getPopularMovies()
 
-            discoverViewModel.moviesUpdate.observe(viewLifecycleOwner, Observer {
-                mainViewModel.setProgressBarVisible(false)
+            moviesUpdate.observe(viewLifecycleOwner, Observer {
                 moviesAdapter?.updateList(it)
+                mainViewModel.completeLoadingTask(TASK_LOAD_DISCOVER_MOVIES)
             })
-
         }
     }
 

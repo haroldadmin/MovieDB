@@ -19,6 +19,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.auth.CreateSessionRequest
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
@@ -26,6 +27,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.visible
 import kotlinx.android.synthetic.main.fragment_logged_out.*
 
 class LoggedOutFragment : BaseFragment() {
+
+    private val TASK_LOAD_WEBPAGE = "task-load-webpage"
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var authenticationViewModel: AuthenticationViewModel
@@ -66,13 +69,13 @@ class LoggedOutFragment : BaseFragment() {
                     url?.let {
                         log("Loading this url in webview: $it")
                     }
-                    mainViewModel.setProgressBarVisible(true)
+                    mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_WEBPAGE))
                     super.onPageStarted(view, url, favicon)
                 }
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
-                    mainViewModel.setProgressBarVisible(false)
+                    mainViewModel.completeLoadingTask(TASK_LOAD_WEBPAGE)
                     if (url?.contains("allow") == true) {
                         handleAuthorizationSuccessful(
                             authenticationViewModel.requestToken.value

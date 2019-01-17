@@ -14,11 +14,14 @@ import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AccountDetailsResponse
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import kotlinx.android.synthetic.main.fragment_account.*
 
 class AccountFragment : BaseFragment() {
+
+    private val TASK_LOAD_ACCOUNT_DETAILS = "load-account-details"
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var authenticationViewModel: AuthenticationViewModel
@@ -49,9 +52,13 @@ class AccountFragment : BaseFragment() {
 
         mainViewModel.updateToolbarTitle("Your Account")
 
-        authenticationViewModel.getAccountDetails()
+        if (authenticationViewModel.accountDetails.value == null) {
+            mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_ACCOUNT_DETAILS))
+            authenticationViewModel.getAccountDetails()
+        }
 
         authenticationViewModel.accountDetails.observe(viewLifecycleOwner, Observer { accountInfo ->
+            mainViewModel.completeLoadingTask(TASK_LOAD_ACCOUNT_DETAILS)
             updateView(accountInfo)
         })
     }

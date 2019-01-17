@@ -22,18 +22,10 @@ class MovieDetailsViewModel(application: Application) : AndroidViewModel(applica
 
     private val compositeDisposable = CompositeDisposable()
     private val _movieDetails = MutableLiveData<Movie>()
-    private val _markAsFavoriteSuccess = SingleLiveEvent<Boolean>()
-    private val _addToWatchlistSuccess = SingleLiveEvent<Boolean>()
     private val _accountStatesOfMovie = MutableLiveData<MovieState>()
 
     val movieDetails: LiveData<Movie>
         get() = _movieDetails
-
-    val markAsFavoriteSuccess: LiveData<Boolean>
-        get() = _markAsFavoriteSuccess
-
-    val addToWatchlistSuccess: LiveData<Boolean>
-        get() = _addToWatchlistSuccess
 
     val accountStatesOfMovie: LiveData<MovieState>
         get() = _accountStatesOfMovie
@@ -80,14 +72,15 @@ class MovieDetailsViewModel(application: Application) : AndroidViewModel(applica
     fun toggleMovieFavouriteStatus(accountId: Int, request: MarkMediaAsFavoriteRequest) {
         apiManager.toggleMediaFavouriteStatus(accountId, request)
             .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSuccess {
-                _markAsFavoriteSuccess.value = true
-                getAccountStatesForMovie(request.mediaId)
+            .observeOn(Schedulers.computation())
+            .flatMap {
+                apiManager.getAccountStatesForMovie(request.mediaId)
             }
-            .doOnError {
-                _markAsFavoriteSuccess.value = false
-                getAccountStatesForMovie(request.mediaId)
+            .map { response ->
+                MovieState(response.isWatchlisted, response.isFavourited)
+            }
+            .doOnSuccess { state ->
+                _accountStatesOfMovie.postValue(state)
             }
             .subscribe()
             .disposeWith(compositeDisposable)
@@ -96,14 +89,15 @@ class MovieDetailsViewModel(application: Application) : AndroidViewModel(applica
     fun toggleMovieWatchlistStatus(accountId: Int, request: AddMediaToWatchlistRequest) {
         apiManager.toggleMediaWatchlistStatus(accountId, request)
             .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSuccess {
-                _addToWatchlistSuccess.value = true
-                getAccountStatesForMovie(request.mediaId)
+            .observeOn(Schedulers.computation())
+            .flatMap {
+                apiManager.getAccountStatesForMovie(request.mediaId)
             }
-            .doOnError {
-                _addToWatchlistSuccess.value = false
-                getAccountStatesForMovie(request.mediaId)
+            .map { response ->
+                MovieState(response.isWatchlisted, response.isFavourited)
+            }
+            .doOnSuccess { state ->
+                _accountStatesOfMovie.postValue(state)
             }
             .subscribe()
             .disposeWith(compositeDisposable)

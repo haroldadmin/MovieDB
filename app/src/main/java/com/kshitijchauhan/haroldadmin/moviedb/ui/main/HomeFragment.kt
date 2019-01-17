@@ -15,6 +15,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.MoviesListAdapter
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -22,6 +23,9 @@ import kotlinx.android.synthetic.main.view_searchbox.view.*
 import kotlin.math.roundToInt
 
 class HomeFragment : BaseFragment() {
+
+    private val TAG_GET_POPULAR_MOVIES = "get-popular-movies"
+    private val TAG_GET_TOP_RATED_MOVIES = "get-top-rated-movies"
 
     private lateinit var mainViewModel: MainViewModel
     private lateinit var homeViewModel: HomeViewModel
@@ -48,22 +52,22 @@ class HomeFragment : BaseFragment() {
         homeViewModel.apply {
 
             if (popularMoviesUpdate.value == null) {
-                mainViewModel.setProgressBarVisible(true)
+                mainViewModel.addLoadingTask(LoadingTask(TAG_GET_POPULAR_MOVIES))
                 getPopularMovies()
             }
 
             if (topRatedMoviesUpdate.value == null) {
-                mainViewModel.setProgressBarVisible(true)
+                mainViewModel.addLoadingTask(LoadingTask(TAG_GET_TOP_RATED_MOVIES))
                 getTopRatedMovies()
             }
 
             popularMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
-                mainViewModel.setProgressBarVisible(false)
+                mainViewModel.completeLoadingTask(TAG_GET_POPULAR_MOVIES)
                 popularMoviesAdapter.submitList(newList)
             })
 
             topRatedMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
-                mainViewModel.setProgressBarVisible(false)
+                mainViewModel.completeLoadingTask(TAG_GET_TOP_RATED_MOVIES)
                 topRatedMoviesAdapter.submitList(newList)
             })
         }
