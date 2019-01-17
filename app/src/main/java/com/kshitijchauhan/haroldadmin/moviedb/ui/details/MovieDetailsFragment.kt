@@ -161,6 +161,7 @@ class MovieDetailsFragment : BaseFragment() {
             )
             movieDetailsViewModel.markMovieAsFavorite(mainViewModel.accountId, request)
             mainViewModel.setProgressBarVisible(true)
+            btMarkAsFavourite.setRemoveFromListState(true)
         }
         btAddToWatchlist.setOnClickListener {
             val request=  AddMediaToWatchlistRequest(
@@ -169,6 +170,8 @@ class MovieDetailsFragment : BaseFragment() {
                 true
             )
             movieDetailsViewModel.addMovieToWatchList(mainViewModel.accountId, request)
+            mainViewModel.setProgressBarVisible(true)
+            btAddToWatchlist.setRemoveFromListState(true)
         }
     }
 
