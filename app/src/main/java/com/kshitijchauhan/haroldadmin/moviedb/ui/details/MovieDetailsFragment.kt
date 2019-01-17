@@ -24,7 +24,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disabled
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
@@ -34,7 +34,8 @@ class MovieDetailsFragment : BaseFragment() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    override val associatedUIState: UIState = UIState.DetailsScreenState(this.arguments?.getInt(Constants.KEY_MOVIE_ID) ?: -1)
+    override val associatedUIState: UIState =
+        UIState.DetailsScreenState(this.arguments?.getInt(Constants.KEY_MOVIE_ID) ?: -1)
 
     override fun notifyBottomNavManager() {
         mainViewModel.bottomNavManager.setBottomNavActiveState(this.associatedUIState)
@@ -77,7 +78,10 @@ class MovieDetailsFragment : BaseFragment() {
         movieDetailsViewModel = ViewModelProviders.of(this).get(MovieDetailsViewModel::class.java)
 
         arguments?.getInt(Constants.KEY_MOVIE_ID)?.let { id ->
-            movieDetailsViewModel.getMovieDetails(id)
+            with(movieDetailsViewModel) {
+                getMovieDetails(id)
+                getAccountStatesForMovie(id)
+            }
         }
 
         movieDetailsViewModel.movieDetails.observe(viewLifecycleOwner, Observer { movie ->
@@ -86,20 +90,41 @@ class MovieDetailsFragment : BaseFragment() {
 
         movieDetailsViewModel.markAsFavoriteSuccess.observe(viewLifecycleOwner, Observer { isSuccessful ->
             if (isSuccessful) {
-                // TODO Change button state to red instead of disabling it
-                // TODO Add ability to remove from favourites
-                btMarkAsFavourite.text = "Favourited"
-                btMarkAsFavourite.disabled()
                 mainViewModel.setProgressBarVisible(false)
             }
         })
 
         movieDetailsViewModel.addToWatchlistSuccess.observe(viewLifecycleOwner, Observer { isSuccessful ->
-            // TODO Change button state to red instead of disabling it
-            // TODO Add ability to remove from watchlist
-            btAddToWatchlist.text = "Watchlisted"
-            btAddToWatchlist.disabled()
-            mainViewModel.setProgressBarVisible(false)
+            if (isSuccessful) {
+                mainViewModel.setProgressBarVisible(false)
+            }
+        })
+
+        movieDetailsViewModel.accountStatesOfMovie.observe(viewLifecycleOwner, Observer { state ->
+            log("Updated movie state: $state")
+            if (state.favourited) {
+                btToggleFavourite.apply {
+                    setRemoveFromListState(true)
+                    text = "Un-favourite"
+                }
+            } else {
+                btToggleFavourite.apply {
+                    setRemoveFromListState(false)
+                    text = "Add to Favourites"
+                }
+            }
+
+            if (state.watchlisted) {
+                btToggleWatchlist.apply {
+                    setRemoveFromListState(true)
+                    text = "Un-watchlist"
+                }
+            } else {
+                btToggleWatchlist.apply {
+                    setRemoveFromListState(false)
+                    text = "Add to Watchlist"
+                }
+            }
         })
     }
 
@@ -153,25 +178,25 @@ class MovieDetailsFragment : BaseFragment() {
         chipMovieGenre.text = movie.genres[0].name
         chipMovieRating.text = String.format("%.2f", movie.voteAverage)
         tvDescription.text = movie.overview
-        btMarkAsFavourite.setOnClickListener {
+        btToggleFavourite.setOnClickListener {
+            val isFavourite = movieDetailsViewModel.accountStatesOfMovie.value?.favourited == true
             val request = MarkMediaAsFavoriteRequest(
                 MediaTypes.MOVIE.mediaName,
                 movie.id,
-                true
+                !isFavourite
             )
-            movieDetailsViewModel.markMovieAsFavorite(mainViewModel.accountId, request)
+            movieDetailsViewModel.toggleMovieFavouriteStatus(mainViewModel.accountId, request)
             mainViewModel.setProgressBarVisible(true)
-            btMarkAsFavourite.setRemoveFromListState(true)
         }
-        btAddToWatchlist.setOnClickListener {
-            val request=  AddMediaToWatchlistRequest(
+        btToggleWatchlist.setOnClickListener {
+            val isWatchlisted = movieDetailsViewModel.accountStatesOfMovie.value?.watchlisted == true
+            val request = AddMediaToWatchlistRequest(
                 MediaTypes.MOVIE.mediaName,
                 movie.id,
-                true
+                !isWatchlisted
             )
-            movieDetailsViewModel.addMovieToWatchList(mainViewModel.accountId, request)
+            movieDetailsViewModel.toggleMovieWatchlistStatus(mainViewModel.accountId, request)
             mainViewModel.setProgressBarVisible(true)
-            btAddToWatchlist.setRemoveFromListState(true)
         }
     }
 

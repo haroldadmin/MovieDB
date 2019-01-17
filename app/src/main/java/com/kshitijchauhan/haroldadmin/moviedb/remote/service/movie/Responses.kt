@@ -29,3 +29,8 @@ data class Movie (
     @field:Json(name="title") val title: String,
     @field:Json(name="vote_average") var voteAverage: Double,
     @field:Json(name="vote_count") val voteCount: Int): Parcelable
+
+@Parcelize
+data class MovieStatesResponse(
+    @field:Json(name="favorite") val isFavourited: Boolean,
+    @field:Json(name="watchlist") val isWatchlisted: Boolean): Parcelable

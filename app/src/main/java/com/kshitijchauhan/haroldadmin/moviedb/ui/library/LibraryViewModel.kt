@@ -8,7 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.MovieItemType
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.MovieGridItem
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieGridItem
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getPosterUrl
 import io.reactivex.Observable

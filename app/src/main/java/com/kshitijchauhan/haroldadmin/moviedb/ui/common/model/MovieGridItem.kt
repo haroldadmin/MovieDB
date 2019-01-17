@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.ui.common
+package com.kshitijchauhan.haroldadmin.moviedb.ui.common.model
 
 import com.kshitijchauhan.haroldadmin.moviedb.ui.MovieItemType
 

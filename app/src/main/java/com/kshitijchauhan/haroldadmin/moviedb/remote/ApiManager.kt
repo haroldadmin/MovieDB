@@ -27,6 +27,8 @@ class ApiManager @Inject constructor(
 
     fun getMovieDetails(movieId: Int) = movieService.getMovieDetails(movieId)
 
+    fun getAccountStatesForMovie(movieId: Int) = movieService.getAccountStatesForMovie(movieId)
+
     fun getTopRatedMovies() = discoveryService.getTopRatedMovies()
 
     fun getRequestToken() = authenticationService.getRequestToken()
@@ -39,9 +41,9 @@ class ApiManager @Inject constructor(
 
     fun getFavouriteMovies(accountId: Int) = accountService.getFavouriteMovies(accountId)
 
-    fun markMediaAsFavorite(accountId: Int, request: MarkMediaAsFavoriteRequest) =
+    fun toggleMediaFavouriteStatus(accountId: Int, request: MarkMediaAsFavoriteRequest) =
             accountService.markMediaAsFavorite(accountId, request)
 
-    fun addMediaToWatchlist(accountId: Int, request: AddMediaToWatchlistRequest) =
+    fun toggleMediaWatchlistStatus(accountId: Int, request: AddMediaToWatchlistRequest) =
             accountService.addMediaToWatchlist(accountId, request)
 }

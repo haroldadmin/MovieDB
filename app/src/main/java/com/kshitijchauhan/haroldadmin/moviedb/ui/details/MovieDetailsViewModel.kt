@@ -1,7 +1,6 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.details
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,10 +10,9 @@ import com.kshitijchauhan.haroldadmin.moviedb.remote.Config
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AddMediaToWatchlistRequest
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.MarkMediaAsFavoriteRequest
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieState
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
-import io.reactivex.SingleObserver
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -26,6 +24,7 @@ class MovieDetailsViewModel(application: Application) : AndroidViewModel(applica
     private val _movieDetails = MutableLiveData<Movie>()
     private val _markAsFavoriteSuccess = SingleLiveEvent<Boolean>()
     private val _addToWatchlistSuccess = SingleLiveEvent<Boolean>()
+    private val _accountStatesOfMovie = MutableLiveData<MovieState>()
 
     val movieDetails: LiveData<Movie>
         get() = _movieDetails
@@ -36,6 +35,8 @@ class MovieDetailsViewModel(application: Application) : AndroidViewModel(applica
     val addToWatchlistSuccess: LiveData<Boolean>
         get() = _addToWatchlistSuccess
 
+    val accountStatesOfMovie: LiveData<MovieState>
+        get() = _accountStatesOfMovie
 
     @Inject
     lateinit var apiManager: ApiManager
@@ -62,29 +63,47 @@ class MovieDetailsViewModel(application: Application) : AndroidViewModel(applica
             .disposeWith(compositeDisposable)
     }
 
-    fun markMovieAsFavorite(accountId: Int, request: MarkMediaAsFavoriteRequest) {
-        apiManager.markMediaAsFavorite(accountId, request)
+    fun getAccountStatesForMovie(movieId: Int) {
+        apiManager.getAccountStatesForMovie(movieId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSuccess {
-                _markAsFavoriteSuccess.value = true
+            .map { response ->
+                MovieState(response.isWatchlisted, response.isFavourited)
             }
-            .doOnError {
-                _markAsFavoriteSuccess.value = false
+            .doOnSuccess{ state ->
+                _accountStatesOfMovie.value = state
             }
             .subscribe()
             .disposeWith(compositeDisposable)
     }
 
-    fun addMovieToWatchList(accountId: Int, request: AddMediaToWatchlistRequest) {
-        apiManager.addMediaToWatchlist(accountId, request)
+    fun toggleMovieFavouriteStatus(accountId: Int, request: MarkMediaAsFavoriteRequest) {
+        apiManager.toggleMediaFavouriteStatus(accountId, request)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSuccess {
+                _markAsFavoriteSuccess.value = true
+                getAccountStatesForMovie(request.mediaId)
+            }
+            .doOnError {
+                _markAsFavoriteSuccess.value = false
+                getAccountStatesForMovie(request.mediaId)
+            }
+            .subscribe()
+            .disposeWith(compositeDisposable)
+    }
+
+    fun toggleMovieWatchlistStatus(accountId: Int, request: AddMediaToWatchlistRequest) {
+        apiManager.toggleMediaWatchlistStatus(accountId, request)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSuccess {
                 _addToWatchlistSuccess.value = true
+                getAccountStatesForMovie(request.mediaId)
             }
             .doOnError {
                 _addToWatchlistSuccess.value = false
+                getAccountStatesForMovie(request.mediaId)
             }
             .subscribe()
             .disposeWith(compositeDisposable)
