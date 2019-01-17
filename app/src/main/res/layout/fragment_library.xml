@@ -26,38 +26,38 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvFavourites"
         tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         tools:listitem="@layout/item_moviegrid"
-        tools:spanCount="4"
-        android:visibility="gone"/>
+        tools:spanCount="4" />
 
     <TextView
         android:id="@+id/tvWatchlist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:text="Watchlist"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
         android:textColor="@color/colorSecondary"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/emptyViewFavourites" />
+        app:layout_constraintTop_toTopOf="@+id/barrierFavourites" />
 
     <com.kshitijchauhan.haroldadmin.moviedb.ui.common.CustomRecyclerView
         android:id="@+id/rvWatchlist"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvWatchlist"
         tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
         tools:listitem="@layout/item_moviegrid"
-        tools:spanCount="4"
-        android:visibility="gone"/>
+        tools:spanCount="4" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/moviesGroup"
@@ -82,7 +82,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone"/>
+        tools:visibility="gone" />
 
     <TextView
         android:id="@+id/emptyViewWatchlist"
@@ -94,10 +94,10 @@
         android:layout_marginEnd="8dp"
         android:text="This list seems to be empty"
         android:textAlignment="center"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tvWatchlist"
-        app:layout_constraintTop_toBottomOf="@+id/tvWatchlist"
-        android:visibility="visible" />
+        app:layout_constraintTop_toBottomOf="@+id/tvWatchlist" />
 
     <TextView
         android:id="@+id/emptyViewFavourites"
@@ -109,15 +109,23 @@
         android:layout_marginEnd="8dp"
         android:text="This list seems to be empty"
         android:textAlignment="center"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/tvFavourites"
-        app:layout_constraintTop_toBottomOf="@+id/tvFavourites"
-        android:visibility="visible" />
+        app:layout_constraintTop_toBottomOf="@+id/tvFavourites" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/infoGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="tvInfo" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrierFavourites"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="tvFavourites,emptyViewFavourites,rvFavourites"
+        tools:layout_editor_absoluteY="731dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
