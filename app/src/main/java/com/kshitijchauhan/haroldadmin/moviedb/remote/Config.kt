@@ -4,9 +4,9 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 
 object Config {
 
-    const val BASE_URL: String = "https://api.themoviedb.org/"
-
     const val API_VERSION: Int = 3
+
+    const val BASE_URL: String = "https://api.themoviedb.org/$API_VERSION/"
 
     const val BASE_IMAGE_URL: String = "https://image.tmdb.org/t/p/"
 
