@@ -25,6 +25,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disabled
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.snackbar
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
@@ -85,8 +87,10 @@ class MovieDetailsFragment : BaseFragment() {
             with(movieDetailsViewModel) {
                 mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner))
                 getMovieDetails(id)
-                mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_ACCOUNT_STATES, viewLifecycleOwner))
-                getAccountStatesForMovie(id)
+                if (mainViewModel.isAuthenticated) {
+                    mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_ACCOUNT_STATES, viewLifecycleOwner))
+                    getAccountStatesForMovie(id)
+                }
             }
         }
 
@@ -127,12 +131,9 @@ class MovieDetailsFragment : BaseFragment() {
              load movie state, or by toggling favourite/watchlist status of it.
               */
             // TODO Fix this
-            if (mainViewModel.findLoadingTask(TASK_TOGGLE_FAVOURITE, viewLifecycleOwner) != null) {
-                mainViewModel.completeLoadingTask(TASK_TOGGLE_FAVOURITE, viewLifecycleOwner)
-            }
-
-            if (mainViewModel.findLoadingTask(TASK_TOGGLE_WATCHLIST, viewLifecycleOwner) != null) {
-                mainViewModel.completeLoadingTask(TASK_TOGGLE_WATCHLIST, viewLifecycleOwner)
+            mainViewModel.apply {
+                completeLoadingTask(TASK_TOGGLE_FAVOURITE, viewLifecycleOwner)
+                completeLoadingTask(TASK_TOGGLE_WATCHLIST, viewLifecycleOwner)
             }
         })
     }
@@ -187,25 +188,40 @@ class MovieDetailsFragment : BaseFragment() {
         chipMovieGenre.text = movie.genres[0].name
         chipMovieRating.text = String.format("%.2f", movie.voteAverage)
         tvDescription.text = movie.overview
-        btToggleFavourite.setOnClickListener {
-            val isFavourite = movieDetailsViewModel.accountStatesOfMovie.value?.favourited == true
-            val request = MarkMediaAsFavoriteRequest(
-                MediaTypes.MOVIE.mediaName,
-                movie.id,
-                !isFavourite
-            )
-            mainViewModel.addLoadingTask(LoadingTask(TASK_TOGGLE_FAVOURITE, viewLifecycleOwner))
-            movieDetailsViewModel.toggleMovieFavouriteStatus(mainViewModel.accountId, request)
-        }
-        btToggleWatchlist.setOnClickListener {
-            val isWatchlisted = movieDetailsViewModel.accountStatesOfMovie.value?.watchlisted == true
-            val request = AddMediaToWatchlistRequest(
-                MediaTypes.MOVIE.mediaName,
-                movie.id,
-                !isWatchlisted
-            )
-            mainViewModel.addLoadingTask(LoadingTask(TASK_TOGGLE_WATCHLIST, viewLifecycleOwner))
-            movieDetailsViewModel.toggleMovieWatchlistStatus(mainViewModel.accountId, request)
+        if (mainViewModel.isAuthenticated) {
+            btToggleFavourite.setOnClickListener {
+                val isFavourite = movieDetailsViewModel.accountStatesOfMovie.value?.favourited == true
+                val request = MarkMediaAsFavoriteRequest(
+                    MediaTypes.MOVIE.mediaName,
+                    movie.id,
+                    !isFavourite
+                )
+                mainViewModel.addLoadingTask(LoadingTask(TASK_TOGGLE_FAVOURITE, viewLifecycleOwner))
+                movieDetailsViewModel.toggleMovieFavouriteStatus(mainViewModel.accountId, request)
+            }
+            btToggleWatchlist.setOnClickListener {
+                val isWatchlisted = movieDetailsViewModel.accountStatesOfMovie.value?.watchlisted == true
+                val request = AddMediaToWatchlistRequest(
+                    MediaTypes.MOVIE.mediaName,
+                    movie.id,
+                    !isWatchlisted
+                )
+                mainViewModel.addLoadingTask(LoadingTask(TASK_TOGGLE_WATCHLIST, viewLifecycleOwner))
+                movieDetailsViewModel.toggleMovieWatchlistStatus(mainViewModel.accountId, request)
+            }
+        } else {
+            btToggleFavourite.apply {
+                setUnauthenticatedState(true)
+                setOnClickListener {
+                    snackbar("You need to login to do that.")
+                }
+            }
+            btToggleWatchlist.apply {
+                setUnauthenticatedState(true)
+                setOnClickListener {
+                    snackbar("You need to login to do that.")
+                }
+            }
         }
     }
 

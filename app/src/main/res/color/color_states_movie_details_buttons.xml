@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:color="@color/colorError" app:state_remove_from_list="true" />
+    <item android:color="@color/colorError"
+        app:state_remove_from_list="true"
+        app:state_unauthenticated="false"/>
+    <item android:color="@color/colorSurface"
+        app:state_unauthenticated="true"
+        app:state_remove_from_list="false" />
     <item android:color="@color/colorSecondary" android:state_enabled="true" />
 </selector>
