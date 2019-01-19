@@ -69,13 +69,13 @@ class LoggedOutFragment : BaseFragment() {
                     url?.let {
                         log("Loading this url in webview: $it")
                     }
-                    mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_WEBPAGE))
+                    mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_WEBPAGE, viewLifecycleOwner))
                     super.onPageStarted(view, url, favicon)
                 }
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
-                    mainViewModel.completeLoadingTask(TASK_LOAD_WEBPAGE)
+                    mainViewModel.completeLoadingTask(TASK_LOAD_WEBPAGE, viewLifecycleOwner)
                     if (url?.contains("allow") == true) {
                         handleAuthorizationSuccessful(
                             authenticationViewModel.requestToken.value

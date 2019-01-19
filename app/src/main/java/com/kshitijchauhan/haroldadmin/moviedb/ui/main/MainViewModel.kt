@@ -2,6 +2,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
@@ -13,7 +14,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.ProgressBarNotific
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SharedPreferencesDelegate
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
@@ -26,25 +26,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     @Inject
     lateinit var progressBarManager: ProgressBarManager
 
-    private val compositeDisposable = CompositeDisposable()
-
     init {
         getApplication<MovieDBApplication>()
             .appComponent
             .inject(this)
-
-        progressBarManager.getProgressBarRelay()
-            .subscribe { notification ->
-                _progressBarNotification.value = notification
-            }
-            .disposeWith(compositeDisposable)
     }
 
     private val _state = SingleLiveEvent<UIState>()
     private val _snackbar = SingleLiveEvent<String>()
     private val _clearBackStack = SingleLiveEvent<Unit>()
     private val _toolbarTitle = SingleLiveEvent<String>()
-    private val _progressBarNotification = MutableLiveData<ProgressBarNotification>()
     private var _isAuthenticated by SharedPreferencesDelegate(application, Constants.KEY_IS_AUTHENTICATED, false)
     private var _sessionId by SharedPreferencesDelegate(application, Constants.KEY_SESSION_ID, "")
     private var _accountId by SharedPreferencesDelegate(application, Constants.KEY_ACCOUNT_ID, -1)
@@ -65,7 +56,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         get() = _snackbar
 
     val progressBarNotification: LiveData<ProgressBarNotification>
-        get() = _progressBarNotification
+        get() = progressBarManager.getProgressBarLiveData()
 
     val clearBackStack: LiveData<Unit>
         get() = _clearBackStack
@@ -94,12 +85,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         progressBarManager.addTask(task)
     }
 
-    fun completeLoadingTask(tag: String) {
-        progressBarManager.completeTaskByTag(tag)
+    fun completeLoadingTask(tag: String, lifecycleOwner: LifecycleOwner) {
+        progressBarManager.completeTaskByTag(tag, lifecycleOwner)
     }
 
-    fun findLoadingTask(tag: String): LoadingTask? {
-        return progressBarManager.findTaskByTag(tag)
+    fun findLoadingTask(tag: String, lifecycleOwner: LifecycleOwner): LoadingTask? {
+        return progressBarManager.findTaskByTag(tag, lifecycleOwner)
     }
 
     fun peekState() = _state.value

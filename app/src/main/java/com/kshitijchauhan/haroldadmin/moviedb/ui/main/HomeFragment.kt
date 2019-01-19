@@ -52,22 +52,22 @@ class HomeFragment : BaseFragment() {
         homeViewModel.apply {
 
             if (popularMoviesUpdate.value == null) {
-                mainViewModel.addLoadingTask(LoadingTask(TAG_GET_POPULAR_MOVIES))
+                mainViewModel.addLoadingTask(LoadingTask(TAG_GET_POPULAR_MOVIES, this@HomeFragment.viewLifecycleOwner))
                 getPopularMovies()
             }
 
             if (topRatedMoviesUpdate.value == null) {
-                mainViewModel.addLoadingTask(LoadingTask(TAG_GET_TOP_RATED_MOVIES))
+                mainViewModel.addLoadingTask(LoadingTask(TAG_GET_TOP_RATED_MOVIES, this@HomeFragment.viewLifecycleOwner))
                 getTopRatedMovies()
             }
 
             popularMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
-                mainViewModel.completeLoadingTask(TAG_GET_POPULAR_MOVIES)
+                mainViewModel.completeLoadingTask(TAG_GET_POPULAR_MOVIES, viewLifecycleOwner)
                 popularMoviesAdapter.submitList(newList)
             })
 
             topRatedMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
-                mainViewModel.completeLoadingTask(TAG_GET_TOP_RATED_MOVIES)
+                mainViewModel.completeLoadingTask(TAG_GET_TOP_RATED_MOVIES, viewLifecycleOwner)
                 topRatedMoviesAdapter.submitList(newList)
             })
         }

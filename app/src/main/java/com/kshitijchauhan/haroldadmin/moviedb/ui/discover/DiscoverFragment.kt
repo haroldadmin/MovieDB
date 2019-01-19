@@ -48,12 +48,12 @@ class DiscoverFragment : BaseFragment() {
         discoverViewModel = ViewModelProviders.of(this).get(DiscoverViewModel::class.java)
 
         discoverViewModel.apply {
-            mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_DISCOVER_MOVIES))
+            mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_DISCOVER_MOVIES, viewLifecycleOwner))
             getPopularMovies()
 
             moviesUpdate.observe(viewLifecycleOwner, Observer {
                 moviesAdapter?.updateList(it)
-                mainViewModel.completeLoadingTask(TASK_LOAD_DISCOVER_MOVIES)
+                mainViewModel.completeLoadingTask(TASK_LOAD_DISCOVER_MOVIES, viewLifecycleOwner)
             })
         }
     }

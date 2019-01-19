@@ -63,17 +63,17 @@ class LibraryFragment : BaseFragment() {
             libraryViewModel.apply {
 
                 if (favouriteMoviesUpdate.value == null) {
-                    mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_FAVOURITE_MOVIES))
+                    mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_FAVOURITE_MOVIES, viewLifecycleOwner))
                     getFavouriteMoves(mainViewModel.accountId)
                 }
 
                 if (watchListMoviesUpdate.value == null) {
-                    mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_WATCHLISTED_MOVIES))
+                    mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_WATCHLISTED_MOVIES, viewLifecycleOwner))
                     getWatchlistedeMovies(mainViewModel.accountId)
                 }
 
                 favouriteMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
-                    mainViewModel.completeLoadingTask(TASK_LOAD_FAVOURITE_MOVIES)
+                    mainViewModel.completeLoadingTask(TASK_LOAD_FAVOURITE_MOVIES, viewLifecycleOwner)
                     /**
                      * If the adapter was unpopulated before, the empty view will be removed, the recycler view's new
                      * items will appear. If the new items are not empty, then the watchlist recycler view and its header
@@ -85,7 +85,7 @@ class LibraryFragment : BaseFragment() {
                 })
 
                 watchListMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
-                    mainViewModel.completeLoadingTask(TASK_LOAD_WATCHLISTED_MOVIES)
+                    mainViewModel.completeLoadingTask(TASK_LOAD_WATCHLISTED_MOVIES, viewLifecycleOwner)
                     watchListedMoviesAdapter.submitList(newList)
                 })
             }

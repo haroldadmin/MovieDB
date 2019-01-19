@@ -53,12 +53,12 @@ class AccountFragment : BaseFragment() {
         mainViewModel.updateToolbarTitle("Your Account")
 
         if (authenticationViewModel.accountDetails.value == null) {
-            mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_ACCOUNT_DETAILS))
+            mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_ACCOUNT_DETAILS, viewLifecycleOwner))
             authenticationViewModel.getAccountDetails()
         }
 
         authenticationViewModel.accountDetails.observe(viewLifecycleOwner, Observer { accountInfo ->
-            mainViewModel.completeLoadingTask(TASK_LOAD_ACCOUNT_DETAILS)
+            mainViewModel.completeLoadingTask(TASK_LOAD_ACCOUNT_DETAILS, viewLifecycleOwner)
             updateView(accountInfo)
         })
     }

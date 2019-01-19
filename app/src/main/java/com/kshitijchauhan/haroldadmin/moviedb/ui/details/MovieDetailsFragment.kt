@@ -83,15 +83,15 @@ class MovieDetailsFragment : BaseFragment() {
 
         arguments?.getInt(Constants.KEY_MOVIE_ID)?.let { id ->
             with(movieDetailsViewModel) {
-                mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_DETAILS))
+                mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner))
                 getMovieDetails(id)
-                mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_ACCOUNT_STATES))
+                mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_ACCOUNT_STATES, viewLifecycleOwner))
                 getAccountStatesForMovie(id)
             }
         }
 
         movieDetailsViewModel.movieDetails.observe(viewLifecycleOwner, Observer { movie ->
-            mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_DETAILS)
+            mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner)
             updateView(movie)
         })
 
@@ -120,19 +120,19 @@ class MovieDetailsFragment : BaseFragment() {
                 }
             }
 
-            mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_ACCOUNT_STATES)
+            mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_ACCOUNT_STATES, viewLifecycleOwner)
 
             /*
              We don't know if this update of account states for current movie was triggered by the initial call to
              load movie state, or by toggling favourite/watchlist status of it.
               */
             // TODO Fix this
-            if (mainViewModel.findLoadingTask(TASK_TOGGLE_FAVOURITE) != null) {
-                mainViewModel.completeLoadingTask(TASK_TOGGLE_FAVOURITE)
+            if (mainViewModel.findLoadingTask(TASK_TOGGLE_FAVOURITE, viewLifecycleOwner) != null) {
+                mainViewModel.completeLoadingTask(TASK_TOGGLE_FAVOURITE, viewLifecycleOwner)
             }
 
-            if (mainViewModel.findLoadingTask(TASK_TOGGLE_WATCHLIST) != null) {
-                mainViewModel.completeLoadingTask(TASK_TOGGLE_WATCHLIST)
+            if (mainViewModel.findLoadingTask(TASK_TOGGLE_WATCHLIST, viewLifecycleOwner) != null) {
+                mainViewModel.completeLoadingTask(TASK_TOGGLE_WATCHLIST, viewLifecycleOwner)
             }
         })
     }
@@ -194,7 +194,7 @@ class MovieDetailsFragment : BaseFragment() {
                 movie.id,
                 !isFavourite
             )
-            mainViewModel.addLoadingTask(LoadingTask(TASK_TOGGLE_FAVOURITE))
+            mainViewModel.addLoadingTask(LoadingTask(TASK_TOGGLE_FAVOURITE, viewLifecycleOwner))
             movieDetailsViewModel.toggleMovieFavouriteStatus(mainViewModel.accountId, request)
         }
         btToggleWatchlist.setOnClickListener {
@@ -204,7 +204,7 @@ class MovieDetailsFragment : BaseFragment() {
                 movie.id,
                 !isWatchlisted
             )
-            mainViewModel.addLoadingTask(LoadingTask(TASK_TOGGLE_WATCHLIST))
+            mainViewModel.addLoadingTask(LoadingTask(TASK_TOGGLE_WATCHLIST, viewLifecycleOwner))
             movieDetailsViewModel.toggleMovieWatchlistStatus(mainViewModel.accountId, request)
         }
     }
