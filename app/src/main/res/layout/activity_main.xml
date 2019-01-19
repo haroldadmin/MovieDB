@@ -46,8 +46,8 @@
         app:itemBackground="@color/colorSurface"
         app:itemIconTint="@color/bottom_navigation_icons"
         app:itemTextColor="@color/bottom_navigation_text"
-        app:layout_behavior="com.kshitijchauhan.haroldadmin.moviedb.utils.ScrollAwareBottomNavBehaviour"
-        app:menu="@menu/menu_app_destinations" />
+        app:menu="@menu/menu_app_destinations"
+        app:labelVisibilityMode="labeled"/>
 
     <me.zhanghai.android.materialprogressbar.MaterialProgressBar
         style="@style/Widget.MaterialProgressBar.ProgressBar.Horizontal"
