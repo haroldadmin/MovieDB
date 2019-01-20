@@ -30,6 +30,7 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class MovieDetailsFragment : BaseFragment() {
@@ -41,7 +42,7 @@ class MovieDetailsFragment : BaseFragment() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private lateinit var movieDetailsViewModel: MovieDetailsViewModel
+    private val movieDetailsViewModel: MovieDetailsViewModel by viewModel()
     private val mainViewModel: MainViewModel by sharedViewModel()
 
     override val associatedUIState: UIState =
@@ -84,8 +85,6 @@ class MovieDetailsFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        movieDetailsViewModel = ViewModelProviders.of(this).get(MovieDetailsViewModel::class.java)
 
         arguments?.getInt(Constants.KEY_MOVIE_ID)?.let { id ->
             with(movieDetailsViewModel) {

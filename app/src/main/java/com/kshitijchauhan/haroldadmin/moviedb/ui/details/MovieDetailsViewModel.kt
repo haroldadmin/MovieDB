@@ -1,10 +1,8 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.details
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
+import androidx.lifecycle.ViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.remote.Config
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AddMediaToWatchlistRequest
@@ -16,9 +14,8 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
 
-class MovieDetailsViewModel(application: Application) : AndroidViewModel(application) {
+class MovieDetailsViewModel(private val apiManager: ApiManager) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
     private val _movieDetails = MutableLiveData<Movie>()
@@ -33,15 +30,6 @@ class MovieDetailsViewModel(application: Application) : AndroidViewModel(applica
 
     val trailerUrl: LiveData<String>
         get() = _trailerUrl
-
-    @Inject
-    lateinit var apiManager: ApiManager
-
-    init {
-        (application as MovieDBApplication)
-            .appComponent
-            .inject(this)
-    }
 
     fun getMovieDetails(movieId: Int) {
         apiManager.getMovieDetails(movieId)
@@ -71,7 +59,7 @@ class MovieDetailsViewModel(application: Application) : AndroidViewModel(applica
             .map { response ->
                 MovieState(response.isWatchlisted, response.isFavourited)
             }
-            .doOnSuccess{ state ->
+            .doOnSuccess { state ->
                 _accountStatesOfMovie.value = state
             }
             .subscribe()

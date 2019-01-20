@@ -16,6 +16,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.remote.service.search.SearchServic
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AuthenticationViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.ProgressBarManager
+import com.kshitijchauhan.haroldadmin.moviedb.ui.details.MovieDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.discover.DiscoverViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.HomeViewModel
@@ -106,6 +107,7 @@ val uiModule = module {
     viewModel { DiscoverViewModel(get()) }
     viewModel { AuthenticationViewModel(get(), get(), get()) }
     viewModel { SearchViewModel(get()) }
+    viewModel { MovieDetailsViewModel(get()) }
     viewModel { MainViewModel(get(), get(), get()) }
 }
 
