@@ -3,7 +3,7 @@
 <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ivPoster"
-    android:layout_width="@dimen/movie_grid_poster_width"
+    android:layout_width="match_parent"
     android:layout_height="@dimen/movie_grid_poster_height"
     android:scaleType="fitXY"
     tools:srcCompat="@tools:sample/avatars" />
