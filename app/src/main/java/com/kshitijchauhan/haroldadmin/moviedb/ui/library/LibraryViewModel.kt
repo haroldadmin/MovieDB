@@ -1,11 +1,8 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.library
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
+import androidx.lifecycle.ViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.MovieItemType
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieGridItem
@@ -14,19 +11,12 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getPosterUrl
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
 
-class LibraryViewModel(application: Application) : AndroidViewModel(application) {
+class LibraryViewModel(private val apiManager: ApiManager) : ViewModel() {
 
-    private val _isFavouritesLoading = MutableLiveData<Boolean>()
-    private val _isWatchlistLoading = MutableLiveData<Boolean>()
-    private val _isLoading = MediatorLiveData<Boolean>()
     private val _favouriteMoviesUpdate = MutableLiveData<List<MovieGridItem>>()
     private val _watchlistedMoviesUpdate = MutableLiveData<List<MovieGridItem>>()
     private val compositeDisposable = CompositeDisposable()
-
-    @Inject
-    lateinit var apiManager: ApiManager
 
     val favouriteMoviesUpdate: LiveData<List<MovieGridItem>>
         get() = _favouriteMoviesUpdate
@@ -34,26 +24,7 @@ class LibraryViewModel(application: Application) : AndroidViewModel(application)
     val watchListMoviesUpdate: LiveData<List<MovieGridItem>>
         get() = _watchlistedMoviesUpdate
 
-    val isLoading: LiveData<Boolean>
-        get() = _isLoading
-
-    init {
-        getApplication<MovieDBApplication>()
-            .appComponent
-            .inject(this)
-
-        _isLoading.apply {
-            addSource(_isFavouritesLoading) { isLoading ->
-                _isLoading.value = (_isLoading.value ?: false) || isLoading
-            }
-            addSource(_isWatchlistLoading) { isLoading ->
-                _isLoading.value = (_isLoading.value ?: false) || isLoading
-            }
-        }
-    }
-
     fun getFavouriteMoves(accountId: Int) {
-        _isFavouritesLoading.value = true
         apiManager
             .getFavouriteMovies(accountId)
             .subscribeOn(Schedulers.io())
@@ -76,7 +47,6 @@ class LibraryViewModel(application: Application) : AndroidViewModel(application)
             }
             .toList()
             .doOnSuccess {
-                _isFavouritesLoading.postValue(false)
                 _favouriteMoviesUpdate.postValue(it)
             }
             .subscribe()
@@ -84,7 +54,6 @@ class LibraryViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun getWatchlistedeMovies(accountId: Int) {
-        _isFavouritesLoading.value = true
         apiManager
             .getMoviesWatchList(accountId)
             .subscribeOn(Schedulers.io())
@@ -107,7 +76,6 @@ class LibraryViewModel(application: Application) : AndroidViewModel(application)
             }
             .toList()
             .doOnSuccess {
-                _isWatchlistLoading.postValue(false)
                 _watchlistedMoviesUpdate.postValue(it)
             }
             .subscribe()

@@ -20,6 +20,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumn
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.visible
 import kotlinx.android.synthetic.main.fragment_library.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.roundToInt
 
 class LibraryFragment : BaseFragment() {
@@ -28,7 +29,7 @@ class LibraryFragment : BaseFragment() {
     private val TASK_LOAD_WATCHLISTED_MOVIES = "load-watchlisted-movies"
 
     private lateinit var mainViewModel: MainViewModel
-    private lateinit var libraryViewModel: LibraryViewModel
+    private val libraryViewModel: LibraryViewModel by viewModel()
     private lateinit var favouriteMoviesAdapter: MoviesListAdapter
     private lateinit var watchListedMoviesAdapter: MoviesListAdapter
 
@@ -57,7 +58,6 @@ class LibraryFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
-        libraryViewModel = ViewModelProviders.of(this).get(LibraryViewModel::class.java)
 
         if (mainViewModel.isAuthenticated) {
             libraryViewModel.apply {
