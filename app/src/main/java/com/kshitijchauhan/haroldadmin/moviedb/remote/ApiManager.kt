@@ -1,6 +1,5 @@
 package com.kshitijchauhan.haroldadmin.moviedb.remote
 
-import com.kshitijchauhan.haroldadmin.moviedb.di.AppScope
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AccountService
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AddMediaToWatchlistRequest
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.MarkMediaAsFavoriteRequest
@@ -9,10 +8,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.remote.service.auth.CreateSessionR
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.discover.DiscoveryService
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.MovieService
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.search.SearchService
-import javax.inject.Inject
 
-@AppScope
-class ApiManager @Inject constructor(
+class ApiManager (
     private val authenticationService: AuthenticationService,
     private val discoveryService: DiscoveryService,
     private val searchService: SearchService,

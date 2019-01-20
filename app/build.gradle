@@ -60,6 +60,10 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation 'com.google.android.material:material:1.0.0'
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
+
 
     // Networking
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
@@ -69,12 +73,6 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
 
     // DI
-    implementation 'com.google.dagger:dagger:2.19'
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
-    kapt 'com.google.dagger:dagger-compiler:2.19'
-
     def koin_version = '1.0.2'
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-androidx-scope:$koin_version"

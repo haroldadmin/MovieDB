@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.transition.Fade
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionSet
@@ -27,11 +26,6 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
-        (application as MovieDBApplication)
-            .appComponent
-            .inject(this)
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
