@@ -19,6 +19,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.ProgressBarManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.discover.DiscoverViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.HomeViewModel
+import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import okhttp3.Cache
 import okhttp3.OkHttpClient
@@ -103,6 +104,7 @@ val uiModule = module {
     viewModel { LibraryViewModel(get()) }
     viewModel { DiscoverViewModel(get()) }
     viewModel { AuthenticationViewModel(get(), get(), get()) }
+    viewModel { SearchViewModel(get()) }
 }
 
 

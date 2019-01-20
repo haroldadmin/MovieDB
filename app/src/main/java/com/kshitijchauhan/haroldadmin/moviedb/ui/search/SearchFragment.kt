@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.transition.*
+import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding2.internal.Notification
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay
@@ -24,6 +24,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.view_searchbox.*
 import kotlinx.android.synthetic.main.view_searchbox.view.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 class SearchFragment : BaseFragment() {
@@ -35,7 +36,7 @@ class SearchFragment : BaseFragment() {
     private val onPauseRelay: PublishRelay<Any> = PublishRelay.create()
 
     private lateinit var mainViewModel: MainViewModel
-    private lateinit var searchViewModel: SearchViewModel
+    private val searchViewModel: SearchViewModel by viewModel()
     private lateinit var searchAdapter: SearchResultsAdapter
 
     override val associatedUIState: UIState = UIState.SearchScreenState
@@ -51,7 +52,6 @@ class SearchFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        searchViewModel = ViewModelProviders.of(this).get(SearchViewModel::class.java)
         mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
 
         searchViewModel.searchUpdate.observe(viewLifecycleOwner, Observer {
