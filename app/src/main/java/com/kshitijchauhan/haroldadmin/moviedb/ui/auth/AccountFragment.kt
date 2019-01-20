@@ -18,13 +18,14 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import kotlinx.android.synthetic.main.fragment_account.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AccountFragment : BaseFragment() {
 
     private val TASK_LOAD_ACCOUNT_DETAILS = "load-account-details"
 
     private lateinit var mainViewModel: MainViewModel
-    private lateinit var authenticationViewModel: AuthenticationViewModel
+    private val authenticationViewModel: AuthenticationViewModel by viewModel()
 
     override val associatedUIState: UIState = UIState.AccountScreenState.AuthenticatedScreenState
 
@@ -48,7 +49,6 @@ class AccountFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
 
         mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
-        authenticationViewModel = ViewModelProviders.of(this).get(AuthenticationViewModel::class.java)
 
         mainViewModel.updateToolbarTitle("Your Account")
 

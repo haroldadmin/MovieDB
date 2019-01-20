@@ -1,10 +1,9 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.auth
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
+import androidx.lifecycle.ViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.remote.SessionIdInterceptor
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AccountDetailsResponse
@@ -16,17 +15,18 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
 
-class AuthenticationViewModel(application: Application) : AndroidViewModel(application) {
+class AuthenticationViewModel(sharedPreferences: SharedPreferences,
+                              private val sessionIdInterceptor: SessionIdInterceptor,
+                              private val apiManager: ApiManager) : ViewModel() {
 
     private val _requestToken = MutableLiveData<String>()
     private val _authSuccess = SingleLiveEvent<Boolean>()
     private val _accountDetails = MutableLiveData<AccountDetailsResponse>()
     private val compositeDisposable = CompositeDisposable()
-    private var sessionId by SharedPreferencesDelegate(application, Constants.KEY_SESSION_ID, "")
-    private var isAuthenticated by SharedPreferencesDelegate(application, Constants.KEY_IS_AUTHENTICATED, false)
-    private var accountId by SharedPreferencesDelegate(application, Constants.KEY_ACCOUNT_ID, -1)
+    private var sessionId by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_SESSION_ID, "")
+    private var isAuthenticated by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_IS_AUTHENTICATED, false)
+    private var accountId by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_ACCOUNT_ID, -1)
 
     val requestToken: LiveData<String>
         get() = _requestToken
@@ -36,18 +36,6 @@ class AuthenticationViewModel(application: Application) : AndroidViewModel(appli
 
     val accountDetails: LiveData<AccountDetailsResponse>
         get() = _accountDetails
-
-    @Inject
-    lateinit var apiManager: ApiManager
-
-    @Inject
-    lateinit var sessionIdInterceptor: SessionIdInterceptor
-
-    init {
-        getApplication<MovieDBApplication>()
-            .appComponent
-            .inject(this)
-    }
 
     fun getRequestToken() {
         apiManager

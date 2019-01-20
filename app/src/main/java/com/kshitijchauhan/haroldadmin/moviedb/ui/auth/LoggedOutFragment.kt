@@ -25,13 +25,14 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.visible
 import kotlinx.android.synthetic.main.fragment_logged_out.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoggedOutFragment : BaseFragment() {
 
     private val TASK_LOAD_WEBPAGE = "task-load-webpage"
 
     private lateinit var mainViewModel: MainViewModel
-    private lateinit var authenticationViewModel: AuthenticationViewModel
+    private val authenticationViewModel: AuthenticationViewModel by viewModel()
 
     override val associatedUIState: UIState = UIState.AccountScreenState.UnauthenticatedScreenState
 
@@ -54,8 +55,6 @@ class LoggedOutFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
 
         mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
-        authenticationViewModel = ViewModelProviders.of(this).get(AuthenticationViewModel::class.java)
-
         mainViewModel.updateToolbarTitle("Login")
     }
 

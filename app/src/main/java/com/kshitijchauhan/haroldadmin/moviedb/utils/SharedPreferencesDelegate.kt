@@ -1,14 +1,24 @@
 package com.kshitijchauhan.haroldadmin.moviedb.utils
 
 import android.annotation.SuppressLint
+import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import kotlin.reflect.KProperty
 
-class SharedPreferencesDelegate<T>(private val context: Context, private val key: String, private val defaultValue: T) {
-    private val prefs: SharedPreferences by lazy { context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE) }
+class SharedPreferencesDelegate<T>(
+    private val prefs: SharedPreferences,
+    private val key: String,
+    private val defaultValue: T
+) {
+
+    constructor(application: Application, key: String, defaultValue: T) : this(
+        application.getSharedPreferences(application.getString(R.string.app_name), Context.MODE_PRIVATE),
+        key,
+        defaultValue
+    )
 
     // TODO Cache most recent value in memory
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
