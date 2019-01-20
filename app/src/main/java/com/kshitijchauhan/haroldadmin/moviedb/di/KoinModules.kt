@@ -15,11 +15,13 @@ import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.MovieService
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.search.SearchService
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.ProgressBarManager
+import com.kshitijchauhan.haroldadmin.moviedb.ui.main.HomeViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
+import org.koin.androidx.viewmodel.ext.koin.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module.module
 import retrofit2.Retrofit
@@ -94,6 +96,7 @@ val apiModule = module {
 val uiModule = module {
     single { BottomNavManager() }
     single { ProgressBarManager() }
+    viewModel { HomeViewModel(get()) }
 }
 
 

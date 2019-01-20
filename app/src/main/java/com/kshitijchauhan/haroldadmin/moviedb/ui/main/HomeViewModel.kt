@@ -1,10 +1,8 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
+import androidx.lifecycle.ViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.MovieItemType
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieGridItem
@@ -13,9 +11,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getPosterUrl
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import javax.inject.Inject
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
+class HomeViewModel(private val apiManager: ApiManager) : ViewModel() {
 
     private val isPopularMoviesLoading = MutableLiveData<Boolean>()
     private val isTopRatedMoviesLoading = MutableLiveData<Boolean>()
@@ -23,20 +20,11 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private val _popularMoviesUpdate = MutableLiveData<List<MovieGridItem>>()
     private val _topRatedMoviesUpdate = MutableLiveData<List<MovieGridItem>>()
 
-    @Inject
-    lateinit var apiManager: ApiManager
-
     val popularMoviesUpdate: LiveData<List<MovieGridItem>>
         get() = _popularMoviesUpdate
 
     val topRatedMoviesUpdate: LiveData<List<MovieGridItem>>
         get() = _topRatedMoviesUpdate
-
-    init {
-        (application as MovieDBApplication)
-            .appComponent
-            .inject(this)
-    }
 
     fun getPopularMovies() {
         isPopularMoviesLoading.value = true

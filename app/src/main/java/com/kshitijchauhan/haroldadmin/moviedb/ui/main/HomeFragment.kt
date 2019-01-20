@@ -20,6 +20,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.view_searchbox.view.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.roundToInt
 
 class HomeFragment : BaseFragment() {
@@ -28,7 +29,7 @@ class HomeFragment : BaseFragment() {
     private val TAG_GET_TOP_RATED_MOVIES = "get-top-rated-movies"
 
     private lateinit var mainViewModel: MainViewModel
-    private lateinit var homeViewModel: HomeViewModel
+    private val homeViewModel: HomeViewModel by viewModel()
     private lateinit var popularMoviesAdapter: MoviesListAdapter
     private lateinit var topRatedMoviesAdapter: MoviesListAdapter
 
@@ -101,7 +102,6 @@ class HomeFragment : BaseFragment() {
 
     private fun initViewModels() {
         mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
-        homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
     }
 
     private fun setupSearchBox() {
