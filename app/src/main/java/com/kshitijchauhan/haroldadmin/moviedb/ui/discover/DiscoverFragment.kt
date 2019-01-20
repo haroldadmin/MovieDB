@@ -16,13 +16,14 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_discover.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DiscoverFragment : BaseFragment() {
 
     private val TASK_LOAD_DISCOVER_MOVIES = "load-discover-movies"
 
     private lateinit var mainViewModel: MainViewModel
-    private lateinit var discoverViewModel: DiscoverViewModel
+    private val discoverViewModel: DiscoverViewModel by viewModel()
     private var moviesAdapter: MoviesAdapter? = null
 
     override val associatedUIState: UIState = UIState.DiscoverScreenState
@@ -45,7 +46,6 @@ class DiscoverFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
-        discoverViewModel = ViewModelProviders.of(this).get(DiscoverViewModel::class.java)
 
         discoverViewModel.apply {
             mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_DISCOVER_MOVIES, viewLifecycleOwner))

@@ -15,6 +15,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.MovieService
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.search.SearchService
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.ProgressBarManager
+import com.kshitijchauhan.haroldadmin.moviedb.ui.discover.DiscoverViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.HomeViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
@@ -99,6 +100,7 @@ val uiModule = module {
     single { ProgressBarManager() }
     viewModel { HomeViewModel(get()) }
     viewModel { LibraryViewModel(get()) }
+    viewModel { DiscoverViewModel(get()) }
 }
 
 
