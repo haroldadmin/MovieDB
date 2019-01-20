@@ -29,6 +29,8 @@ class ApiManager @Inject constructor(
 
     fun getAccountStatesForMovie(movieId: Int) = movieService.getAccountStatesForMovie(movieId)
 
+    fun getVideosForMovie(movieId: Int) = movieService.getVideosForMovie(movieId)
+
     fun getTopRatedMovies() = discoveryService.getTopRatedMovies()
 
     fun getRequestToken() = authenticationService.getRequestToken()

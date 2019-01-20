@@ -34,3 +34,17 @@ data class Movie (
 data class MovieStatesResponse(
     @field:Json(name="favorite") val isFavourited: Boolean,
     @field:Json(name="watchlist") val isWatchlisted: Boolean): Parcelable
+
+@Parcelize
+data class MovieVideo(
+    @field:Json(name="id") val id: String,
+    @field:Json(name="key") val key: String,
+    @field:Json(name="name") val name: String,
+    @field:Json(name="site") val site: String,
+    @field:Json(name="size") val size: Int,
+    @field:Json(name="type") val type: String): Parcelable
+
+@Parcelize
+data class MovieVideosResponse(
+    @field:Json(name="id") val id: Int,
+    @field:Json(name="results") val results: List<MovieVideo>): Parcelable

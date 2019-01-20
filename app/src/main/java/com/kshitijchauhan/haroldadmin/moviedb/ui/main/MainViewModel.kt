@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
@@ -15,7 +14,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SharedPreferencesDelegate
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
-import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {

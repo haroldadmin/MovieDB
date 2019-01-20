@@ -55,6 +55,7 @@ inline fun <reified T : BaseFragment> AppCompatActivity.replaceFragment(
 
     val ft = this.supportFragmentManager
         .beginTransaction()
+        .setReorderingAllowed(true)
         .replace(containerId, nextFragment)
     if (addToBackStack) {
         ft.addToBackStack(backStackName)

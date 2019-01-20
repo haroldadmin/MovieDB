@@ -95,6 +95,7 @@ dependencies {
     implementation 'com.mikepenz:itemanimators:1.1.0'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'me.zhanghai.android.materialprogressbar:library:1.6.1'
+    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:9.0.1'
 }
 
 apply plugin: 'kotlin-kapt'

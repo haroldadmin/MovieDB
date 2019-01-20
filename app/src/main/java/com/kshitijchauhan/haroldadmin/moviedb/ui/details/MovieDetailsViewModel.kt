@@ -11,8 +11,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AddMediaToW
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.MarkMediaAsFavoriteRequest
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieState
-import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -23,12 +23,16 @@ class MovieDetailsViewModel(application: Application) : AndroidViewModel(applica
     private val compositeDisposable = CompositeDisposable()
     private val _movieDetails = MutableLiveData<Movie>()
     private val _accountStatesOfMovie = MutableLiveData<MovieState>()
+    private val _trailerUrl = MutableLiveData<String>()
 
     val movieDetails: LiveData<Movie>
         get() = _movieDetails
 
     val accountStatesOfMovie: LiveData<MovieState>
         get() = _accountStatesOfMovie
+
+    val trailerUrl: LiveData<String>
+        get() = _trailerUrl
 
     @Inject
     lateinit var apiManager: ApiManager
@@ -50,7 +54,12 @@ class MovieDetailsViewModel(application: Application) : AndroidViewModel(applica
                 movie.backdropPath = "${Config.BASE_IMAGE_URL}${Config.DEFAULT_BACKDROP_SIZE}${movie.backdropPath}"
                 movie
             }
-            .doOnSuccess { _movieDetails.postValue(it) }
+            .doOnSuccess {
+                _movieDetails.postValue(it)
+            }
+            .doAfterSuccess {
+                getVideosForMovie(movieId)
+            }
             .subscribe()
             .disposeWith(compositeDisposable)
     }
@@ -98,6 +107,27 @@ class MovieDetailsViewModel(application: Application) : AndroidViewModel(applica
             }
             .doOnSuccess { state ->
                 _accountStatesOfMovie.postValue(state)
+            }
+            .subscribe()
+            .disposeWith(compositeDisposable)
+    }
+
+    fun getVideosForMovie(movieId: Int) {
+        apiManager.getVideosForMovie(movieId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
+            .flatMapObservable { response ->
+                Observable.fromIterable(response.results)
+            }
+            .filter { movieVideo ->
+                movieVideo.site == "YouTube" && movieVideo.type == "Trailer"
+            }
+            .map { movieVideo ->
+                movieVideo.key
+            }
+            .firstElement()
+            .doOnSuccess { url ->
+                _trailerUrl.postValue(url)
             }
             .subscribe()
             .disposeWith(compositeDisposable)

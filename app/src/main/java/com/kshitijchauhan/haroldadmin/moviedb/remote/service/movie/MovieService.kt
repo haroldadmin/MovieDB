@@ -11,4 +11,7 @@ interface MovieService {
 
     @GET("movie/{movieId}/account_states")
     fun getAccountStatesForMovie(@Path("movieId") movieId: Int): Single<MovieStatesResponse>
+
+    @GET("movie/{movieId}/videos")
+    fun getVideosForMovie(@Path("movieId") movieId: Int): Single<MovieVideosResponse>
 }

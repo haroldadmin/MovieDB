@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/detailsRootView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/colorSurfaceDark"
     tools:context=".ui.details.MovieDetailsFragment">
 
@@ -17,12 +17,11 @@
         android:layout_marginEnd="8dp"
         android:elevation="4dp"
         android:scaleType="fitXY"
-        android:transitionName=""
-        app:layout_constraintBottom_toBottomOf="@id/posterBottomGuideline"
         app:layout_constraintDimensionRatio=""
         app:layout_constraintEnd_toStartOf="@+id/posterWidthGuideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/headerBarrier"
         tools:src="@tools:sample/avatars" />
 
     <ImageView
@@ -33,7 +32,7 @@
         android:scaleType="centerCrop"
         android:tint="#88000000"
         app:layout_constraintBottom_toBottomOf="@id/headerBarrier"
-        app:layout_constraintDimensionRatio="h,"
+        app:layout_constraintDimensionRatio="h,4:3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,45 +47,43 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:elevation="4dp"
         android:ellipsize="end"
         android:paddingBottom="8dp"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
         android:textColor="@color/textOnPrimaryHighEmphasis"
-        app:layout_constraintBottom_toTopOf="@+id/posterBottomGuideline"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ivPoster"
         app:layout_constraintTop_toTopOf="@+id/ivPoster"
-        app:layout_constraintVertical_bias="0.25"
         tools:text="Hotel Transylvania 3: Summer Vacation" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/tvDescriptionHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="24dp"
         android:text="Description"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
         android:textColor="@color/colorSecondary"
+        android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btToggleWatchlist" />
 
     <TextView
         android:id="@+id/tvDescription"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/tvTitle"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/tvDescriptionHeader"
         tools:text="Lorem ipsum" />
 
     <com.google.android.material.chip.ChipGroup
@@ -143,13 +140,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivPoster" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/posterBottomGuideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.5" />
-
     <com.kshitijchauhan.haroldadmin.moviedb.ui.common.CustomMaterialButton
         android:id="@+id/btToggleWatchlist"
         style="@style/Widget.MaterialComponents.Button"
@@ -181,5 +171,28 @@
         app:layout_constraintStart_toEndOf="@+id/btToggleWatchlist"
         app:layout_constraintTop_toBottomOf="@id/headerBarrier"
         tools:text="Un-Favourite" />
+
+    <com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
+        android:id="@+id/ypvTrailer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTrailerHeader" />
+
+    <TextView
+        android:id="@+id/tvTrailerHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Trailer"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
+        android:textColor="@color/colorSecondary"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.SharedElementCallback
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -13,7 +14,6 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
 import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AddMediaToWatchlistRequest
@@ -25,8 +25,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disabled
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.snackbar
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
@@ -75,6 +75,11 @@ class MovieDetailsFragment : BaseFragment() {
         val view = inflater.inflate(R.layout.fragment_movie_details, container, false)
         ViewCompat.setTransitionName(view.ivPoster, arguments?.getString(Constants.KEY_TRANSITION_NAME))
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        lifecycle.addObserver(ypvTrailer)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -136,6 +141,18 @@ class MovieDetailsFragment : BaseFragment() {
                 completeLoadingTask(TASK_TOGGLE_WATCHLIST, viewLifecycleOwner)
             }
         })
+
+        movieDetailsViewModel.trailerUrl.observe(viewLifecycleOwner, Observer { url ->
+                ypvTrailer.initialize({ initializedPlayer ->
+                    initializedPlayer.addListener(object: AbstractYouTubePlayerListener() {
+                        override fun onReady() {
+                            super.onReady()
+                            initializedPlayer.cueVideo(url, 0f)
+                        }
+                    })
+                }, true)
+
+        })
     }
 
     private fun updateView(movie: Movie) {
@@ -144,10 +161,6 @@ class MovieDetailsFragment : BaseFragment() {
 
         Glide.with(this)
             .load(movie.posterPath)
-            .apply(
-                RequestOptions()
-                    .centerCrop()
-            )
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
                     e: GlideException?,
@@ -176,10 +189,6 @@ class MovieDetailsFragment : BaseFragment() {
         Glide.with(this)
             .asBitmap()
             .transition(BitmapTransitionOptions.withCrossFade())
-            .apply(
-                RequestOptions()
-                    .centerCrop()
-            )
             .load(movie.backdropPath)
             .into(ivBackdrop)
 

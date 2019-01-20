@@ -47,3 +47,5 @@ fun Float.getNumberOfColumns(context: Context): Int {
     val screenWidth = context.resources.displayMetrics.widthPixels
     return screenWidth.div(this).toInt()
 }
+
+fun String.toYoutubeUrl() = "https://www.youtube.com/watch?v=$this"
