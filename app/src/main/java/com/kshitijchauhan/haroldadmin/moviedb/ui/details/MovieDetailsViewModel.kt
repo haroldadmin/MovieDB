@@ -15,7 +15,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class MovieDetailsViewModel(private val apiManager: ApiManager) : ViewModel() {
+class MovieDetailsViewModel(private val apiManager: ApiManager,
+                            private val isAuthenticated: Boolean,
+                            private val movieId: Int) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
     private val _movieDetails = MutableLiveData<Movie>()
@@ -31,7 +33,15 @@ class MovieDetailsViewModel(private val apiManager: ApiManager) : ViewModel() {
     val trailerUrl: LiveData<String>
         get() = _trailerUrl
 
-    fun getMovieDetails(movieId: Int) {
+    init {
+        getMovieDetails()
+        getVideosForMovie()
+        if (isAuthenticated) {
+            getAccountStatesForMovie()
+        }
+    }
+
+    fun getMovieDetails(movieId: Int = this.movieId) {
         apiManager.getMovieDetails(movieId)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
@@ -47,12 +57,15 @@ class MovieDetailsViewModel(private val apiManager: ApiManager) : ViewModel() {
             }
             .doAfterSuccess {
                 getVideosForMovie(movieId)
+                if (isAuthenticated) {
+                    getAccountStatesForMovie(movieId)
+                }
             }
             .subscribe()
             .disposeWith(compositeDisposable)
     }
 
-    fun getAccountStatesForMovie(movieId: Int) {
+    fun getAccountStatesForMovie(movieId: Int = this.movieId) {
         apiManager.getAccountStatesForMovie(movieId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -100,7 +113,7 @@ class MovieDetailsViewModel(private val apiManager: ApiManager) : ViewModel() {
             .disposeWith(compositeDisposable)
     }
 
-    fun getVideosForMovie(movieId: Int) {
+    fun getVideosForMovie(movieId: Int = this.movieId) {
         apiManager.getVideosForMovie(movieId)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())

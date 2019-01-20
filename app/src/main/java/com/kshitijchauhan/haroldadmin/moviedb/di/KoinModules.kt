@@ -107,7 +107,7 @@ val uiModule = module {
     viewModel { DiscoverViewModel(get()) }
     viewModel { AuthenticationViewModel(get(), get(), get()) }
     viewModel { SearchViewModel(get()) }
-    viewModel { MovieDetailsViewModel(get()) }
+    viewModel { (isAuthenticated: Boolean, movieId: Int) -> MovieDetailsViewModel(get(), isAuthenticated, movieId) }
     viewModel { MainViewModel(get(), get(), get()) }
 }
 

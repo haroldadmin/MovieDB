@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -31,6 +30,7 @@ import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 
 class MovieDetailsFragment : BaseFragment() {
@@ -39,10 +39,16 @@ class MovieDetailsFragment : BaseFragment() {
     private val TASK_LOAD_MOVIE_ACCOUNT_STATES = "load-account-states"
     private val TASK_TOGGLE_FAVOURITE = "mark-as-favourite"
     private val TASK_TOGGLE_WATCHLIST = "add-to-watchlist"
+    private val TASK_LOAD_MOVIE_VIDEOS = "load-movie-videos"
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val movieDetailsViewModel: MovieDetailsViewModel by viewModel()
+    private val movieDetailsViewModel: MovieDetailsViewModel by viewModel {
+        val movieId = arguments?.getInt(Constants.KEY_MOVIE_ID, -1)
+        val isAuthenticated = mainViewModel.isAuthenticated
+        parametersOf(isAuthenticated, movieId)
+    }
+
     private val mainViewModel: MainViewModel by sharedViewModel()
 
     override val associatedUIState: UIState =
@@ -86,14 +92,12 @@ class MovieDetailsFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        arguments?.getInt(Constants.KEY_MOVIE_ID)?.let { id ->
-            with(movieDetailsViewModel) {
-                mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner))
-                getMovieDetails(id)
-                if (mainViewModel.isAuthenticated) {
-                    mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_ACCOUNT_STATES, viewLifecycleOwner))
-                    getAccountStatesForMovie(id)
-                }
+        // MovieDetailsViewModel is running these tasks in its init method
+        mainViewModel.apply {
+            addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner))
+            addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_VIDEOS, viewLifecycleOwner))
+            if (isAuthenticated) {
+                addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_ACCOUNT_STATES, viewLifecycleOwner))
             }
         }
 
@@ -149,7 +153,7 @@ class MovieDetailsFragment : BaseFragment() {
                     }
                 })
             }, true)
-
+            mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_VIDEOS, viewLifecycleOwner)
         })
     }
 
