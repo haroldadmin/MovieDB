@@ -1,10 +1,10 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import android.content.SharedPreferences
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
-import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
+import androidx.lifecycle.ViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.ProgressBarManager
@@ -14,29 +14,20 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SharedPreferencesDelegate
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
-import javax.inject.Inject
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
-
-    @Inject
-    lateinit var bottomNavManager: BottomNavManager
-
-    @Inject
-    lateinit var progressBarManager: ProgressBarManager
-
-    init {
-        getApplication<MovieDBApplication>()
-            .appComponent
-            .inject(this)
-    }
+class MainViewModel(
+    private val bottomNavManager: BottomNavManager,
+    private val progressBarManager: ProgressBarManager,
+    sharedPreferences: SharedPreferences
+) : ViewModel() {
 
     private val _state = SingleLiveEvent<UIState>()
     private val _snackbar = SingleLiveEvent<String>()
     private val _clearBackStack = SingleLiveEvent<Unit>()
     private val _toolbarTitle = SingleLiveEvent<String>()
-    private var _isAuthenticated by SharedPreferencesDelegate(application, Constants.KEY_IS_AUTHENTICATED, false)
-    private var _sessionId by SharedPreferencesDelegate(application, Constants.KEY_SESSION_ID, "")
-    private var _accountId by SharedPreferencesDelegate(application, Constants.KEY_ACCOUNT_ID, -1)
+    private var _isAuthenticated by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_IS_AUTHENTICATED, false)
+    private var _sessionId by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_SESSION_ID, "")
+    private var _accountId by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_ACCOUNT_ID, -1)
 
     val state: LiveData<UIState>
         get() = _state
@@ -106,4 +97,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun updateBottomNavManagerState(state: UIState) {
         this.bottomNavManager.setBottomNavActiveState(state)
     }
+
+    fun setBottomNavView(bottomNavigationView: BottomNavigationView) {
+        this.bottomNavManager.setBottomNavView(bottomNavigationView)
+    }
+
+    fun getBottomNavView() = bottomNavManager.bottomNavigationView
 }

@@ -10,7 +10,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.transition.Fade
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
@@ -25,19 +24,20 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.visible
 import kotlinx.android.synthetic.main.fragment_logged_out.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoggedOutFragment : BaseFragment() {
 
     private val TASK_LOAD_WEBPAGE = "task-load-webpage"
 
-    private lateinit var mainViewModel: MainViewModel
+    private val mainViewModel: MainViewModel by sharedViewModel()
     private val authenticationViewModel: AuthenticationViewModel by viewModel()
 
     override val associatedUIState: UIState = UIState.AccountScreenState.UnauthenticatedScreenState
 
     override fun notifyBottomNavManager() {
-        mainViewModel.bottomNavManager.setBottomNavActiveState(this.associatedUIState)
+        mainViewModel.updateBottomNavManagerState(this.associatedUIState)
     }
 
     companion object {
@@ -53,8 +53,6 @@ class LoggedOutFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
         mainViewModel.updateToolbarTitle("Login")
     }
 

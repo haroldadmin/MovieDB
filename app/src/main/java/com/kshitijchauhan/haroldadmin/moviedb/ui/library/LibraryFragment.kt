@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.transition.TransitionManager
 import com.bumptech.glide.Glide
@@ -20,6 +19,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumn
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.visible
 import kotlinx.android.synthetic.main.fragment_library.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.roundToInt
 
@@ -28,7 +28,7 @@ class LibraryFragment : BaseFragment() {
     private val TASK_LOAD_FAVOURITE_MOVIES = "load-favourite-movies"
     private val TASK_LOAD_WATCHLISTED_MOVIES = "load-watchlisted-movies"
 
-    private lateinit var mainViewModel: MainViewModel
+    private val mainViewModel: MainViewModel by sharedViewModel()
     private val libraryViewModel: LibraryViewModel by viewModel()
     private lateinit var favouriteMoviesAdapter: MoviesListAdapter
     private lateinit var watchListedMoviesAdapter: MoviesListAdapter
@@ -36,7 +36,7 @@ class LibraryFragment : BaseFragment() {
     override val associatedUIState: UIState = UIState.LibraryScreenState
 
     override fun notifyBottomNavManager() {
-        mainViewModel.bottomNavManager.setBottomNavActiveState(this.associatedUIState)
+        mainViewModel.updateBottomNavManagerState(this.associatedUIState)
     }
 
     companion object {
@@ -57,7 +57,6 @@ class LibraryFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
 
         if (mainViewModel.isAuthenticated) {
             libraryViewModel.apply {
@@ -78,7 +77,7 @@ class LibraryFragment : BaseFragment() {
                      * If the adapter was unpopulated before, the empty view will be removed, the recycler view's new
                      * items will appear. If the new items are not empty, then the watchlist recycler view and its header
                      * will have to be shifted down. We want to animate those changes.
-                      */
+                     */
                     val isListEmpty = favouriteMoviesAdapter.itemCount == 0
                     if (isListEmpty) TransitionManager.beginDelayedTransition(libraryContainer)
                     favouriteMoviesAdapter.submitList(newList)

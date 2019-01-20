@@ -20,6 +20,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.view_searchbox.view.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.math.roundToInt
 
@@ -28,7 +29,7 @@ class HomeFragment : BaseFragment() {
     private val TAG_GET_POPULAR_MOVIES = "get-popular-movies"
     private val TAG_GET_TOP_RATED_MOVIES = "get-top-rated-movies"
 
-    private lateinit var mainViewModel: MainViewModel
+    private val mainViewModel: MainViewModel by sharedViewModel()
     private val homeViewModel: HomeViewModel by viewModel()
     private lateinit var popularMoviesAdapter: MoviesListAdapter
     private lateinit var topRatedMoviesAdapter: MoviesListAdapter
@@ -38,7 +39,7 @@ class HomeFragment : BaseFragment() {
     override val associatedUIState: UIState = UIState.HomeScreenState
 
     override fun notifyBottomNavManager() {
-        mainViewModel.bottomNavManager.setBottomNavActiveState(this.associatedUIState)
+        mainViewModel.updateBottomNavManagerState(this.associatedUIState)
     }
 
     companion object {
@@ -47,8 +48,6 @@ class HomeFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        initViewModels()
 
         homeViewModel.apply {
 
@@ -98,10 +97,6 @@ class HomeFragment : BaseFragment() {
 
         setupRecyclerViews()
         setupSearchBox()
-    }
-
-    private fun initViewModels() {
-        mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
     }
 
     private fun setupSearchBox() {

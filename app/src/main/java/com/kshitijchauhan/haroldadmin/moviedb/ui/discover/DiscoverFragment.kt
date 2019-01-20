@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.kshitijchauhan.haroldadmin.moviedb.R
@@ -16,20 +15,21 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_discover.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DiscoverFragment : BaseFragment() {
 
     private val TASK_LOAD_DISCOVER_MOVIES = "load-discover-movies"
 
-    private lateinit var mainViewModel: MainViewModel
+    private val mainViewModel: MainViewModel by sharedViewModel()
     private val discoverViewModel: DiscoverViewModel by viewModel()
     private var moviesAdapter: MoviesAdapter? = null
 
     override val associatedUIState: UIState = UIState.DiscoverScreenState
 
     override fun notifyBottomNavManager() {
-        mainViewModel.bottomNavManager.setBottomNavActiveState(this.associatedUIState)
+        mainViewModel.updateBottomNavManagerState(this.associatedUIState)
     }
 
     companion object {
@@ -45,8 +45,6 @@ class DiscoverFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
-
         discoverViewModel.apply {
             mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_DISCOVER_MOVIES, viewLifecycleOwner))
             getPopularMovies()

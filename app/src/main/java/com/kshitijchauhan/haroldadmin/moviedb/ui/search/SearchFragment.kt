@@ -24,6 +24,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.android.synthetic.main.view_searchbox.*
 import kotlinx.android.synthetic.main.view_searchbox.view.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
@@ -35,7 +36,7 @@ class SearchFragment : BaseFragment() {
 
     private val onPauseRelay: PublishRelay<Any> = PublishRelay.create()
 
-    private lateinit var mainViewModel: MainViewModel
+    private val mainViewModel: MainViewModel by sharedViewModel()
     private val searchViewModel: SearchViewModel by viewModel()
     private lateinit var searchAdapter: SearchResultsAdapter
 
@@ -52,7 +53,6 @@ class SearchFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
 
         searchViewModel.searchUpdate.observe(viewLifecycleOwner, Observer {
             searchAdapter.updateList(it)

@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
@@ -18,19 +17,20 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import kotlinx.android.synthetic.main.fragment_account.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AccountFragment : BaseFragment() {
 
     private val TASK_LOAD_ACCOUNT_DETAILS = "load-account-details"
 
-    private lateinit var mainViewModel: MainViewModel
+    private val mainViewModel: MainViewModel by sharedViewModel()
     private val authenticationViewModel: AuthenticationViewModel by viewModel()
 
     override val associatedUIState: UIState = UIState.AccountScreenState.AuthenticatedScreenState
 
     override fun notifyBottomNavManager() {
-        mainViewModel.bottomNavManager.setBottomNavActiveState(this.associatedUIState)
+        mainViewModel.updateBottomNavManagerState(this.associatedUIState)
     }
 
     companion object {
@@ -47,8 +47,6 @@ class AccountFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-        mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
 
         mainViewModel.updateToolbarTitle("Your Account")
 

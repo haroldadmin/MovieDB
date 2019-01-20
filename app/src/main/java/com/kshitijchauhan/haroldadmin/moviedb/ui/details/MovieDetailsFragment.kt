@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.app.SharedElementCallback
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -30,6 +29,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.Abstract
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 
 class MovieDetailsFragment : BaseFragment() {
@@ -42,13 +42,13 @@ class MovieDetailsFragment : BaseFragment() {
     private val compositeDisposable = CompositeDisposable()
 
     private lateinit var movieDetailsViewModel: MovieDetailsViewModel
-    private lateinit var mainViewModel: MainViewModel
+    private val mainViewModel: MainViewModel by sharedViewModel()
 
     override val associatedUIState: UIState =
         UIState.DetailsScreenState(this.arguments?.getInt(Constants.KEY_MOVIE_ID) ?: -1)
 
     override fun notifyBottomNavManager() {
-        mainViewModel.bottomNavManager.setBottomNavActiveState(this.associatedUIState)
+        mainViewModel.updateBottomNavManagerState(this.associatedUIState)
     }
 
     companion object {
@@ -85,7 +85,6 @@ class MovieDetailsFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        mainViewModel = ViewModelProviders.of(activity!!).get(MainViewModel::class.java)
         movieDetailsViewModel = ViewModelProviders.of(this).get(MovieDetailsViewModel::class.java)
 
         arguments?.getInt(Constants.KEY_MOVIE_ID)?.let { id ->
@@ -143,14 +142,14 @@ class MovieDetailsFragment : BaseFragment() {
         })
 
         movieDetailsViewModel.trailerUrl.observe(viewLifecycleOwner, Observer { url ->
-                ypvTrailer.initialize({ initializedPlayer ->
-                    initializedPlayer.addListener(object: AbstractYouTubePlayerListener() {
-                        override fun onReady() {
-                            super.onReady()
-                            initializedPlayer.cueVideo(url, 0f)
-                        }
-                    })
-                }, true)
+            ypvTrailer.initialize({ initializedPlayer ->
+                initializedPlayer.addListener(object : AbstractYouTubePlayerListener() {
+                    override fun onReady() {
+                        super.onReady()
+                        initializedPlayer.cueVideo(url, 0f)
+                    }
+                })
+            }, true)
 
         })
     }

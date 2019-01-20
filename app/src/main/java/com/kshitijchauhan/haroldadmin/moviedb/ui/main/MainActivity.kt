@@ -20,10 +20,11 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchFragment
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var mainViewModel: MainViewModel
+    private val mainViewModel: MainViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -34,9 +35,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-
-        mainViewModel.bottomNavManager.setBottomNavView(mainNavView)
+        mainViewModel.setBottomNavView(mainNavView)
 
         mainViewModel.state.observe(this, Observer { pair ->
             handleStateChange(pair)
@@ -71,7 +70,7 @@ class MainActivity : AppCompatActivity() {
             title = getString(R.string.app_name)
         }
 
-        mainViewModel.bottomNavManager.bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+        mainViewModel.getBottomNavView().setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.menuHome -> {
                     mainViewModel.updateStateTo(UIState.HomeScreenState)
