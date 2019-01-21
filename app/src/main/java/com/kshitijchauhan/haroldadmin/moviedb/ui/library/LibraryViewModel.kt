@@ -40,7 +40,7 @@ class LibraryViewModel(private val apiManager: ApiManager) : ViewModel() {
                     MovieGridItem(
                         id,
                         title,
-                        getPosterUrl(posterPath),
+                        this.posterPath.getPosterUrl(),
                         MovieItemType.LibraryType.Favourite
                     )
                 }
@@ -69,7 +69,7 @@ class LibraryViewModel(private val apiManager: ApiManager) : ViewModel() {
                     MovieGridItem(
                         id,
                         title,
-                        getPosterUrl(posterPath),
+                        this.posterPath.getPosterUrl(),
                         MovieItemType.LibraryType.Watchlisted
                     )
                 }

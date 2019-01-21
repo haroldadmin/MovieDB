@@ -216,7 +216,7 @@ class MovieDetailsFragment : BaseFragment() {
 
         tvTitle.text = movie.title
         chipMovieYear.text = movie.releaseDate
-        chipMovieGenre.text = movie.genres[0].name
+        chipMovieGenre.text = movie.genres.takeIf { it.isNotEmpty() }?.first()?.name ?: "N/A"
         chipMovieRating.text = String.format("%.2f", movie.voteAverage)
         tvDescription.text = movie.overview
         if (mainViewModel.isAuthenticated) {

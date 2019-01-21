@@ -43,7 +43,7 @@ class HomeViewModel(private val apiManager: ApiManager) : ViewModel() {
                     MovieGridItem(
                         id,
                         title,
-                        getPosterUrl(posterPath),
+                        this.posterPath.getPosterUrl(),
                         MovieItemType.MovieType.Popular
                     )
                 }
@@ -74,7 +74,7 @@ class HomeViewModel(private val apiManager: ApiManager) : ViewModel() {
                     MovieGridItem(
                         id,
                         title,
-                        getPosterUrl(posterPath),
+                        this.posterPath.getPosterUrl(),
                         MovieItemType.MovieType.TopRated
                     )
                 }

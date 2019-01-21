@@ -6,8 +6,6 @@ import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
 import com.kshitijchauhan.haroldadmin.moviedb.remote.Config
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.common.GeneralMovieResponse
-import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -37,16 +35,22 @@ fun Float.dpToPx(context: Context): Float {
     return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, this, context.resources.displayMetrics)
 }
 
-fun GeneralMovieResponse.getPosterUrl(posterPath: String?): String {
-    return posterPath?.let {
-        "${Config.BASE_IMAGE_URL}${Config.SMALL_POSTER_SIZE}$it"
+fun String?.getPosterUrl(): String {
+    return this?.let {
+        "${Config.BASE_IMAGE_URL}${Config.DEFAULT_POSTER_SIZE}$it"
+    } ?: ""
+}
+
+fun String?.getBackdropUrl(): String {
+    return this?.let {
+        "${Config.BASE_IMAGE_URL}${Config.DEFAULT_BACKDROP_SIZE}${this}"
     } ?: ""
 }
 
 fun String?.getProfilePictureUrl(): String {
-    val url = "${Config.BASE_IMAGE_URL}${Config.SMALL_PROFILE_PICTURE_SIZE}$this"
-    this?.log("Generated profile picture url: $url")
-    return url
+    return this?.let {
+        "${Config.BASE_IMAGE_URL}${Config.SMALL_PROFILE_PICTURE_SIZE}$this"
+    } ?: ""
 }
 
 fun Float.getNumberOfColumns(context: Context): Int {

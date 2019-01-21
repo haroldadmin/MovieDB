@@ -1,7 +1,5 @@
 package com.kshitijchauhan.haroldadmin.moviedb.remote
 
-import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
-
 object Config {
 
     const val API_VERSION: Int = 3

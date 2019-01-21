@@ -11,6 +11,9 @@ import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.CastMember
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieState
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getBackdropUrl
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getPosterUrl
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -52,10 +55,10 @@ class MovieDetailsViewModel(private val apiManager: ApiManager,
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
             .map { movie ->
-                movie.posterPath = "${Config.BASE_IMAGE_URL}${Config.DEFAULT_POSTER_SIZE}${movie.posterPath}"
+                movie.posterPath = movie.posterPath.getPosterUrl()
                 movie.voteAverage = movie.voteAverage.div(10.0).times(5)
                 movie.releaseDate = movie.releaseDate.split("-")[0]
-                movie.backdropPath = "${Config.BASE_IMAGE_URL}${Config.DEFAULT_BACKDROP_SIZE}${movie.backdropPath}"
+                movie.backdropPath = movie.backdropPath.getBackdropUrl()
                 movie
             }
             .doOnSuccess {
@@ -132,9 +135,12 @@ class MovieDetailsViewModel(private val apiManager: ApiManager,
             .map { movieVideo ->
                 movieVideo.key
             }
-            .firstElement()
+            .first("")
             .doOnSuccess { url ->
                 _trailerUrl.postValue(url)
+            }
+            .doOnError { err ->
+                _trailerUrl.postValue("")
             }
             .subscribe()
             .disposeWith(compositeDisposable)

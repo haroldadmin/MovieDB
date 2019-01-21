@@ -13,7 +13,7 @@ data class GenrePair(
 data class Movie (
     @field:Json(name="adult") val isAdult: Boolean,
     @field:Json(name="backdrop_path") var backdropPath: String?,
-    @field:Json(name="budget") val budget: Int,
+    @field:Json(name="budget") val budget: Long,
     @field:Json(name="genres") val genres: List<GenrePair>,
     @field:Json(name="homepage") val homepage: String?,
     @field:Json(name="id") val id: Int,
@@ -24,7 +24,7 @@ data class Movie (
     @field:Json(name="popularity") val popularity: Double,
     @field:Json(name="poster_path") var posterPath: String?,
     @field:Json(name="release_date") var releaseDate: String,
-    @field:Json(name="revenue") val revenue: Int,
+    @field:Json(name="revenue") val revenue: Long,
     @field:Json(name="runtime") val runtime: Int?,
     @field:Json(name="title") val title: String,
     @field:Json(name="vote_average") var voteAverage: Double,
