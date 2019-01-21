@@ -32,7 +32,9 @@
                 android:layout_height="match_parent"
                 android:background="@android:color/transparent"
                 android:hint="Search"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:inputType="text"
+                android:maxLines="1"/>
 
 
         </com.google.android.material.textfield.TextInputLayout>
