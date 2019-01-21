@@ -16,4 +16,6 @@ object Config {
 
     const val SMALL_POSTER_SIZE: String = "w185"
 
+    const val SMALL_PROFILE_PICTURE_SIZE: String = "w185"
+
 }

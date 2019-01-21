@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/ivCreditActorPhoto"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
+        android:src="@drawable/ic_round_account_circle_24px"
+        android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/tvCreditActorName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:text="Robert Downey Jr"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
+        android:textAlignment="center"/>
+</LinearLayout>

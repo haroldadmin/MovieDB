@@ -3,4 +3,6 @@
     <dimen name="movie_grid_poster_width">100dp</dimen>
     <dimen name="movie_grid_poster_height">150dp</dimen>
     <dimen name="movie_grid_item_space">1dp</dimen>
+    <dimen name="cast_member_picture_size">96dp</dimen>
+    <dimen name="cast_member_picture_space">4dp</dimen>
 </resources>

@@ -48,3 +48,19 @@ data class MovieVideo(
 data class MovieVideosResponse(
     @field:Json(name="id") val id: Int,
     @field:Json(name="results") val results: List<MovieVideo>): Parcelable
+
+@Parcelize
+data class CastMember(
+    @field:Json(name="cast_id") val castId: Int,
+    @field:Json(name="character") val character: String,
+    @field:Json(name="credit_id") val creditId: String,
+    @field:Json(name="gender") val gender: Int?,
+    @field:Json(name="id") val id: Int,
+    @field:Json(name="name") val name: String,
+    @field:Json(name="order") val order: Int,
+    @field:Json(name="profile_path") val profilePath: String?): Parcelable
+
+@Parcelize
+data class MovieCreditsResponse(
+    @field:Json(name="id") val id: Int,
+    @field:Json(name="cast") val cast: List<CastMember>): Parcelable

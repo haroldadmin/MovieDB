@@ -28,6 +28,8 @@ class ApiManager (
 
     fun getVideosForMovie(movieId: Int) = movieService.getVideosForMovie(movieId)
 
+    fun getCreditsForMovie(movieId: Int) = movieService.getCreditsForMovie(movieId)
+
     fun getTopRatedMovies() = discoveryService.getTopRatedMovies()
 
     fun getRequestToken() = authenticationService.getRequestToken()

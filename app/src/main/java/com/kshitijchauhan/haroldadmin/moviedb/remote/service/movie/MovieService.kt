@@ -14,4 +14,7 @@ interface MovieService {
 
     @GET("movie/{movieId}/videos")
     fun getVideosForMovie(@Path("movieId") movieId: Int): Single<MovieVideosResponse>
+
+    @GET("movie/{movieId}/credits")
+    fun getCreditsForMovie(@Path("movieId") movieId: Int): Single<MovieCreditsResponse>
 }

@@ -7,6 +7,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.remote.Config
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AddMediaToWatchlistRequest
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.MarkMediaAsFavoriteRequest
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.CastMember
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieState
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
@@ -23,6 +24,7 @@ class MovieDetailsViewModel(private val apiManager: ApiManager,
     private val _movieDetails = MutableLiveData<Movie>()
     private val _accountStatesOfMovie = MutableLiveData<MovieState>()
     private val _trailerUrl = MutableLiveData<String>()
+    private val _movieCredits = MutableLiveData<List<CastMember>>()
 
     val movieDetails: LiveData<Movie>
         get() = _movieDetails
@@ -33,12 +35,16 @@ class MovieDetailsViewModel(private val apiManager: ApiManager,
     val trailerUrl: LiveData<String>
         get() = _trailerUrl
 
+    val movieCredits: LiveData<List<CastMember>>
+        get() = _movieCredits
+
     init {
         getMovieDetails()
         getVideosForMovie()
         if (isAuthenticated) {
             getAccountStatesForMovie()
         }
+        getCreditsForMovie()
     }
 
     fun getMovieDetails(movieId: Int = this.movieId) {
@@ -129,6 +135,22 @@ class MovieDetailsViewModel(private val apiManager: ApiManager,
             .firstElement()
             .doOnSuccess { url ->
                 _trailerUrl.postValue(url)
+            }
+            .subscribe()
+            .disposeWith(compositeDisposable)
+    }
+
+    fun getCreditsForMovie(movieId: Int = this.movieId) {
+        apiManager.getCreditsForMovie(movieId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
+            .flatMapObservable { response ->
+                Observable.fromIterable(response.cast)
+            }
+            .take(8)
+            .toList()
+            .doOnSuccess {
+                _movieCredits.postValue(it)
             }
             .subscribe()
             .disposeWith(compositeDisposable)

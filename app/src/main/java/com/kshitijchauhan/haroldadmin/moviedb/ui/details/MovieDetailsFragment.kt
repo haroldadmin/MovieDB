@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -23,6 +24,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
+import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.snackbar
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener
 import io.reactivex.disposables.CompositeDisposable
@@ -31,6 +34,7 @@ import kotlinx.android.synthetic.main.fragment_movie_details.view.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import kotlin.math.roundToInt
 
 
 class MovieDetailsFragment : BaseFragment() {
@@ -50,6 +54,8 @@ class MovieDetailsFragment : BaseFragment() {
     }
 
     private val mainViewModel: MainViewModel by sharedViewModel()
+
+    private lateinit var creditsAdapter: CreditsAdapter
 
     override val associatedUIState: UIState =
         UIState.DetailsScreenState(this.arguments?.getInt(Constants.KEY_MOVIE_ID) ?: -1)
@@ -73,6 +79,7 @@ class MovieDetailsFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         postponeEnterTransition()
+        creditsAdapter = CreditsAdapter(Glide.with(this))
     }
 
     override fun onCreateView(
@@ -87,6 +94,15 @@ class MovieDetailsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         lifecycle.addObserver(ypvTrailer)
+
+        val columns = resources.getDimension(R.dimen.cast_member_picture_size).getNumberOfColumns(view.context)
+        val space = resources.getDimension(R.dimen.cast_member_picture_space)
+
+        rvCredits.apply {
+            layoutManager = GridLayoutManager(context, columns)
+            adapter = creditsAdapter
+            addItemDecoration(EqualSpaceGridItemDecoration(space.roundToInt()))
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -154,6 +170,10 @@ class MovieDetailsFragment : BaseFragment() {
                 })
             }, true)
             mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_VIDEOS, viewLifecycleOwner)
+        })
+
+        movieDetailsViewModel.movieCredits.observe(viewLifecycleOwner, Observer { credits ->
+            creditsAdapter.submitList(credits)
         })
     }
 

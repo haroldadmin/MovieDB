@@ -43,6 +43,12 @@ fun GeneralMovieResponse.getPosterUrl(posterPath: String?): String {
     } ?: ""
 }
 
+fun String?.getProfilePictureUrl(): String {
+    val url = "${Config.BASE_IMAGE_URL}${Config.SMALL_PROFILE_PICTURE_SIZE}$this"
+    this?.log("Generated profile picture url: $url")
+    return url
+}
+
 fun Float.getNumberOfColumns(context: Context): Int {
     val screenWidth = context.resources.displayMetrics.widthPixels
     return screenWidth.div(this).toInt()

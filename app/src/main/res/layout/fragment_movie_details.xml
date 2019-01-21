@@ -195,4 +195,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
 
+    <TextView
+        android:id="@+id/tvCastHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Cast"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
+        android:textColor="@color/colorSecondary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ypvTrailer" />
+
+    <com.kshitijchauhan.haroldadmin.moviedb.ui.common.CustomRecyclerView
+        android:id="@+id/rvCredits"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvCastHeader"
+        tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        tools:listitem="@layout/item_credit_actor"
+        tools:spanCount="4" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
