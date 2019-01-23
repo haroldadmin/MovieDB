@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.remote
+package com.kshitijchauhan.haroldadmin.moviedb.repository.remote
 
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import okhttp3.Interceptor

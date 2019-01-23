@@ -3,7 +3,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.MovieItemType
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieGridItem
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith

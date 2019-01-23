@@ -1,13 +1,13 @@
-package com.kshitijchauhan.haroldadmin.moviedb.remote
+package com.kshitijchauhan.haroldadmin.moviedb.repository.remote
 
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AccountService
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AddMediaToWatchlistRequest
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.MarkMediaAsFavoriteRequest
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.auth.AuthenticationService
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.auth.CreateSessionRequest
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.discover.DiscoveryService
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.MovieService
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.search.SearchService
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.account.AccountService
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.account.AddMediaToWatchlistRequest
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.account.MarkMediaAsFavoriteRequest
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.auth.AuthenticationService
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.auth.CreateSessionRequest
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.discover.DiscoveryService
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.movie.MovieService
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.search.SearchService
 
 class ApiManager (
     private val authenticationService: AuthenticationService,

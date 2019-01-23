@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.remote.service.config
+package com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.config
 
 import io.reactivex.Single
 import retrofit2.http.GET

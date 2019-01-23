@@ -11,13 +11,12 @@ import com.jakewharton.rxbinding2.internal.Notification
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay
 import com.kshitijchauhan.haroldadmin.moviedb.R
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.common.GeneralMovieResponse
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.hideKeyboard
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.showKeyboard
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.visible
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -41,14 +40,14 @@ class SearchFragment : BaseFragment() {
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val searchViewModel: SearchViewModel by viewModel()
     private val searchAdapter: SearchResultsAdapter by inject {
-        parametersOf(mutableListOf<GeneralMovieResponse>(), { movieId: Int ->
-            showDetails(movieId)
-        })
+        parametersOf({ movieId: Int -> showDetails(movieId) })
     }
 
     override val associatedUIState: UIState = UIState.SearchScreenState
 
-    override fun notifyBottomNavManager() { return }
+    override fun notifyBottomNavManager() {
+        return
+    }
 
     override fun updateToolbarTitle() {
         mainViewModel.updateToolbarTitle("Search")
@@ -65,10 +64,13 @@ class SearchFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
 
         searchViewModel.searchUpdate.observe(viewLifecycleOwner, Observer {
-            searchAdapter.updateList(it)
-            if (it.first.isEmpty()) {
+            searchAdapter.submitList(it)
+            if (it.isEmpty()) {
                 TransitionManager.beginDelayedTransition(searchRootView)
                 rvSearchResults.gone()
+            } else {
+                TransitionManager.beginDelayedTransition(searchRootView)
+                rvSearchResults.visible()
             }
         })
     }
@@ -80,7 +82,6 @@ class SearchFragment : BaseFragment() {
 
         searchBox.etSearchBox.apply {
             requestFocus()
-            showKeyboard(context)
         }
 
         rvSearchResults.apply {

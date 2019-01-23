@@ -3,11 +3,13 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.DiffUtil
-import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.common.GeneralMovieResponse
-import com.kshitijchauhan.haroldadmin.moviedb.utils.RxDiffUtil
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.ApiManager
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.common.GeneralMovieResponse
+import com.kshitijchauhan.haroldadmin.moviedb.ui.MovieItemType
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieGridItem
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getPosterUrl
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -16,9 +18,9 @@ import io.reactivex.schedulers.Schedulers
 class SearchViewModel(private val apiManager: ApiManager) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
-    private val _searchUpdate = MutableLiveData<Pair<List<GeneralMovieResponse>, DiffUtil.DiffResult>>()
+    private val _searchUpdate = MutableLiveData<List<MovieGridItem>>()
 
-    val searchUpdate: LiveData<Pair<List<GeneralMovieResponse>, DiffUtil.DiffResult>>
+    val searchUpdate: LiveData<List<MovieGridItem>>
         get() = _searchUpdate
 
     private var currentQuery: Disposable? = null
@@ -32,18 +34,19 @@ class SearchViewModel(private val apiManager: ApiManager) : ViewModel() {
             .search(query)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
-            .map { response ->
-                response.results
+            .flatMapObservable { response ->
+                Observable.fromIterable(response.results)
             }
-            .flatMapObservable { movies ->
-                Observable.fromIterable(movies)
+            .map { generalMovieResponse: GeneralMovieResponse ->
+                MovieGridItem(
+                    generalMovieResponse.id,
+                    generalMovieResponse.title,
+                    generalMovieResponse.posterPath.getPosterUrl(),
+                    MovieItemType.MovieType.SearchResult
+                )
             }
             .toList()
-            .toObservable()
-            .compose(RxDiffUtil.calculateDiff { oldList, newList ->
-                SearchDiffUtil(oldList, newList)
-            })
-            .doOnNext {
+            .doOnSuccess {
                 _searchUpdate.postValue(it)
             }
             .subscribe()

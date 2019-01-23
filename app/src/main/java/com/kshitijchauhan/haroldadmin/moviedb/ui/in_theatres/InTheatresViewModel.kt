@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.DiffUtil
-import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
-import com.kshitijchauhan.haroldadmin.moviedb.remote.Config
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.common.GeneralMovieResponse
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.ApiManager
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.Config
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.common.GeneralMovieResponse
 import com.kshitijchauhan.haroldadmin.moviedb.utils.RxDiffUtil
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import io.reactivex.Observable

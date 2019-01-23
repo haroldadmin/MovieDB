@@ -21,6 +21,7 @@ sealed class MovieItemType {
     sealed class MovieType: MovieItemType() {
         object Popular: MovieType()
         object TopRated: MovieType()
+        object SearchResult: MovieType()
     }
     sealed class LibraryType: MovieItemType() {
         object Favourite: LibraryType()

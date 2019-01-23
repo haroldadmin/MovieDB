@@ -1,6 +1,5 @@
-package com.kshitijchauhan.haroldadmin.moviedb.remote
+package com.kshitijchauhan.haroldadmin.moviedb.repository.remote
 
-import com.kshitijchauhan.haroldadmin.moviedb.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
 

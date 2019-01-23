@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.remote.service.account
+package com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.account
 
 import io.reactivex.Single
 import retrofit2.http.Body

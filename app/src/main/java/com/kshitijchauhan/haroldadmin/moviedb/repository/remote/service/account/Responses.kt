@@ -1,7 +1,7 @@
-package com.kshitijchauhan.haroldadmin.moviedb.remote.service.account
+package com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.account
 
 import android.os.Parcelable
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.common.GeneralMovieResponse
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.common.GeneralMovieResponse
 import com.squareup.moshi.Json
 import kotlinx.android.parcel.Parcelize
 

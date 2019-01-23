@@ -8,20 +8,21 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.BuildConfig
 import com.kshitijchauhan.haroldadmin.moviedb.R
-import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiKeyInterceptor
-import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiManager
-import com.kshitijchauhan.haroldadmin.moviedb.remote.Config
-import com.kshitijchauhan.haroldadmin.moviedb.remote.SessionIdInterceptor
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AccountService
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.auth.AuthenticationService
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.common.GeneralMovieResponse
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.discover.DiscoveryService
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.MovieService
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.search.SearchService
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.ApiKeyInterceptor
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.ApiManager
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.Config
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.SessionIdInterceptor
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.account.AccountService
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.auth.AuthenticationService
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.common.GeneralMovieResponse
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.discover.DiscoveryService
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.movie.MovieService
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.search.SearchService
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AuthenticationViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.MoviesListAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.ProgressBarManager
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieGridItem
 import com.kshitijchauhan.haroldadmin.moviedb.ui.details.CreditsAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.ui.details.MovieDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresViewModel
@@ -129,8 +130,8 @@ val uiModule = module {
     factory { (glide: RequestManager, clickListener: (movieId: Int, transitionName: String, sharedView: View) -> Unit) ->
         MoviesListAdapter(glide, clickListener)
     }
-    factory { (searchResults: MutableList<GeneralMovieResponse>, onItemClick: (movieId: Int) -> Unit) ->
-        SearchResultsAdapter(searchResults, onItemClick)
+    factory { (onItemClick: (movieId: Int) -> Unit) ->
+        SearchResultsAdapter(onItemClick)
     }
 }
 

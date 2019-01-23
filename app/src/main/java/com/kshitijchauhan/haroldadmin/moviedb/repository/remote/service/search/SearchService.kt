@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.remote.service.search
+package com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.search
 
 import io.reactivex.Single
 import retrofit2.http.GET

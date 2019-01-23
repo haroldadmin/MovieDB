@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie
+package com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.movie
 
 import android.os.Parcelable
 import com.squareup.moshi.Json

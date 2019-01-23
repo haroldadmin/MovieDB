@@ -6,10 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.CastMember
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.movie.CastMember
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getProfilePictureUrl
 import kotlinx.android.synthetic.main.item_credit_actor.view.*
 

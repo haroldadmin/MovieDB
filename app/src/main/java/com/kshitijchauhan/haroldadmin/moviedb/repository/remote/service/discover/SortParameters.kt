@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.remote.service.discover
+package com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.discover
 
 
 

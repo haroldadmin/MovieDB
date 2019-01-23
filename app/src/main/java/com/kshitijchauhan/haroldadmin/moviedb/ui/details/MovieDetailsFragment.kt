@@ -15,10 +15,10 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.kshitijchauhan.haroldadmin.moviedb.R
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AddMediaToWatchlistRequest
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.MarkMediaAsFavoriteRequest
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.MediaTypes
-import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.account.AddMediaToWatchlistRequest
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.account.MarkMediaAsFavoriteRequest
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.account.MediaTypes
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.movie.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
