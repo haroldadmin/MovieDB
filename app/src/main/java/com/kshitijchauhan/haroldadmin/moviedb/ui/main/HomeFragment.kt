@@ -46,7 +46,7 @@ class HomeFragment : BaseFragment() {
         })
     }
 
-    private val onPause: PublishRelay<Any> = PublishRelay.create()
+    private val onDestroyView: PublishRelay<Any> = PublishRelay.create()
 
     override val associatedUIState: UIState = UIState.HomeScreenState
 
@@ -114,7 +114,7 @@ class HomeFragment : BaseFragment() {
                 if (isFocused)
                     mainViewModel.updateStateTo(UIState.SearchScreenState)
             }
-            .takeUntil(onPause)
+            .takeUntil(onDestroyView)
             .subscribe()
     }
 
@@ -135,8 +135,8 @@ class HomeFragment : BaseFragment() {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        onPause.accept(Notification.INSTANCE)
+    override fun onDestroyView() {
+        super.onDestroyView()
+        onDestroyView.accept(Notification.INSTANCE)
     }
 }
