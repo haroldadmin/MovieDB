@@ -108,11 +108,6 @@ class MainActivity : AppCompatActivity() {
 
         when (state) {
             is UIState.HomeScreenState -> {
-
-                supportActionBar?.apply {
-                    title = "MovieDB"
-                }
-
                 replaceFragment(
                     HomeFragment.newInstance(),
                     R.id.fragment_container,
@@ -122,11 +117,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             is UIState.AccountScreenState.UnauthenticatedScreenState -> {
-
-                supportActionBar?.apply {
-                    title = "Login"
-                }
-
                 replaceFragment(
                     LoggedOutFragment.newInstance(),
                     R.id.fragment_container,
@@ -136,11 +126,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             is UIState.AccountScreenState.AuthenticatedScreenState -> {
-
-                supportActionBar?.apply {
-                    title = "Your Account"
-                }
-
                 replaceFragment(
                     AccountFragment.newInstance(),
                     R.id.fragment_container,
@@ -150,11 +135,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             is UIState.InTheatresScreenState -> {
-
-                supportActionBar?.apply {
-                    title = "In Theatres"
-                }
-
                 replaceFragment(
                     InTheatresFragment.newInstance(),
                     R.id.fragment_container,
@@ -164,11 +144,6 @@ class MainActivity : AppCompatActivity() {
             }
 
             is UIState.SearchScreenState -> {
-
-                supportActionBar?.apply {
-                    title = "Search"
-                }
-
                 val transitionSet = TransitionSet()
                 transitionSet.apply {
                     addTransition(TransitionInflater.from(this@MainActivity).inflateTransition(android.R.transition.move))
@@ -203,10 +178,6 @@ class MainActivity : AppCompatActivity() {
                 )
             }
             UIState.LibraryScreenState -> {
-                supportActionBar?.apply {
-                    title = "Library"
-                }
-
                 replaceFragment(
                     LibraryFragment.newInstance(),
                     R.id.fragment_container,

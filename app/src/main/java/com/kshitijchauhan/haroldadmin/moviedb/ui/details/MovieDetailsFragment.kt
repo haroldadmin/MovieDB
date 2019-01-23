@@ -64,6 +64,10 @@ class MovieDetailsFragment : BaseFragment() {
         mainViewModel.updateBottomNavManagerState(this.associatedUIState)
     }
 
+    override fun updateToolbarTitle() {
+        mainViewModel.updateToolbarTitle("Movie")
+    }
+
     companion object {
         fun newInstance(movieId: Int, transitionName: String): MovieDetailsFragment {
             val newInstance = MovieDetailsFragment()
@@ -93,6 +97,9 @@ class MovieDetailsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        updateToolbarTitle()
+
         lifecycle.addObserver(ypvTrailer)
 
         val columns = resources.getDimension(R.dimen.cast_member_picture_size).getNumberOfColumns(view.context)

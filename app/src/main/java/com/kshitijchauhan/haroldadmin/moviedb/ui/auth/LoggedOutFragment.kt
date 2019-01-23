@@ -40,6 +40,10 @@ class LoggedOutFragment : BaseFragment() {
         mainViewModel.updateBottomNavManagerState(this.associatedUIState)
     }
 
+    override fun updateToolbarTitle() {
+        mainViewModel.updateToolbarTitle("Your Account")
+    }
+
     companion object {
         fun newInstance() = LoggedOutFragment()
     }
@@ -58,6 +62,8 @@ class LoggedOutFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        updateToolbarTitle()
 
         authWebView.apply {
             webViewClient = object : WebViewClient() {

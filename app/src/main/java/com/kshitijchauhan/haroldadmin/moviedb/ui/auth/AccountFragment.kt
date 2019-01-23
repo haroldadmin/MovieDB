@@ -33,6 +33,10 @@ class AccountFragment : BaseFragment() {
         mainViewModel.updateBottomNavManagerState(this.associatedUIState)
     }
 
+    override fun updateToolbarTitle() {
+        mainViewModel.updateToolbarTitle("Your Account")
+    }
+
     companion object {
         fun newInstance() = AccountFragment()
     }
@@ -63,6 +67,9 @@ class AccountFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        updateToolbarTitle()
+
         btLogout.setOnClickListener {
             handleLogout()
         }

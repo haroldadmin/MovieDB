@@ -42,6 +42,10 @@ class HomeFragment : BaseFragment() {
         mainViewModel.updateBottomNavManagerState(this.associatedUIState)
     }
 
+    override fun updateToolbarTitle() {
+        mainViewModel.updateToolbarTitle("Home")
+    }
+
     companion object {
         fun newInstance() = HomeFragment()
     }
@@ -84,6 +88,8 @@ class HomeFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        updateToolbarTitle()
 
         popularMoviesAdapter =
                 MoviesListAdapter(Glide.with(this)) { id, transitionName, sharedView ->

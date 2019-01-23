@@ -32,6 +32,10 @@ class InTheatresFragment : BaseFragment() {
         mainViewModel.updateBottomNavManagerState(this.associatedUIState)
     }
 
+    override fun updateToolbarTitle() {
+        mainViewModel.updateToolbarTitle("In Theatres")
+    }
+
     companion object {
         fun newInstance() = InTheatresFragment()
     }
@@ -58,6 +62,9 @@ class InTheatresFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        updateToolbarTitle()
+
         val linearLayoutManager = LinearLayoutManager(context)
         moviesAdapter = MoviesAdapter(Glide.with(this), mutableListOf()) { id ->
             mainViewModel.updateStateTo(UIState.DetailsScreenState(id))

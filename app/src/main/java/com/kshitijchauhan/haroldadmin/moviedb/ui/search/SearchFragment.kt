@@ -44,6 +44,10 @@ class SearchFragment : BaseFragment() {
 
     override fun notifyBottomNavManager() { return }
 
+    override fun updateToolbarTitle() {
+        mainViewModel.updateToolbarTitle("Search")
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -65,6 +69,8 @@ class SearchFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        updateToolbarTitle()
 
         searchBox.etSearchBox.apply {
             requestFocus()

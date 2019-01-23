@@ -39,6 +39,10 @@ class LibraryFragment : BaseFragment() {
         mainViewModel.updateBottomNavManagerState(this.associatedUIState)
     }
 
+    override fun updateToolbarTitle() {
+        mainViewModel.updateToolbarTitle("Library")
+    }
+
     companion object {
         fun newInstance() = LibraryFragment()
     }
@@ -52,6 +56,7 @@ class LibraryFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        updateToolbarTitle()
         setupRecyclerViews()
     }
 

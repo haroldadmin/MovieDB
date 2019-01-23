@@ -14,6 +14,8 @@ abstract class BaseFragment: Fragment() {
 
     protected abstract fun notifyBottomNavManager()
 
+    protected abstract fun updateToolbarTitle()
+
     override fun onAttach(context: Context) {
         log("onAttach")
         super.onAttach(context)
