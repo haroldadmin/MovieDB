@@ -5,9 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.jakewharton.rxbinding2.internal.Notification
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxrelay2.PublishRelay
@@ -20,8 +19,10 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.view_searchbox.view.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import kotlin.math.roundToInt
 
 class HomeFragment : BaseFragment() {
@@ -31,8 +32,19 @@ class HomeFragment : BaseFragment() {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val homeViewModel: HomeViewModel by viewModel()
-    private lateinit var popularMoviesAdapter: MoviesListAdapter
-    private lateinit var topRatedMoviesAdapter: MoviesListAdapter
+    private val glideRequestManager: RequestManager by inject {
+        parametersOf(this)
+    }
+    private val popularMoviesAdapter: MoviesListAdapter by inject {
+        parametersOf(glideRequestManager, { id: Int, transitionName: String, sharedView: View ->
+            mainViewModel.updateStateTo(UIState.DetailsScreenState(id, transitionName, sharedView))
+        })
+    }
+    private val topRatedMoviesAdapter: MoviesListAdapter by inject {
+        parametersOf(glideRequestManager, { id: Int, transitionName: String, sharedView: View ->
+            mainViewModel.updateStateTo(UIState.DetailsScreenState(id, transitionName, sharedView))
+        })
+    }
 
     private val onPause: PublishRelay<Any> = PublishRelay.create()
 
@@ -88,19 +100,7 @@ class HomeFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         updateToolbarTitle()
-
-        popularMoviesAdapter =
-                MoviesListAdapter(Glide.with(this)) { id, transitionName, sharedView ->
-                    mainViewModel.updateStateTo(UIState.DetailsScreenState(id, transitionName, sharedView))
-                }
-
-        topRatedMoviesAdapter =
-                MoviesListAdapter(Glide.with(this)) { id, transitionName, sharedView ->
-                    mainViewModel.updateStateTo(UIState.DetailsScreenState(id, transitionName, sharedView))
-                }
-
         setupRecyclerViews()
         setupSearchBox()
     }

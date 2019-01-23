@@ -2,6 +2,10 @@ package com.kshitijchauhan.haroldadmin.moviedb.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.view.View
+import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.BuildConfig
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.remote.ApiKeyInterceptor
@@ -10,17 +14,22 @@ import com.kshitijchauhan.haroldadmin.moviedb.remote.Config
 import com.kshitijchauhan.haroldadmin.moviedb.remote.SessionIdInterceptor
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.account.AccountService
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.auth.AuthenticationService
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.common.GeneralMovieResponse
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.discover.DiscoveryService
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.movie.MovieService
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.search.SearchService
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AuthenticationViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.MoviesListAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.ProgressBarManager
+import com.kshitijchauhan.haroldadmin.moviedb.ui.details.CreditsAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.ui.details.MovieDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresViewModel
+import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.MoviesAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.HomeViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
+import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchResultsAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import okhttp3.Cache
@@ -100,8 +109,10 @@ val apiModule = module {
 }
 
 val uiModule = module {
+
     single { BottomNavManager() }
     single { ProgressBarManager() }
+
     viewModel { HomeViewModel(get()) }
     viewModel { LibraryViewModel(get()) }
     viewModel { InTheatresViewModel(get()) }
@@ -109,6 +120,18 @@ val uiModule = module {
     viewModel { SearchViewModel(get()) }
     viewModel { (isAuthenticated: Boolean, movieId: Int) -> MovieDetailsViewModel(get(), isAuthenticated, movieId) }
     viewModel { MainViewModel(get(), get(), get()) }
+
+    factory("fragment-glide-request-manager") { (fragment: Fragment) -> Glide.with(fragment) }
+    factory { (glide: RequestManager) -> CreditsAdapter(glide) }
+    factory { (glide: RequestManager, moviesList: MutableList<GeneralMovieResponse>, clickListener: (movieId: Int) -> Unit) ->
+        MoviesAdapter(glide, moviesList, clickListener)
+    }
+    factory { (glide: RequestManager, clickListener: (movieId: Int, transitionName: String, sharedView: View) -> Unit) ->
+        MoviesListAdapter(glide, clickListener)
+    }
+    factory { (searchResults: MutableList<GeneralMovieResponse>, onItemClick: (movieId: Int) -> Unit) ->
+        SearchResultsAdapter(searchResults, onItemClick)
+    }
 }
 
 

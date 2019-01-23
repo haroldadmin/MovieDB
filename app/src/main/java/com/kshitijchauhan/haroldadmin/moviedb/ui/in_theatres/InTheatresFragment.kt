@@ -7,16 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.R
+import com.kshitijchauhan.haroldadmin.moviedb.remote.service.common.GeneralMovieResponse
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_in_theatres.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class InTheatresFragment : BaseFragment() {
 
@@ -24,7 +27,14 @@ class InTheatresFragment : BaseFragment() {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val inTheatresViewModel: InTheatresViewModel by viewModel()
-    private var moviesAdapter: MoviesAdapter? = null
+    private val glideRequestManager: RequestManager by inject("fragment-glide-request-manager") {
+        parametersOf(this)
+    }
+    private val moviesAdapter: MoviesAdapter by inject {
+        parametersOf(glideRequestManager, mutableListOf<GeneralMovieResponse>(), { id: Int ->
+            mainViewModel.updateStateTo(UIState.DetailsScreenState(id))
+        })
+    }
 
     override val associatedUIState: UIState = UIState.InTheatresScreenState
 
@@ -54,7 +64,7 @@ class InTheatresFragment : BaseFragment() {
             getPopularMovies()
 
             moviesUpdate.observe(viewLifecycleOwner, Observer {
-                moviesAdapter?.updateList(it)
+                moviesAdapter.updateList(it)
                 mainViewModel.completeLoadingTask(TASK_LOAD_IN_THEATRES_MOVIES, viewLifecycleOwner)
             })
         }
@@ -66,18 +76,10 @@ class InTheatresFragment : BaseFragment() {
         updateToolbarTitle()
 
         val linearLayoutManager = LinearLayoutManager(context)
-        moviesAdapter = MoviesAdapter(Glide.with(this), mutableListOf()) { id ->
-            mainViewModel.updateStateTo(UIState.DetailsScreenState(id))
-        }
         rvMovies.apply {
             layoutManager = linearLayoutManager
             adapter = moviesAdapter
             itemAnimator = AlphaInAnimator()
         }
-    }
-
-    override fun onDestroyView() {
-        moviesAdapter = null
-        super.onDestroyView()
     }
 }

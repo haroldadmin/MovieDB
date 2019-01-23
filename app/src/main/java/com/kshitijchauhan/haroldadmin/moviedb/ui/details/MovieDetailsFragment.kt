@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
@@ -31,6 +31,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.Abstract
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -55,7 +56,13 @@ class MovieDetailsFragment : BaseFragment() {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
 
-    private lateinit var creditsAdapter: CreditsAdapter
+    private val glideRequestManager: RequestManager by inject("fragment-glide-request-manager") {
+        parametersOf(this)
+    }
+
+    private val creditsAdapter: CreditsAdapter by inject {
+        parametersOf(glideRequestManager)
+    }
 
     override val associatedUIState: UIState =
         UIState.DetailsScreenState(this.arguments?.getInt(Constants.KEY_MOVIE_ID) ?: -1)
@@ -83,7 +90,6 @@ class MovieDetailsFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         postponeEnterTransition()
-        creditsAdapter = CreditsAdapter(Glide.with(this))
     }
 
     override fun onCreateView(
@@ -188,7 +194,7 @@ class MovieDetailsFragment : BaseFragment() {
 
         mainViewModel.updateToolbarTitle(movie.title)
 
-        Glide.with(this)
+        glideRequestManager
             .load(movie.posterPath)
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
@@ -215,7 +221,7 @@ class MovieDetailsFragment : BaseFragment() {
             })
             .into(ivPoster)
 
-        Glide.with(this)
+        glideRequestManager
             .asBitmap()
             .transition(BitmapTransitionOptions.withCrossFade())
             .load(movie.backdropPath)

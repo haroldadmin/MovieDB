@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
@@ -17,8 +17,10 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import kotlinx.android.synthetic.main.fragment_account.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 class AccountFragment : BaseFragment() {
 
@@ -26,7 +28,9 @@ class AccountFragment : BaseFragment() {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val authenticationViewModel: AuthenticationViewModel by viewModel()
-
+    private val glideRequestManager: RequestManager by inject("fragment-glide-request-manager") {
+        parametersOf(this)
+    }
     override val associatedUIState: UIState = UIState.AccountScreenState.AuthenticatedScreenState
 
     override fun notifyBottomNavManager() {
@@ -87,7 +91,7 @@ class AccountFragment : BaseFragment() {
 
     private fun updateView(accountInfo: AccountDetailsResponse) {
         with(accountInfo) {
-            Glide.with(this@AccountFragment)
+            glideRequestManager
                 .load("https://www.gravatar.com/avatar/${avatar.gravatar.hash}")
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .apply(
