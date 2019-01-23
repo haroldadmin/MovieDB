@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.ui.discover
+package com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -13,7 +13,7 @@ import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
-class DiscoverViewModel(private val apiManager: ApiManager) : ViewModel() {
+class InTheatresViewModel(private val apiManager: ApiManager) : ViewModel() {
 
     private val _moviesUpdate = MutableLiveData<Pair<List<GeneralMovieResponse>, DiffUtil.DiffResult>>()
     private val compositeDisposable = CompositeDisposable()
@@ -23,7 +23,7 @@ class DiscoverViewModel(private val apiManager: ApiManager) : ViewModel() {
 
     fun getPopularMovies() {
         apiManager
-            .getPopularMovies()
+            .getMoviesInTheatres()
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
             .map { response ->

@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.ui.discover
+package com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres
 
 import androidx.recyclerview.widget.DiffUtil
 import com.kshitijchauhan.haroldadmin.moviedb.remote.service.common.GeneralMovieResponse

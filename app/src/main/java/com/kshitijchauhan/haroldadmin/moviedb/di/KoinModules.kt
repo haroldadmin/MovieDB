@@ -17,7 +17,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AuthenticationViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.ProgressBarManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.details.MovieDetailsViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.ui.discover.DiscoverViewModel
+import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.HomeViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
@@ -104,7 +104,7 @@ val uiModule = module {
     single { ProgressBarManager() }
     viewModel { HomeViewModel(get()) }
     viewModel { LibraryViewModel(get()) }
-    viewModel { DiscoverViewModel(get()) }
+    viewModel { InTheatresViewModel(get()) }
     viewModel { AuthenticationViewModel(get(), get(), get()) }
     viewModel { SearchViewModel(get()) }
     viewModel { (isAuthenticated: Boolean, movieId: Int) -> MovieDetailsViewModel(get(), isAuthenticated, movieId) }

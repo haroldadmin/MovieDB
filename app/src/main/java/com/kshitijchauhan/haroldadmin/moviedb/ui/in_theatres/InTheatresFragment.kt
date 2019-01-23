@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.ui.discover
+package com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres
 
 
 import android.os.Bundle
@@ -14,44 +14,44 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.mikepenz.itemanimators.AlphaInAnimator
-import kotlinx.android.synthetic.main.fragment_discover.*
+import kotlinx.android.synthetic.main.fragment_in_theatres.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class DiscoverFragment : BaseFragment() {
+class InTheatresFragment : BaseFragment() {
 
-    private val TASK_LOAD_DISCOVER_MOVIES = "load-discover-movies"
+    private val TASK_LOAD_IN_THEATRES_MOVIES = "load-in-theatres-movies"
 
     private val mainViewModel: MainViewModel by sharedViewModel()
-    private val discoverViewModel: DiscoverViewModel by viewModel()
+    private val inTheatresViewModel: InTheatresViewModel by viewModel()
     private var moviesAdapter: MoviesAdapter? = null
 
-    override val associatedUIState: UIState = UIState.DiscoverScreenState
+    override val associatedUIState: UIState = UIState.InTheatresScreenState
 
     override fun notifyBottomNavManager() {
         mainViewModel.updateBottomNavManagerState(this.associatedUIState)
     }
 
     companion object {
-        fun newInstance() = DiscoverFragment()
+        fun newInstance() = InTheatresFragment()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_discover, container, false)
+        return inflater.inflate(R.layout.fragment_in_theatres, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        discoverViewModel.apply {
-            mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_DISCOVER_MOVIES, viewLifecycleOwner))
+        inTheatresViewModel.apply {
+            mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_IN_THEATRES_MOVIES, viewLifecycleOwner))
             getPopularMovies()
 
             moviesUpdate.observe(viewLifecycleOwner, Observer {
                 moviesAdapter?.updateList(it)
-                mainViewModel.completeLoadingTask(TASK_LOAD_DISCOVER_MOVIES, viewLifecycleOwner)
+                mainViewModel.completeLoadingTask(TASK_LOAD_IN_THEATRES_MOVIES, viewLifecycleOwner)
             })
         }
     }

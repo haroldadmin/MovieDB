@@ -6,7 +6,7 @@ sealed class UIState {
 
     object HomeScreenState: UIState()
     object LibraryScreenState: UIState()
-    object DiscoverScreenState: UIState()
+    object InTheatresScreenState: UIState()
     object SearchScreenState: UIState()
     data class DetailsScreenState(val movieId: Int = -1,
                                   val transitionName: String? = null,

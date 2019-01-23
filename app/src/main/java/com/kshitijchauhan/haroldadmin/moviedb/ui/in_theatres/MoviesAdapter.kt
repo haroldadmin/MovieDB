@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.ui.discover
+package com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres
 
 import android.view.LayoutInflater
 import android.view.View
@@ -53,7 +53,7 @@ class MoviesAdapter(
                 itemView.apply {
                     tvTitle.text = title
                     chipReleaseYear.text = releaseDate
-                    chipGenre.text = if (Constants.Genres[genreIds[0]].isNullOrEmpty()) "Unknown Genre" else Constants.Genres[genreIds[0]]
+                    chipGenre.text = genreIds.takeIf { it.isNotEmpty() }?.let { Constants.Genres[genreIds[0]] } ?: "N/A"
                     glide
                         .load(movieSearchResult.posterPath)
                         .transition(DrawableTransitionOptions.withCrossFade(200))

@@ -11,9 +11,9 @@
         android:title="Library" />
 
     <item
-        android:id="@+id/menuDiscover"
+        android:id="@+id/menuInTheatres"
         android:icon="@drawable/ic_round_local_movies_24px"
-        android:title="Discover"/>
+        android:title="In Theatres"/>
 
     <item
         android:id="@+id/menuAccount"

@@ -20,6 +20,8 @@ class ApiManager (
 
     fun getPopularMovies() = discoveryService.getPopularMovies()
 
+    fun getMoviesInTheatres(movieRegion: String = "IN") = discoveryService.getMoviesInTheatre(region = movieRegion)
+
     fun search(query: String) = searchService.searchForMovie(query)
 
     fun getMovieDetails(movieId: Int) = movieService.getMovieDetails(movieId)

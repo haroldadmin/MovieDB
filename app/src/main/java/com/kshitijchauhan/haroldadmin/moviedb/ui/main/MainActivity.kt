@@ -7,13 +7,12 @@ import androidx.lifecycle.Observer
 import androidx.transition.Fade
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionSet
-import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AccountFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoggedOutFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.details.MovieDetailsFragment
-import com.kshitijchauhan.haroldadmin.moviedb.ui.discover.DiscoverFragment
+import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchFragment
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.*
@@ -82,8 +81,8 @@ class MainActivity : AppCompatActivity() {
                     }
                     true
                 }
-                R.id.menuDiscover -> {
-                    mainViewModel.updateStateTo(UIState.DiscoverScreenState)
+                R.id.menuInTheatres -> {
+                    mainViewModel.updateStateTo(UIState.InTheatresScreenState)
                     true
                 }
                 else -> throw IllegalStateException("Unknown screen state")
@@ -150,14 +149,14 @@ class MainActivity : AppCompatActivity() {
                 )
             }
 
-            is UIState.DiscoverScreenState -> {
+            is UIState.InTheatresScreenState -> {
 
                 supportActionBar?.apply {
-                    title = "Discover"
+                    title = "In Theatres"
                 }
 
                 replaceFragment(
-                    DiscoverFragment.newInstance(),
+                    InTheatresFragment.newInstance(),
                     R.id.fragment_container,
                     enterTransition = enterFade,
                     exitTransition = exitFade
