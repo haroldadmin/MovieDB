@@ -11,7 +11,7 @@ data class GenrePair(
     @field:Json(name="name") val name: String): Parcelable
 
 @Parcelize
-data class Movie (
+data class MovieResponse (
     @field:Json(name="adult") val isAdult: Boolean,
     @field:Json(name="backdrop_path") var backdropPath: String?,
     @field:Json(name="budget") val budget: Long,
@@ -33,8 +33,8 @@ data class Movie (
 
 @Parcelize
 data class MovieStatesResponse(
-    @field:Json(name="favorite") val isFavourited: Boolean,
-    @field:Json(name="watchlist") val isWatchlisted: Boolean): Parcelable
+    @field:Json(name="favorite") val isFavourited: Boolean?,
+    @field:Json(name="watchlist") val isWatchlisted: Boolean?): Parcelable
 
 @Parcelize
 data class MovieVideo(

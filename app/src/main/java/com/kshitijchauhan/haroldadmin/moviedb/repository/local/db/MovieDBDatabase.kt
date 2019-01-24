@@ -11,7 +11,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Collection
 import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Converters
 import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Movie
 
-@Database(entities = [Movie::class, Actor::class, Collection::class], version = 1)
+@Database(entities = [Movie::class, Actor::class, Collection::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class MovieDBDatabase : RoomDatabase() {
 

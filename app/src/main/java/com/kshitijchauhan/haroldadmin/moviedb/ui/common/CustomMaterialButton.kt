@@ -7,7 +7,7 @@ import com.google.android.material.button.MaterialButton
 import com.kshitijchauhan.haroldadmin.moviedb.R
 
 /**
- * This class is used for buttons in the Movie Details Fragment to enable its buttons to change their colour when
+ * This class is used for buttons in the MovieResponse Details Fragment to enable its buttons to change their colour when
  * the current movie is already added to Watchlist or Favourites list, or when the user is currently unauthenticated.
  */
 class CustomMaterialButton @JvmOverloads constructor(

@@ -9,6 +9,8 @@ import java.util.*
 data class Movie(
     @PrimaryKey
     val id: Int,
+    @ColumnInfo(name = "title")
+    val title: String,
     @ColumnInfo(name = "poster_path")
     val posterPath: String,
     @ColumnInfo(name = "backdrop_path")
@@ -22,9 +24,9 @@ data class Movie(
     @ColumnInfo(name = "genre")
     val genre: String,
     @ColumnInfo(name = "watchlisted")
-    val isWatchlisted: Boolean,
+    val isWatchlisted: Boolean?,
     @ColumnInfo(name = "favourite")
-    val isFavourited: Boolean,
+    val isFavourited: Boolean?,
     @ColumnInfo(name = "trailer_url")
     val trailerUrl: String,
     @ColumnInfo(name = "cast_ids")

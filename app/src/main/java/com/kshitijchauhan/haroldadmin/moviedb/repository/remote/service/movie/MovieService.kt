@@ -7,7 +7,7 @@ import retrofit2.http.Path
 interface MovieService {
 
     @GET("movie/{movieId}")
-    fun getMovieDetails(@Path("movieId") movieId: Int): Single<Movie>
+    fun getMovieDetails(@Path("movieId") movieId: Int): Single<MovieResponse>
 
     @GET("movie/{movieId}/account_states")
     fun getAccountStatesForMovie(@Path("movieId") movieId: Int): Single<MovieStatesResponse>

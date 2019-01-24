@@ -59,3 +59,7 @@ fun Float.getNumberOfColumns(context: Context): Int {
 }
 
 fun String.toYoutubeUrl() = "https://www.youtube.com/watch?v=$this"
+
+fun <T> List<T>.firstOrDefault(default: T): T {
+    return this.firstOrNull() ?: default
+}

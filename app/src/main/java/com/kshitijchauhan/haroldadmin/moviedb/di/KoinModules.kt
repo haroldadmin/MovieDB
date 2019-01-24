@@ -37,6 +37,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
+import io.reactivex.disposables.CompositeDisposable
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -134,8 +135,9 @@ val repositoryModule = module {
     single { get<MovieDBDatabase>().moviesDao() }
     single { get<MovieDBDatabase>().actorsDao() }
     single { get<MovieDBDatabase>().collectionsDao() }
-    single {
-        MoviesRepository(get(), get())
+    factory {
+        val isAuthenticated = get<SharedPreferences>().getBoolean(Constants.KEY_IS_AUTHENTICATED, false)
+        MoviesRepository(get(), get(), isAuthenticated)
     }
 }
 
@@ -149,7 +151,15 @@ val uiModule = module {
     viewModel { InTheatresViewModel(get()) }
     viewModel { AuthenticationViewModel(get(), get(), get()) }
     viewModel { SearchViewModel(get()) }
-    viewModel { (isAuthenticated: Boolean, movieId: Int) -> MovieDetailsViewModel(get(), isAuthenticated, movieId) }
+    viewModel { (movieId: Int) ->
+        val isAuthenticated = get<SharedPreferences>().getBoolean(Constants.KEY_IS_AUTHENTICATED, false)
+        MovieDetailsViewModel(
+            get(),
+            isAuthenticated,
+            movieId,
+            get()
+        )
+    }
     viewModel { MainViewModel(get(), get(), get()) }
 
     factory("fragment-glide-request-manager") { (fragment: Fragment) -> Glide.with(fragment) }
