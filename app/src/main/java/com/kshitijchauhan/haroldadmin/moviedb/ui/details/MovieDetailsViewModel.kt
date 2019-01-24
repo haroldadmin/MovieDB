@@ -2,167 +2,95 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.details
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.ApiManager
-import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.account.AddMediaToWatchlistRequest
-import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.account.MarkMediaAsFavoriteRequest
-import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.movie.CastMember
-import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.movie.Movie
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieState
+import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.repository.local.movie.MoviesRepository
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BaseViewModel
+import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getBackdropUrl
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getPosterUrl
-import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import org.koin.core.parameter.parametersOf
+import org.koin.standalone.inject
+import java.io.IOException
+import java.util.concurrent.TimeoutException
 
-class MovieDetailsViewModel(private val apiManager: ApiManager,
-                            private val isAuthenticated: Boolean,
-                            private val movieId: Int) : ViewModel() {
+class MovieDetailsViewModel(
+    private val isAuthenticated: Boolean,
+    private val movieId: Int
+) : BaseViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
-    private val _movieDetails = MutableLiveData<Movie>()
-    private val _accountStatesOfMovie = MutableLiveData<MovieState>()
-    private val _trailerUrl = MutableLiveData<String>()
-    private val _movieCredits = MutableLiveData<List<CastMember>>()
-
-    val movieDetails: LiveData<Movie>
-        get() = _movieDetails
-
-    val accountStatesOfMovie: LiveData<MovieState>
-        get() = _accountStatesOfMovie
-
-    val trailerUrl: LiveData<String>
-        get() = _trailerUrl
-
-    val movieCredits: LiveData<List<CastMember>>
-        get() = _movieCredits
-
-    init {
-        getMovieDetails()
-        getVideosForMovie()
-        if (isAuthenticated) {
-            getAccountStatesForMovie()
-        }
-        getCreditsForMovie()
+    private val _movie = MutableLiveData<Movie>()
+    private val _message = SingleLiveEvent<String>()
+    private val moviesRepository: MoviesRepository by inject {
+        parametersOf(compositeDisposable)
     }
 
-    fun getMovieDetails(movieId: Int = this.movieId) {
-        apiManager.getMovieDetails(movieId)
+    val movie: LiveData<Movie>
+        get() = _movie
+
+    val message: LiveData<String>
+        get() = _message
+
+    fun getMovieDetails(isAuthenticated: Boolean) {
+        moviesRepository.getMovieDetails(movieId, isAuthenticated)
             .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.computation())
-            .map { movie ->
-                movie.posterPath = movie.posterPath.getPosterUrl()
-                movie.voteAverage = movie.voteAverage.div(10.0).times(5)
-//                movie.releaseDate = movie.releaseDatesplit("-")[0]
-//                movie.releaseDate = movie.releaseDate
-                movie.backdropPath = movie.backdropPath.getBackdropUrl()
-                movie
-            }
-            .doOnSuccess {
-                _movieDetails.postValue(it)
-            }
-            .doAfterSuccess {
-                getVideosForMovie(movieId)
-                if (isAuthenticated) {
-                    getAccountStatesForMovie(movieId)
+            .subscribe(
+                // onNext
+                { movie: Movie ->
+                    _movie.postValue(movie)
+                },
+                // onError
+                {
+                    handleError(it)
                 }
-            }
-            .subscribe()
+            )
             .disposeWith(compositeDisposable)
     }
 
-    fun getAccountStatesForMovie(movieId: Int = this.movieId) {
-        apiManager.getAccountStatesForMovie(movieId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .map { response ->
-                MovieState(response.isWatchlisted, response.isFavourited)
+    fun toggleMovieFavouriteStatus(accountId: Int) {
+        if (isAuthenticated) {
+            _movie.value?.isFavourited?.let {
+                moviesRepository
+                    .toggleMovieFavouriteStatus(!it, movieId, accountId)
+                    .subscribe(
+                        // OnNext
+                        { log("Movie status updated successfully") },
+                        // onError
+                        { error -> handleError(error) }
+                    )
+                    .disposeWith(compositeDisposable)
             }
-            .doOnSuccess { state ->
-                _accountStatesOfMovie.value = state
-            }
-            .subscribe()
-            .disposeWith(compositeDisposable)
+        } else throw IllegalStateException("Can't toggle favourite status if user is not logged in")
     }
 
-    fun toggleMovieFavouriteStatus(accountId: Int, request: MarkMediaAsFavoriteRequest) {
-        apiManager.toggleMediaFavouriteStatus(accountId, request)
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.computation())
-            .flatMap {
-                apiManager.getAccountStatesForMovie(request.mediaId)
+    fun toggleMovieWatchlistStatus(accountId: Int) {
+        if (isAuthenticated) {
+            _movie.value?.isWatchlisted?.let {
+                moviesRepository
+                    .toggleMovieWatchlistStatus(!it, movieId, accountId)
+                    .subscribe(
+                        // OnNext
+                        { log("Movie status updated successfully") },
+                        // onError
+                        { error -> handleError(error) }
+                    )
+                    .disposeWith(compositeDisposable)
             }
-            .map { response ->
-                MovieState(response.isWatchlisted, response.isFavourited)
-            }
-            .doOnSuccess { state ->
-                _accountStatesOfMovie.postValue(state)
-            }
-            .subscribe()
-            .disposeWith(compositeDisposable)
-    }
-
-    fun toggleMovieWatchlistStatus(accountId: Int, request: AddMediaToWatchlistRequest) {
-        apiManager.toggleMediaWatchlistStatus(accountId, request)
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.computation())
-            .flatMap {
-                apiManager.getAccountStatesForMovie(request.mediaId)
-            }
-            .map { response ->
-                MovieState(response.isWatchlisted, response.isFavourited)
-            }
-            .doOnSuccess { state ->
-                _accountStatesOfMovie.postValue(state)
-            }
-            .subscribe()
-            .disposeWith(compositeDisposable)
-    }
-
-    fun getVideosForMovie(movieId: Int = this.movieId) {
-        apiManager.getVideosForMovie(movieId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.computation())
-            .flatMapObservable { response ->
-                Observable.fromIterable(response.results)
-            }
-            .filter { movieVideo ->
-                movieVideo.site == "YouTube" && movieVideo.type == "Trailer"
-            }
-            .map { movieVideo ->
-                movieVideo.key
-            }
-            .first("")
-            .doOnSuccess { url ->
-                _trailerUrl.postValue(url)
-            }
-            .doOnError {
-                _trailerUrl.postValue("")
-            }
-            .subscribe()
-            .disposeWith(compositeDisposable)
-    }
-
-    fun getCreditsForMovie(movieId: Int = this.movieId) {
-        apiManager.getCreditsForMovie(movieId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.computation())
-            .flatMapObservable { response ->
-                Observable.fromIterable(response.cast)
-            }
-            .take(8)
-            .toList()
-            .doOnSuccess {
-                _movieCredits.postValue(it)
-            }
-            .subscribe()
-            .disposeWith(compositeDisposable)
+        } else throw IllegalStateException("Can't toggle watchlist status if user is not logged in")
     }
 
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.dispose()
+    }
+
+    private fun handleError(error: Throwable) {
+        when (error) {
+            is IOException -> _message.postValue("Please check your internet connection")
+            is TimeoutException -> _message.postValue("Request timed out")
+            else -> _message.postValue("An error occurred")
+        }
     }
 }

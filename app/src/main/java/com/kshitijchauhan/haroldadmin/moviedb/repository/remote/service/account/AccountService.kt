@@ -18,11 +18,11 @@ interface AccountService {
     fun getFavouriteMovies(@Path("accountId") accountId: Int): Single<FavouriteMoviesResponse>
 
     @POST("account/{accountId}/favorite")
-    fun markMediaAsFavorite(@Path("accountId") accountId: Int,
-                            @Body request: MarkMediaAsFavoriteRequest): Single<MarkAsFavoriteResponse>
+    fun toggleMediaFavouriteStatus(@Path("accountId") accountId: Int,
+                                   @Body request: ToggleMediaFavouriteStatusRequest): Single<ToggleFavouriteResponse>
 
     @POST("account/{accountId}/watchlist")
-    fun addMediaToWatchlist(@Path("accountId") accountId: Int,
-                            @Body request: AddMediaToWatchlistRequest): Single<AddToWatchlistResponse>
+    fun toggleMediaWatchlistStatus(@Path("accountId") accountId: Int,
+                                   @Body request: ToggleMediaWatchlistStatusRequest): Single<ToggleWatchlistResponse>
 }
 

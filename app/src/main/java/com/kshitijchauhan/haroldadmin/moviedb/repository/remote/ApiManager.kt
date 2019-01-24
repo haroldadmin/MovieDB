@@ -1,8 +1,8 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.remote
 
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.account.AccountService
-import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.account.AddMediaToWatchlistRequest
-import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.account.MarkMediaAsFavoriteRequest
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.account.ToggleMediaWatchlistStatusRequest
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.account.ToggleMediaFavouriteStatusRequest
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.auth.AuthenticationService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.auth.CreateSessionRequest
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.discover.DiscoveryService
@@ -44,9 +44,9 @@ class ApiManager (
 
     fun getFavouriteMovies(accountId: Int) = accountService.getFavouriteMovies(accountId)
 
-    fun toggleMediaFavouriteStatus(accountId: Int, request: MarkMediaAsFavoriteRequest) =
-            accountService.markMediaAsFavorite(accountId, request)
+    fun toggleMediaFavouriteStatus(accountId: Int, request: ToggleMediaFavouriteStatusRequest) =
+            accountService.toggleMediaFavouriteStatus(accountId, request)
 
-    fun toggleMediaWatchlistStatus(accountId: Int, request: AddMediaToWatchlistRequest) =
-            accountService.addMediaToWatchlist(accountId, request)
+    fun toggleMediaWatchlistStatus(accountId: Int, request: ToggleMediaWatchlistStatusRequest) =
+            accountService.toggleMediaWatchlistStatus(accountId, request)
 }

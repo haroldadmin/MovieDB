@@ -21,7 +21,7 @@ class CustomRecyclerView @JvmOverloads constructor(
         /**
          * We have to override every method in this observer because DiffUtil does not call just onChanged,
          * but it calls the other methods too depending on the changes. If we just override onChanged, then our empty
-         * view will not be update when, for example, new items are added to a previously empty list
+         * view will not be updated when, for example, new items are added to a previously empty list
          */
         override fun onChanged() {
             super.onChanged()

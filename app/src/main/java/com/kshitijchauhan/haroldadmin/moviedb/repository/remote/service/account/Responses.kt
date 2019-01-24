@@ -36,11 +36,11 @@ data class FavouriteMoviesResponse(
     @field:Json(name="total_results") val totalResults: Int): Parcelable
 
 @Parcelize
-data class MarkAsFavoriteResponse(
+data class ToggleFavouriteResponse(
     @field:Json(name="status_code") val statusCode: Int,
     @field:Json(name="status_message") val statusMessage: String): Parcelable
 
 @Parcelize
-data class AddToWatchlistResponse(
+data class ToggleWatchlistResponse(
     @field:Json(name="status_code") val statusCode: Int,
     @field:Json(name="status_message") val statusMessage: String): Parcelable

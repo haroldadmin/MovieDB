@@ -9,8 +9,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.BuildConfig
 import com.kshitijchauhan.haroldadmin.moviedb.R
-import com.kshitijchauhan.haroldadmin.moviedb.repository.local.MoviesRepository
 import com.kshitijchauhan.haroldadmin.moviedb.repository.local.db.MovieDBDatabase
+import com.kshitijchauhan.haroldadmin.moviedb.repository.local.movie.LocalMoviesSource
+import com.kshitijchauhan.haroldadmin.moviedb.repository.local.movie.MoviesRepository
+import com.kshitijchauhan.haroldadmin.moviedb.repository.local.movie.RemoteMoviesSource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.ApiKeyInterceptor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.Config
@@ -135,9 +137,10 @@ val repositoryModule = module {
     single { get<MovieDBDatabase>().moviesDao() }
     single { get<MovieDBDatabase>().actorsDao() }
     single { get<MovieDBDatabase>().collectionsDao() }
-    factory {
-        val isAuthenticated = get<SharedPreferences>().getBoolean(Constants.KEY_IS_AUTHENTICATED, false)
-        MoviesRepository(get(), get(), isAuthenticated)
+    factory { LocalMoviesSource(get()) }
+    factory { RemoteMoviesSource(get(), get()) }
+    factory { (compositeDisposable: CompositeDisposable) ->
+        MoviesRepository(get(), get(), compositeDisposable)
     }
 }
 
@@ -153,12 +156,7 @@ val uiModule = module {
     viewModel { SearchViewModel(get()) }
     viewModel { (movieId: Int) ->
         val isAuthenticated = get<SharedPreferences>().getBoolean(Constants.KEY_IS_AUTHENTICATED, false)
-        MovieDetailsViewModel(
-            get(),
-            isAuthenticated,
-            movieId,
-            get()
-        )
+        MovieDetailsViewModel(isAuthenticated, movieId)
     }
     viewModel { MainViewModel(get(), get(), get()) }
 

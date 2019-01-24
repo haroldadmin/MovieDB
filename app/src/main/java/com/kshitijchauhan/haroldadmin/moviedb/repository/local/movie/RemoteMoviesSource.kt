@@ -1,55 +1,39 @@
-package com.kshitijchauhan.haroldadmin.moviedb.repository.local
+package com.kshitijchauhan.haroldadmin.moviedb.repository.local.movie
 
-import com.kshitijchauhan.haroldadmin.moviedb.repository.local.dao.MovieDao
 import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.account.*
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.movie.*
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.firstOrDefault
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getBackdropUrl
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getPosterUrl
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
-import io.reactivex.Observable
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.toYoutubeUrl
 import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
 
-class MoviesRepository(
-    private val moviesDao: MovieDao,
+class RemoteMoviesSource(
     private val movieService: MovieService,
-    private val isAuthenticated: Boolean
-) : Repository<Movie>() {
+    private val accountService: AccountService
+) {
 
-    override fun get(id: Int): Observable<Movie> {
-
+    fun getMovieDetails(id: Int, isAuthenticated: Boolean): Single<Movie> {
         lateinit var movieResponse: MovieResponse
         lateinit var creditsResponse: MovieCreditsResponse
         lateinit var statesResponse: MovieStatesResponse
         lateinit var videosResponse: MovieVideosResponse
 
-        movieService.getMovieDetails(id)
-            .doOnSubscribe {
-                log("Subscribing to movie details")
-            }
+        return movieService.getMovieDetails(id)
             .doOnSuccess {
-                log("Retrieved movie details")
                 movieResponse = it
             }
             .flatMap {
                 movieService.getCreditsForMovie(id)
             }
-            .doOnSubscribe {
-                log("Subscribing to movie credits")
-            }
             .doOnSuccess {
-                log("Retrieved movie credits")
                 creditsResponse = it
             }
             .flatMap {
                 movieService.getVideosForMovie(id)
             }
-            .doOnSubscribe {
-                log("Subscribing to movie videos")
-            }
             .doOnSuccess {
-                log("Retrieved movie videos")
                 videosResponse = it
             }
             .flatMap {
@@ -59,60 +43,32 @@ class MoviesRepository(
                     Single.just(MovieStatesResponse(isFavourited = null, isWatchlisted = null))
                 }
             }
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.single())
-            .doOnSubscribe {
-                log("Subscribing to movie details")
-            }
             .doOnSuccess {
-                log("Retrieved movie states")
                 statesResponse = it
-                val movie = mapResponsesToMovieModel(movieResponse, statesResponse, videosResponse, creditsResponse)
-                this.save(movie)
             }
-            .subscribe()
-
-        return moviesDao.getMovie(id)
+            .flatMap {
+                Single.just(mapResponsesToMovieModel(movieResponse, statesResponse, videosResponse, creditsResponse))
+            }
     }
 
-    override fun getAll(): Observable<List<Movie>> {
-        return moviesDao.getAllMovies()
+    fun toggleMovieFavouriteStatus(isFavourite: Boolean, movieId: Int, accountId: Int): Single<ToggleFavouriteResponse> {
+        return ToggleMediaFavouriteStatusRequest(
+            MediaTypes.MOVIE.mediaName,
+            movieId,
+            isFavourite
+        ).let { request ->
+            accountService.toggleMediaFavouriteStatus(accountId, request)
+        }
     }
 
-    override fun save(t: Movie) {
-        moviesDao.saveMovie(t)
-    }
-
-    override fun saveMultiple(vararg t: Movie) {
-        moviesDao.saveMovies(*t)
-    }
-
-    override fun saveAll(ts: List<Movie>) {
-        moviesDao.saveAllMovies(ts)
-    }
-
-    override fun update(t: Movie) {
-        moviesDao.updateMovie(t)
-    }
-
-    override fun updateMultiple(vararg t: Movie) {
-        moviesDao.updateMovies(*t)
-    }
-
-    override fun updateAll(ts: List<Movie>) {
-        moviesDao.updateAllMovies(ts)
-    }
-
-    override fun delete(t: Movie) {
-        moviesDao.deleteMovie(t)
-    }
-
-    override fun deleteMultiple(vararg t: Movie) {
-        moviesDao.deleteMovies(*t)
-    }
-
-    override fun deleteAll(ts: List<Movie>) {
-        moviesDao.deleteAllMovies(ts)
+    fun toggleMovieWatchlistStatus(isWatchlisted: Boolean, movieId: Int, accountId: Int): Single<ToggleWatchlistResponse> {
+        return ToggleMediaWatchlistStatusRequest(
+            MediaTypes.MOVIE.mediaName,
+            movieId,
+            isWatchlisted
+        ).let { request ->
+            accountService.toggleMediaWatchlistStatus(accountId, request)
+        }
     }
 
     private fun mapResponsesToMovieModel(
@@ -140,7 +96,7 @@ class MoviesRepository(
                     movieVideo.key
                 }
                 .firstOrDefault(""),
-            creditsResponse.cast.map { it.castId }
+            creditsResponse.cast.take(8).map { it.castId }
         )
     }
 }

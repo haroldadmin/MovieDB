@@ -9,14 +9,14 @@ enum class MediaTypes(val mediaName: String) {
 }
 
 @Parcelize
-data class MarkMediaAsFavoriteRequest(
+data class ToggleMediaFavouriteStatusRequest(
     @field:Json(name = "media_type") val mediaType: String,
     @field:Json(name = "media_id") val mediaId: Int,
     @field:Json(name = "favorite") val favorite: Boolean
 ) : Parcelable
 
 @Parcelize
-data class AddMediaToWatchlistRequest(
+data class ToggleMediaWatchlistStatusRequest(
     @field:Json(name = "media_type") val mediaType: String,
     @field:Json(name = "media_id") val mediaId: Int,
     @field:Json(name = "watchlist") val watchlist: Boolean

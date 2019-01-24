@@ -2,16 +2,19 @@ package com.kshitijchauhan.haroldadmin.moviedb.repository.local.dao
 
 import androidx.room.*
 import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Movie
-import io.reactivex.Observable
+import io.reactivex.Flowable
 
 @Dao
 interface MovieDao {
 
     @Query("SELECT * FROM movies")
-    fun getAllMovies(): Observable<List<Movie>>
+    fun getAllMovies(): Flowable<List<Movie>>
 
     @Query("SELECT * FROM movies WHERE id = :id")
-    fun getMovie(id: Int): Observable<Movie>
+    fun getMovie(id: Int): Flowable<Movie>
+
+    @Query("SELECT * FROM movies WHERE id = :id")
+    fun getMovieBlocking(id: Int): Movie
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveMovie(movie: Movie)
