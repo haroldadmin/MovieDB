@@ -12,6 +12,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.common.GeneralMovieResponse
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import kotlinx.android.synthetic.main.item_movielist.view.*
+import java.text.SimpleDateFormat
 
 class MoviesAdapter(
     val glide: RequestManager,
@@ -52,7 +53,7 @@ class MoviesAdapter(
             with(movieSearchResult) {
                 itemView.apply {
                     tvTitle.text = title
-                    chipReleaseYear.text = releaseDate
+                    chipReleaseYear.text = SimpleDateFormat("yyyy").format(releaseDate)
                     chipGenre.text = genreIds.takeIf { it.isNotEmpty() }?.let { Constants.Genres[genreIds[0]] } ?: "N/A"
                     glide
                         .load(movieSearchResult.posterPath)

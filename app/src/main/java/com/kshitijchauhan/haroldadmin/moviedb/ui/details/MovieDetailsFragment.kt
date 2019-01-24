@@ -35,6 +35,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import java.text.SimpleDateFormat
 import kotlin.math.roundToInt
 
 
@@ -228,7 +229,7 @@ class MovieDetailsFragment : BaseFragment() {
             .into(ivBackdrop)
 
         tvTitle.text = movie.title
-        chipMovieYear.text = movie.releaseDate
+        chipMovieYear.text = SimpleDateFormat("yyyy").format(movie.releaseDate)
         chipMovieGenre.text = movie.genres.takeIf { it.isNotEmpty() }?.first()?.name ?: "N/A"
         chipMovieRating.text = String.format("%.2f", movie.voteAverage)
         tvDescription.text = movie.overview

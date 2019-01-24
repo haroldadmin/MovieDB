@@ -55,7 +55,8 @@ class MovieDetailsViewModel(private val apiManager: ApiManager,
             .map { movie ->
                 movie.posterPath = movie.posterPath.getPosterUrl()
                 movie.voteAverage = movie.voteAverage.div(10.0).times(5)
-                movie.releaseDate = movie.releaseDate.split("-")[0]
+//                movie.releaseDate = movie.releaseDatesplit("-")[0]
+//                movie.releaseDate = movie.releaseDate
                 movie.backdropPath = movie.backdropPath.getBackdropUrl()
                 movie
             }
@@ -137,7 +138,7 @@ class MovieDetailsViewModel(private val apiManager: ApiManager,
             .doOnSuccess { url ->
                 _trailerUrl.postValue(url)
             }
-            .doOnError { err ->
+            .doOnError {
                 _trailerUrl.postValue("")
             }
             .subscribe()

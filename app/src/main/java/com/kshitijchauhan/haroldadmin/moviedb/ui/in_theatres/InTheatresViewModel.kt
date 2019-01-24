@@ -35,7 +35,7 @@ class InTheatresViewModel(private val apiManager: ApiManager) : ViewModel() {
             .map { movie ->
                 movie.posterPath = "${Config.BASE_IMAGE_URL}${Config.DEFAULT_POSTER_SIZE}${movie.posterPath}"
                 movie.voteAverage = movie.voteAverage.div(10.0).times(5)
-                movie.releaseDate = movie.releaseDate.split("-")[0]
+//                movie.releaseDate = movie.releaseDate.split("-")[0]
                 movie
             }
             .toList()

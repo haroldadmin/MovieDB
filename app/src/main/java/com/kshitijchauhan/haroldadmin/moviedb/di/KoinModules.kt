@@ -4,10 +4,13 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.BuildConfig
 import com.kshitijchauhan.haroldadmin.moviedb.R
+import com.kshitijchauhan.haroldadmin.moviedb.repository.local.MoviesRepository
+import com.kshitijchauhan.haroldadmin.moviedb.repository.local.db.MovieDBDatabase
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.ApiKeyInterceptor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.Config
@@ -22,7 +25,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AuthenticationViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.MoviesListAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.ProgressBarManager
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieGridItem
 import com.kshitijchauhan.haroldadmin.moviedb.ui.details.CreditsAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.ui.details.MovieDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresViewModel
@@ -33,6 +35,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchResultsAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -43,6 +47,7 @@ import org.koin.dsl.module.module
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.*
 
 
 val applicationModule = module {
@@ -86,7 +91,12 @@ val retrofitModule = module {
             .build()
     }
 
-    single { MoshiConverterFactory.create() }
+    single {
+        Moshi.Builder()
+            .add(Date::class.java, Rfc3339DateJsonAdapter())
+            .build()
+            .let { moshi -> MoshiConverterFactory.create(moshi) }
+    }
 
     single { RxJava2CallAdapterFactory.create() }
 
@@ -100,6 +110,17 @@ val retrofitModule = module {
     }
 }
 
+val databaseModule = module {
+
+    single {
+        Room.databaseBuilder(
+            androidContext(),
+            MovieDBDatabase::class.java,
+            androidContext().getString(R.string.app_name)
+        ).build()
+    }
+}
+
 val apiModule = module {
     factory { get<Retrofit>().create(AuthenticationService::class.java) }
     factory { get<Retrofit>().create(DiscoveryService::class.java) }
@@ -107,6 +128,15 @@ val apiModule = module {
     factory { get<Retrofit>().create(MovieService::class.java) }
     factory { get<Retrofit>().create(AccountService::class.java) }
     single { ApiManager(get(), get(), get(), get(), get()) }
+}
+
+val repositoryModule = module {
+    single { get<MovieDBDatabase>().moviesDao() }
+    single { get<MovieDBDatabase>().actorsDao() }
+    single { get<MovieDBDatabase>().collectionsDao() }
+    single {
+        MoviesRepository(get(), get())
+    }
 }
 
 val uiModule = module {

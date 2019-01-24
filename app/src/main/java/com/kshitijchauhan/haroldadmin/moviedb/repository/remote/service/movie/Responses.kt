@@ -3,6 +3,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.movie
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 @Parcelize
 data class GenrePair(
@@ -23,7 +24,7 @@ data class Movie (
     @field:Json(name="overview") val overview: String?,
     @field:Json(name="popularity") val popularity: Double,
     @field:Json(name="poster_path") var posterPath: String?,
-    @field:Json(name="release_date") var releaseDate: String,
+    @field:Json(name="release_date") var releaseDate: Date,
     @field:Json(name="revenue") val revenue: Long,
     @field:Json(name="runtime") val runtime: Int?,
     @field:Json(name="title") val title: String,

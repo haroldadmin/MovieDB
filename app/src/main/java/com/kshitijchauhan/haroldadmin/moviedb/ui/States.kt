@@ -17,14 +17,14 @@ sealed class UIState {
     }
 }
 
-sealed class MovieItemType {
-    sealed class MovieType: MovieItemType() {
-        object Popular: MovieType()
-        object TopRated: MovieType()
-        object SearchResult: MovieType()
+sealed class MovieItemType(val name: String) {
+    sealed class MovieType(name: String): MovieItemType(name) {
+        object Popular: MovieType("popular")
+        object TopRated: MovieType("top-rated")
+        object SearchResult: MovieType("search-result")
     }
-    sealed class LibraryType: MovieItemType() {
-        object Favourite: LibraryType()
-        object Watchlisted: LibraryType()
+    sealed class LibraryType(name: String): MovieItemType(name) {
+        object Favourite: LibraryType("favourite")
+        object Watchlisted: LibraryType("watchlisted")
     }
 }

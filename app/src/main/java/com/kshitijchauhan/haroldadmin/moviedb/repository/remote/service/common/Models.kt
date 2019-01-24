@@ -3,13 +3,14 @@ package com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.common
 import android.os.Parcelable
 import com.squareup.moshi.Json
 import kotlinx.android.parcel.Parcelize
+import java.util.*
 
 @Parcelize
 data class GeneralMovieResponse(
     @field:Json(name="adult") val isAdultMovie: Boolean,
     @field:Json(name="poster_path") var posterPath: String?,
     @field:Json(name="overview") val overview: String,
-    @field:Json(name="release_date") var releaseDate: String,
+    @field:Json(name="release_date") var releaseDate: Date,
     @field:Json(name="genre_ids") val genreIds: List<Int>,
     @field:Json(name="id") val id: Int,
     @field:Json(name="original_title") val originalTitle: String,
