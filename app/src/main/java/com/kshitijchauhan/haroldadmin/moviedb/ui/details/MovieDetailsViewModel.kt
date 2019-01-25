@@ -37,7 +37,7 @@ class MovieDetailsViewModel(
         get() = _message
 
     fun getMovieDetails(isAuthenticated: Boolean) {
-        moviesRepository.getMovieDetails(movieId, isAuthenticated, compositeDisposable)
+        moviesRepository.getMovieDetails(movieId, isAuthenticated)
             .subscribeOn(Schedulers.io())
             .doOnNext { movie ->
                 getActorsForMovie(movie.castIds, compositeDisposable)

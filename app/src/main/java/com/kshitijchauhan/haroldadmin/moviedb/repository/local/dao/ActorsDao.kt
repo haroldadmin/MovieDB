@@ -3,6 +3,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.repository.local.dao
 import androidx.room.*
 import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Actor
 import io.reactivex.Flowable
+import io.reactivex.Single
 
 @Dao
 interface ActorsDao {
@@ -18,6 +19,9 @@ interface ActorsDao {
 
     @Query("SELECT * FROM actors WHERE id IN (:ids)")
     fun getActors(ids: List<Int>): Flowable<List<Actor>>
+
+    @Query("SELECT COUNT(*) FROM actors WHERE id = :id")
+    fun isActorInDatabase(id: Int): Single<Int>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveActor(actor: Actor)

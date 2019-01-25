@@ -3,6 +3,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.repository.local.dao
 import androidx.room.*
 import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Movie
 import io.reactivex.Flowable
+import io.reactivex.Single
 
 @Dao
 interface MovieDao {
@@ -15,6 +16,9 @@ interface MovieDao {
 
     @Query("SELECT * FROM movies WHERE id = :id")
     fun getMovieBlocking(id: Int): Movie
+
+    @Query("SELECT COUNT(*) FROM movies WHERE id = :id")
+    fun isMovieInDatabase(id: Int): Single<Int>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveMovie(movie: Movie)

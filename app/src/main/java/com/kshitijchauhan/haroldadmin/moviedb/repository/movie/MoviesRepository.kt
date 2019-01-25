@@ -1,11 +1,9 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.movie
 
 import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Movie
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.Flowable
 import io.reactivex.Single
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class MoviesRepository(
@@ -13,23 +11,23 @@ class MoviesRepository(
     private val remoteMoviesSource: RemoteMoviesSource
 ) {
 
-    fun getMovieDetails(id: Int, isAuthenticated: Boolean, compositeDisposable: CompositeDisposable): Flowable<Movie> {
-        remoteMoviesSource.getMovieDetails(id, isAuthenticated)
+    fun getMovieDetails(id: Int, isAuthenticated: Boolean): Flowable<Movie> {
+        return localMoviesSource.isMovieInDatabase(id)
             .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.single())
-            .subscribe(
-                // OnNext
-                { movie: Movie ->
-                    log("Successfully retrieved movie: $movie")
-                    localMoviesSource.saveMovieToDatabase(movie)
-                },
-                // OnError
-                {
-                    log(it.localizedMessage)
+            .flatMapPublisher { count: Int ->
+                if (count > 0) {
+                    log("Movie already exists in database")
+                    localMoviesSource.getMovie(id)
                 }
-            )
-            .disposeWith(compositeDisposable)
-        return localMoviesSource.getMovie(id)
+                else {
+                    log("Fetching movie from the network")
+                    remoteMoviesSource.getMovieDetails(id, isAuthenticated)
+                        .doOnNext { movie ->
+                            log("Saving movie to the database")
+                            localMoviesSource.saveMovieToDatabase(movie)
+                        }
+                }
+            }
     }
 
     fun toggleMovieFavouriteStatus(isFavourite: Boolean, movieId: Int, accountId: Int): Single<Movie> {

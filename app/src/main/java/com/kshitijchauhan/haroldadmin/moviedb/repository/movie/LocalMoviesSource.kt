@@ -9,6 +9,8 @@ class LocalMoviesSource(private val moviesDao: MovieDao) {
 
     fun getMovieBlocking(id: Int) = moviesDao.getMovieBlocking(id)
 
+    fun isMovieInDatabase(id: Int) = moviesDao.isMovieInDatabase(id)
+
     fun saveMovieToDatabase(movie: Movie) = moviesDao.saveMovie(movie)
 
     fun updateMovieInDatabase(movie: Movie) = moviesDao.updateMovie(movie)

@@ -6,6 +6,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.movie.*
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.firstOrDefault
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getBackdropUrl
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getPosterUrl
+import io.reactivex.Flowable
 import io.reactivex.Single
 
 class RemoteMoviesSource(
@@ -13,7 +14,7 @@ class RemoteMoviesSource(
     private val accountService: AccountService
 ) {
 
-    fun getMovieDetails(id: Int, isAuthenticated: Boolean): Single<Movie> {
+    fun getMovieDetails(id: Int, isAuthenticated: Boolean): Flowable<Movie> {
         lateinit var movieResponse: MovieResponse
         lateinit var creditsResponse: MovieCreditsResponse
         lateinit var statesResponse: MovieStatesResponse
@@ -45,8 +46,8 @@ class RemoteMoviesSource(
             .doOnSuccess {
                 statesResponse = it
             }
-            .flatMap {
-                Single.just(mapResponsesToMovieModel(movieResponse, statesResponse, videosResponse, creditsResponse))
+            .flatMapPublisher {
+                Flowable.just(mapResponsesToMovieModel(movieResponse, statesResponse, videosResponse, creditsResponse))
             }
     }
 
