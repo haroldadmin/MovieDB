@@ -9,10 +9,13 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.BuildConfig
 import com.kshitijchauhan.haroldadmin.moviedb.R
+import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.ActorsRepository
+import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.LocalActorsSource
+import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.RemoteActorsSource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.local.db.MovieDBDatabase
-import com.kshitijchauhan.haroldadmin.moviedb.repository.local.movie.LocalMoviesSource
-import com.kshitijchauhan.haroldadmin.moviedb.repository.local.movie.MoviesRepository
-import com.kshitijchauhan.haroldadmin.moviedb.repository.local.movie.RemoteMoviesSource
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movie.LocalMoviesSource
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movie.MoviesRepository
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movie.RemoteMoviesSource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.ApiKeyInterceptor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.Config
@@ -22,6 +25,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.auth.Aut
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.common.GeneralMovieResponse
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.discover.DiscoveryService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.movie.MovieService
+import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.people.PersonService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.search.SearchService
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AuthenticationViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
@@ -130,6 +134,7 @@ val apiModule = module {
     factory { get<Retrofit>().create(SearchService::class.java) }
     factory { get<Retrofit>().create(MovieService::class.java) }
     factory { get<Retrofit>().create(AccountService::class.java) }
+    factory { get<Retrofit>().create(PersonService::class.java) }
     single { ApiManager(get(), get(), get(), get(), get()) }
 }
 
@@ -137,11 +142,14 @@ val repositoryModule = module {
     single { get<MovieDBDatabase>().moviesDao() }
     single { get<MovieDBDatabase>().actorsDao() }
     single { get<MovieDBDatabase>().collectionsDao() }
+
     factory { LocalMoviesSource(get()) }
     factory { RemoteMoviesSource(get(), get()) }
-    factory { (compositeDisposable: CompositeDisposable) ->
-        MoviesRepository(get(), get(), compositeDisposable)
-    }
+    factory { LocalActorsSource(get()) }
+    factory { RemoteActorsSource(get()) }
+
+    factory { MoviesRepository(get(), get()) }
+    factory { ActorsRepository(get(), get()) }
 }
 
 val uiModule = module {
@@ -156,7 +164,7 @@ val uiModule = module {
     viewModel { SearchViewModel(get()) }
     viewModel { (movieId: Int) ->
         val isAuthenticated = get<SharedPreferences>().getBoolean(Constants.KEY_IS_AUTHENTICATED, false)
-        MovieDetailsViewModel(isAuthenticated, movieId)
+        MovieDetailsViewModel(isAuthenticated, movieId, get(), get())
     }
     viewModel { MainViewModel(get(), get(), get()) }
 

@@ -128,6 +128,10 @@ class MovieDetailsFragment : BaseFragment() {
             mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner)
         })
 
+        movieDetailsViewModel.cast.observe(viewLifecycleOwner, Observer { castList ->
+            creditsAdapter.submitList(castList)
+        })
+
         movieDetailsViewModel.message.observe(viewLifecycleOwner, Observer { message ->
             mainViewModel.showSnackbar(message)
         })

@@ -8,12 +8,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
-import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.movie.CastMember
+import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Actor
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getProfilePictureUrl
 import kotlinx.android.synthetic.main.item_credit_actor.view.*
 
 class CreditsAdapter(private val glide: RequestManager) :
-    ListAdapter<CastMember, CreditsAdapter.ViewHolder>(CastMemberDiffCallback()) {
+    ListAdapter<Actor, CreditsAdapter.ViewHolder>(ActorDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_credit_actor, parent, false)
@@ -25,9 +25,9 @@ class CreditsAdapter(private val glide: RequestManager) :
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(castMember: CastMember) {
-            itemView.tvCreditActorName.text = castMember.name
-            glide.load(castMember.profilePath.getProfilePictureUrl())
+        fun bind(actor: Actor) {
+            itemView.tvCreditActorName.text = actor.name
+            glide.load(actor.profilePictureUrl.getProfilePictureUrl())
                 .apply(
                     RequestOptions()
                         .placeholder(R.drawable.ic_round_account_circle_24px)

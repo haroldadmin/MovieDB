@@ -2,24 +2,30 @@ package com.kshitijchauhan.haroldadmin.moviedb.repository.local.dao
 
 import androidx.room.*
 import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Actor
-import io.reactivex.Observable
+import io.reactivex.Flowable
 
 @Dao
 interface ActorsDao {
 
     @Query("SELECT * FROM actors")
-    fun getAllActors(): Observable<List<Actor>>
+    fun getAllActors(): Flowable<List<Actor>>
 
     @Query("SELECT * FROM actors WHERE id = :id")
-    fun getActor(id: Int): Observable<Actor>
+    fun getActor(id: Int): Flowable<Actor>
 
-    @Insert
+    @Query("SELECT * FROM actors WHERE id = :id")
+    fun getActorBlocking(id: Int): Actor
+
+    @Query("SELECT * FROM actors WHERE id IN (:ids)")
+    fun getActors(ids: List<Int>): Flowable<List<Actor>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveActor(actor: Actor)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveActors(vararg actor: Actor)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAllActors(actors: List<Actor>)
 
     @Update
