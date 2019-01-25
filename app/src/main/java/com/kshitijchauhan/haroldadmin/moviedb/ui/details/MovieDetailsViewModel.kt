@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.ActorsRepository
-import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Actor
-import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Movie
-import com.kshitijchauhan.haroldadmin.moviedb.repository.movie.MoviesRepository
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.local.model.Actor
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.local.model.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MoviesRepository
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log

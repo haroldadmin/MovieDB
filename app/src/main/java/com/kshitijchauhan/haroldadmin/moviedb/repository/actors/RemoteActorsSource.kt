@@ -1,8 +1,8 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.actors
 
-import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Actor
-import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.people.PersonResponse
-import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.people.PersonService
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.local.model.Actor
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.people.PersonResponse
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.people.PersonService
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.Flowable
 import io.reactivex.Single

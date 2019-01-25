@@ -4,10 +4,10 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.ApiManager
-import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.SessionIdInterceptor
-import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.account.AccountDetailsResponse
-import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.auth.CreateSessionRequest
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.ApiManager
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.SessionIdInterceptor
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.account.AccountDetailsResponse
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.auth.CreateSessionRequest
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SharedPreferencesDelegate
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent

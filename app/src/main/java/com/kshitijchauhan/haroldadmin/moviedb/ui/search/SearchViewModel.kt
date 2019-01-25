@@ -3,13 +3,12 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.ApiManager
-import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.common.GeneralMovieResponse
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.ApiManager
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.common.GeneralMovieResponse
 import com.kshitijchauhan.haroldadmin.moviedb.ui.MovieItemType
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieGridItem
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getPosterUrl
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable

@@ -1,7 +1,7 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres
 
 import androidx.recyclerview.widget.DiffUtil
-import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.common.GeneralMovieResponse
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.common.GeneralMovieResponse
 
 class MoviesDiffUtil(val oldList: List<GeneralMovieResponse>,
                      val newList: List<GeneralMovieResponse>): DiffUtil.Callback() {

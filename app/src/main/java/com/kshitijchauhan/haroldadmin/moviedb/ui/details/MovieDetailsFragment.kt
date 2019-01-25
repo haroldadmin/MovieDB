@@ -15,7 +15,7 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.kshitijchauhan.haroldadmin.moviedb.R
-import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.local.model.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask

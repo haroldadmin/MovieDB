@@ -1,7 +1,7 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.details
 
 import androidx.recyclerview.widget.DiffUtil
-import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Actor
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.local.model.Actor
 
 class ActorDiffCallback: DiffUtil.ItemCallback<Actor>() {
     override fun areItemsTheSame(oldItem: Actor, newItem: Actor): Boolean {
