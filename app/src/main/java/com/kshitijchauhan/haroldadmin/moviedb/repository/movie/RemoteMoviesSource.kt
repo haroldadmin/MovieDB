@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.repository.local.movie
+package com.kshitijchauhan.haroldadmin.moviedb.repository.movie
 
 import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.account.*
@@ -6,7 +6,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.remote.service.movie.*
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.firstOrDefault
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getBackdropUrl
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getPosterUrl
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.toYoutubeUrl
 import io.reactivex.Single
 
 class RemoteMoviesSource(
@@ -96,7 +95,7 @@ class RemoteMoviesSource(
                     movieVideo.key
                 }
                 .firstOrDefault(""),
-            creditsResponse.cast.take(8).map { it.castId }
+            creditsResponse.cast.take(8).map { it.id }
         )
     }
 }

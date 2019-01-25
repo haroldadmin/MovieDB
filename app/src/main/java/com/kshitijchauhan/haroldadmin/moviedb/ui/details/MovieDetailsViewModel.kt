@@ -2,30 +2,26 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.details
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Movie
-import com.kshitijchauhan.haroldadmin.moviedb.repository.local.movie.MoviesRepository
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BaseViewModel
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movie.MoviesRepository
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import org.koin.core.parameter.parametersOf
-import org.koin.standalone.inject
 import java.io.IOException
 import java.util.concurrent.TimeoutException
 
 class MovieDetailsViewModel(
     private val isAuthenticated: Boolean,
-    private val movieId: Int
-) : BaseViewModel() {
+    private val movieId: Int,
+    private val moviesRepository: MoviesRepository
+) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
     private val _movie = MutableLiveData<Movie>()
     private val _message = SingleLiveEvent<String>()
-    private val moviesRepository: MoviesRepository by inject {
-        parametersOf(compositeDisposable)
-    }
 
     val movie: LiveData<Movie>
         get() = _movie
@@ -34,7 +30,7 @@ class MovieDetailsViewModel(
         get() = _message
 
     fun getMovieDetails(isAuthenticated: Boolean) {
-        moviesRepository.getMovieDetails(movieId, isAuthenticated)
+        moviesRepository.getMovieDetails(movieId, isAuthenticated, compositeDisposable)
             .subscribeOn(Schedulers.io())
             .subscribe(
                 // onNext

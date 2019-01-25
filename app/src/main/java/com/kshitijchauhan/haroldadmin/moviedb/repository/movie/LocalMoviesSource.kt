@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.repository.local.movie
+package com.kshitijchauhan.haroldadmin.moviedb.repository.movie
 
 import com.kshitijchauhan.haroldadmin.moviedb.repository.local.dao.MovieDao
 import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Movie

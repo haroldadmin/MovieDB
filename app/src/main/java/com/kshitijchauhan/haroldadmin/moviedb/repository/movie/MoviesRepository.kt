@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.repository.local.movie
+package com.kshitijchauhan.haroldadmin.moviedb.repository.movie
 
 import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
@@ -10,11 +10,10 @@ import io.reactivex.schedulers.Schedulers
 
 class MoviesRepository(
     private val localMoviesSource: LocalMoviesSource,
-    private val remoteMoviesSource: RemoteMoviesSource,
-    private val compositeDisposable: CompositeDisposable
+    private val remoteMoviesSource: RemoteMoviesSource
 ) {
 
-    fun getMovieDetails(id: Int, isAuthenticated: Boolean): Flowable<Movie> {
+    fun getMovieDetails(id: Int, isAuthenticated: Boolean, compositeDisposable: CompositeDisposable): Flowable<Movie> {
         remoteMoviesSource.getMovieDetails(id, isAuthenticated)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.single())
