@@ -26,6 +26,9 @@ class MoviesRepository(
                             log("Saving movie to the database")
                             localMoviesSource.saveMovieToDatabase(movie)
                         }
+                        .switchMap {
+                            localMoviesSource.getMovie(id)
+                        }
                 }
             }
     }

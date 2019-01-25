@@ -23,6 +23,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_movie_details.*
@@ -123,6 +124,7 @@ class MovieDetailsFragment : BaseFragment() {
         mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner))
 
         movieDetailsViewModel.movie.observe(viewLifecycleOwner, Observer { movie ->
+            log("Received movie update: $movie")
             updateView(movie)
             this.movie = movie
             mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner)
@@ -194,8 +196,8 @@ class MovieDetailsFragment : BaseFragment() {
 
     private fun handleAccountStates(isWatchlisted: Boolean?, isFavourited: Boolean?) {
         if (mainViewModel.isAuthenticated) {
-            isWatchlisted?.let { watchlisted ->
                 btToggleWatchlist.apply {
+                    val watchlisted = isWatchlisted ?: false
                     setRemoveFromListState(watchlisted)
                     text = if (watchlisted) {
                         "Un-Watchlist"
@@ -206,7 +208,6 @@ class MovieDetailsFragment : BaseFragment() {
                         movieDetailsViewModel.toggleMovieWatchlistStatus(mainViewModel.accountId)
                     }
                 }
-            }
         } else {
             btToggleWatchlist.apply {
                 setUnauthenticatedState(true)
@@ -217,17 +218,16 @@ class MovieDetailsFragment : BaseFragment() {
         }
 
         if (mainViewModel.isAuthenticated) {
-            isFavourited?.let { favourited ->
-                btToggleFavourite.apply {
-                    setRemoveFromListState(favourited)
-                    text = if (favourited) {
-                        "Un-Favourite"
-                    } else {
-                        "Add to Favourites"
-                    }
-                    setOnClickListener {
-                        movieDetailsViewModel.toggleMovieFavouriteStatus(mainViewModel.accountId)
-                    }
+            btToggleFavourite.apply {
+                val favourite = isFavourited ?: false
+                setRemoveFromListState(favourite)
+                text = if (favourite) {
+                    "Un-Favourite"
+                } else {
+                    "Add to Favourites"
+                }
+                setOnClickListener {
+                    movieDetailsViewModel.toggleMovieFavouriteStatus(mainViewModel.accountId)
                 }
             }
         } else {
