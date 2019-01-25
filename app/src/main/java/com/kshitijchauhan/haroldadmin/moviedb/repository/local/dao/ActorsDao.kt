@@ -12,7 +12,7 @@ interface ActorsDao {
     fun getAllActors(): Flowable<List<Actor>>
 
     @Query("SELECT * FROM actors WHERE id = :id")
-    fun getActor(id: Int): Flowable<Actor>
+    fun getActor(id: Int): Single<Actor>
 
     @Query("SELECT * FROM actors WHERE id = :id")
     fun getActorBlocking(id: Int): Actor

@@ -1,47 +1,46 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.actors
 
 import com.kshitijchauhan.haroldadmin.moviedb.repository.local.model.Actor
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.Flowable
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 
 class ActorsRepository(
     private val localActorsSource: LocalActorsSource,
     private val remoteActorsSource: RemoteActorsSource
 ) {
 
-    fun getActor(id: Int, compositeDisposable: CompositeDisposable): Flowable<Actor> {
-        remoteActorsSource.getActor(id)
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.single())
-            .doOnSuccess { actor ->
-                localActorsSource.saveActorToDatabase(actor)
-            }
-            .subscribe()
-            .disposeWith(compositeDisposable)
+    fun getActor(id: Int): Flowable<Actor> {
 
-        return localActorsSource.getActor(id)
+        return localActorsSource.isActorInDatabase(id)
+            .flatMapPublisher<Actor> { count ->
+                if (count > 0) {
+                    log("Actor already exists in database")
+                    localActorsSource.getActor(id).toFlowable()
+                } else {
+                    log("Retrieving actor from api")
+                    remoteActorsSource.getActor(id).toFlowable()
+                        .doOnNext { actor ->
+                            log("Saving actor to database")
+                            localActorsSource.saveActorToDatabase(actor)
+                        }
+                        .flatMapSingle {
+                            localActorsSource.getActor(id)
+                        }
+                }
+            }
     }
 
-    fun getAllActors(ids: List<Int>, compositeDisposable: CompositeDisposable): Flowable<List<Actor>> {
-        remoteActorsSource.getAllActors(ids)
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.single())
-            .subscribe(
-                { actors: List<Actor> ->
-                    log("Writing retrieved ${actors.size} actors to the database")
-                    localActorsSource.saveAllActorsToDatabase(actors)
-                }, { error ->
-                    log(error.localizedMessage)
-                }
-            )
-            .disposeWith(compositeDisposable)
+    fun getAllActors(ids: List<Int>): Flowable<List<Actor>> {
 
-        return localActorsSource.getActors(ids)
-            .doOnNext {
-                log("Retrieved list of actors from database: $it")
+        return Flowable.fromIterable(ids)
+            .flatMap { id ->
+                log("Retrieving actor for id: $id")
+                this.getActor(id)
             }
+            .toList()
+            .doOnSuccess {
+                log("List of actors: $it")
+            }
+            .toFlowable()
     }
 }

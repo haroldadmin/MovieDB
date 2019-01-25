@@ -8,7 +8,7 @@ import io.reactivex.Flowable
 class LocalActorsSource(private val actorsDao: ActorsDao) {
 
     fun getActor(id: Int) = actorsDao.getActor(id)
-        .doOnNext {
+        .doOnSuccess {
             log("Retrieved actor from database: $it")
         }
 
@@ -18,6 +18,8 @@ class LocalActorsSource(private val actorsDao: ActorsDao) {
         log("Getting list of actors from database")
         return actorsDao.getActors(ids)
     }
+
+    fun isActorInDatabase(id: Int) = actorsDao.isActorInDatabase(id)
 
     fun saveActorToDatabase(actor: Actor) = actorsDao.saveActor(actor)
 

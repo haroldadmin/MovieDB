@@ -40,7 +40,7 @@ class MovieDetailsViewModel(
         moviesRepository.getMovieDetails(movieId, isAuthenticated)
             .subscribeOn(Schedulers.io())
             .doOnNext { movie ->
-                getActorsForMovie(movie.castIds, compositeDisposable)
+                getActorsForMovie(movie.castIds)
             }
             .subscribe(
                 // onNext
@@ -87,8 +87,8 @@ class MovieDetailsViewModel(
         } else throw IllegalStateException("Can't toggle watchlist status if user is not logged in")
     }
 
-    private fun getActorsForMovie(actorIds: List<Int>, compositeDisposable: CompositeDisposable) {
-        actorsRepository.getAllActors(actorIds, compositeDisposable)
+    private fun getActorsForMovie(actorIds: List<Int>) {
+        actorsRepository.getAllActors(actorIds)
             .subscribeOn(Schedulers.io())
             .subscribe(
                 { actorsList ->
