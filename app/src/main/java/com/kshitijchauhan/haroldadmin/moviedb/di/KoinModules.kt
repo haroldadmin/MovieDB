@@ -12,6 +12,9 @@ import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.ActorsRepository
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.LocalActorsSource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.RemoteActorsSource
+import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionsRepository
+import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.LocalCollectionsSource
+import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.RemoteCollectionsSource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.local.db.MovieDBDatabase
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.LocalMoviesSource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MoviesRepository
@@ -90,9 +93,12 @@ val retrofitModule = module {
             .addInterceptor(get<SessionIdInterceptor> {
                 parametersOf(sessionId)
             })
-            .addInterceptor(get<HttpLoggingInterceptor> {
-                parametersOf(HttpLoggingInterceptor.Level.BODY)
-            })
+            .also {
+                if (BuildConfig.DEBUG)
+                    it.addInterceptor(get<HttpLoggingInterceptor> {
+                        parametersOf(HttpLoggingInterceptor.Level.BASIC)
+                    })
+            }
             .cache(get())
             .build()
     }
@@ -146,9 +152,12 @@ val repositoryModule = module {
     factory { RemoteMoviesSource(get(), get()) }
     factory { LocalActorsSource(get()) }
     factory { RemoteActorsSource(get()) }
+    factory { LocalCollectionsSource(get()) }
+    factory { RemoteCollectionsSource(get(), get()) }
 
     factory { MoviesRepository(get(), get()) }
     factory { ActorsRepository(get(), get()) }
+    factory { CollectionsRepository(get(), get()) }
 }
 
 val uiModule = module {
@@ -157,7 +166,10 @@ val uiModule = module {
     single { ProgressBarManager() }
 
     viewModel { HomeViewModel(get()) }
-    viewModel { LibraryViewModel(get()) }
+    viewModel {
+        val isAuthenticated = get<SharedPreferences>().getBoolean(Constants.KEY_IS_AUTHENTICATED, false)
+        LibraryViewModel(get(), get(), get(), isAuthenticated)
+    }
     viewModel { InTheatresViewModel(get()) }
     viewModel { AuthenticationViewModel(get(), get(), get()) }
     viewModel { SearchViewModel(get()) }

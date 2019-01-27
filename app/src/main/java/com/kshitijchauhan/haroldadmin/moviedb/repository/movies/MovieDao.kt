@@ -1,7 +1,6 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.movies
 
 import androidx.room.*
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.local.model.Movie
 import io.reactivex.Flowable
 import io.reactivex.Single
 
@@ -12,7 +11,13 @@ interface MovieDao {
     fun getAllMovies(): Flowable<List<Movie>>
 
     @Query("SELECT * FROM movies WHERE id = :id")
-    fun getMovie(id: Int): Flowable<Movie>
+    fun getMovieFlowable(id: Int): Flowable<Movie>
+
+    /**
+     * This method can be used where changes to a movie object don't need to be observed continuously.
+     */
+    @Query("SELECT * FROM movies WHERE id = :id")
+    fun getMovie(id: Int): Single<Movie>
 
     @Query("SELECT * FROM movies WHERE id = :id")
     fun getMovieBlocking(id: Int): Movie

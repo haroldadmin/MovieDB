@@ -3,83 +3,121 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.library
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionType
+import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionsRepository
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.ApiManager
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MoviesRepository
 import com.kshitijchauhan.haroldadmin.moviedb.ui.MovieItemType
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieGridItem
+import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getPosterUrl
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.io.IOException
+import java.util.concurrent.TimeoutException
 
-class LibraryViewModel(private val apiManager: ApiManager) : ViewModel() {
+class LibraryViewModel(
+    private val apiManager: ApiManager,
+    private val collectionsRepository: CollectionsRepository,
+    private val moviesRepository: MoviesRepository,
+    private val isAuthenticated: Boolean
+) : ViewModel() {
 
-    private val _favouriteMoviesUpdate = MutableLiveData<List<MovieGridItem>>()
-    private val _watchlistedMoviesUpdate = MutableLiveData<List<MovieGridItem>>()
     private val compositeDisposable = CompositeDisposable()
+    private val _favouriteMovies = MutableLiveData<List<Movie>>()
+    private val _watchlistedMovies = MutableLiveData<List<Movie>>()
+    private val _message = SingleLiveEvent<String>()
 
-    val favouriteMoviesUpdate: LiveData<List<MovieGridItem>>
-        get() = _favouriteMoviesUpdate
+    val watchListMoviesUpdate: LiveData<List<Movie>>
+        get() = _watchlistedMovies
 
-    val watchListMoviesUpdate: LiveData<List<MovieGridItem>>
-        get() = _watchlistedMoviesUpdate
+    val favouriteMovies: LiveData<List<Movie>>
+        get() = _favouriteMovies
 
-    fun getFavouriteMoves(accountId: Int) {
-        apiManager
-            .getFavouriteMovies(accountId)
+    val message: LiveData<String>
+        get() = _message
+
+
+    fun getFavouriteMovies(accountId: Int) {
+        collectionsRepository.getCollection(accountId, CollectionType.Favourite)
             .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.computation())
-            .map { response ->
-                response.results
+            .flatMapPublisher { collection ->
+                Flowable.fromIterable(collection.contents)
             }
-            .flatMapObservable { list ->
-                Observable.fromIterable(list)
-            }
-            .map { movie ->
-                with(movie) {
-                    MovieGridItem(
-                        id,
-                        title,
-                        this.posterPath.getPosterUrl(),
-                        MovieItemType.LibraryType.Favourite
-                    )
-                }
+            .flatMap { id ->
+                moviesRepository.getMovieDetailsFlowable(id, isAuthenticated)
             }
             .toList()
-            .doOnSuccess {
-                _favouriteMoviesUpdate.postValue(it)
-            }
-            .subscribe()
+            .subscribe(
+                { favouritesList: List<Movie> ->
+                    _favouriteMovies.postValue(favouritesList)
+                },
+                { error ->
+                    handleError(error)
+                }
+            )
             .disposeWith(compositeDisposable)
     }
 
-    fun getWatchlistedeMovies(accountId: Int) {
-        apiManager
-            .getMoviesWatchList(accountId)
+    fun getWatchlistedMovies(accountId: Int) {
+        collectionsRepository.getCollection(accountId, CollectionType.Watchlist)
             .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.computation())
-            .map { response ->
-                response.results
+            .flatMapPublisher { collection ->
+                Flowable.fromIterable(collection.contents)
             }
-            .flatMapObservable { list ->
-                Observable.fromIterable(list)
-            }
-            .map { movie ->
-                with(movie) {
-                    MovieGridItem(
-                        id,
-                        title,
-                        this.posterPath.getPosterUrl(),
-                        MovieItemType.LibraryType.Watchlisted
-                    )
-                }
+            .flatMapSingle { id ->
+                moviesRepository.getMovieDetails(id, isAuthenticated)
             }
             .toList()
-            .doOnSuccess {
-                _watchlistedMoviesUpdate.postValue(it)
-            }
-            .subscribe()
+            .subscribe(
+                { watchlist ->
+                    _watchlistedMovies.postValue(watchlist)
+                },
+                { error ->
+                    handleError(error)
+                }
+            )
             .disposeWith(compositeDisposable)
+//        apiManager
+//            .getMoviesWatchList(accountId)
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(Schedulers.computation())
+//            .map { response ->
+//                response.results
+//            }
+//            .flatMapObservable { list ->
+//                Observable.fromIterable(list)
+//            }
+//            .map { movie ->
+//                with(movie) {
+//                    MovieGridItem(
+//                        id,
+//                        title,
+//                        this.posterPath.getPosterUrl(),
+//                        MovieItemType.LibraryType.Watchlisted
+//                    )
+//                }
+//            }
+//            .toList()
+//            .doOnSuccess {
+//                _watchlistedMoviesUpdate.postValue(it)
+//            }
+//            .subscribe()
+//            .disposeWith(compositeDisposable)
+    }
+
+    private fun handleError(error: Throwable) {
+        log(error.localizedMessage)
+        when (error) {
+            is IOException -> _message.postValue("Please check your internet connection")
+            is TimeoutException -> _message.postValue("Request timed out")
+            else -> _message.postValue("An error occurred")
+        }
     }
 
     override fun onCleared() {

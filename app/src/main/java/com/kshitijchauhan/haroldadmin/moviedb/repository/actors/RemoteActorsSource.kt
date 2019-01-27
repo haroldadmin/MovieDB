@@ -1,6 +1,5 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.actors
 
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.local.model.Actor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.people.PersonResponse
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.people.PersonService
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
@@ -31,7 +30,11 @@ class RemoteActorsSource(
     }
 
     private fun mapPersonResponseToActor(personResponse: PersonResponse): Actor {
-        return Actor(personResponse.id, personResponse.profilePath ?: "", personResponse.name)
+        return Actor(
+            personResponse.id,
+            personResponse.profilePath ?: "",
+            personResponse.name
+        )
     }
 
 }

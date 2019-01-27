@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.repository.data.local.model
+package com.kshitijchauhan.haroldadmin.moviedb.repository.data.local
 
 import androidx.room.TypeConverter
 import java.util.*

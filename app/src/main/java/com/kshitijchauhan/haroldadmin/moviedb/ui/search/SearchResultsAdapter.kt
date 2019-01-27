@@ -7,11 +7,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.kshitijchauhan.haroldadmin.moviedb.R
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.MoviesDiffUtil
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieGridItem
 
 class SearchResultsAdapter(val onItemClick: (movieId: Int) -> Unit) :
-    ListAdapter<MovieGridItem, SearchResultsAdapter.ViewHolder>(MoviesDiffUtil()) {
+    ListAdapter<Movie, SearchResultsAdapter.ViewHolder>(MoviesDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_search_suggestion, parent, false)
@@ -25,8 +25,8 @@ class SearchResultsAdapter(val onItemClick: (movieId: Int) -> Unit) :
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(movieSearchResult: MovieGridItem) {
-            (itemView as TextView).text = movieSearchResult.name
+        fun bind(movieSearchResult: Movie) {
+            (itemView as TextView).text = movieSearchResult.title
             itemView.setOnClickListener { onItemClick.invoke(movieSearchResult.id) }
         }
     }

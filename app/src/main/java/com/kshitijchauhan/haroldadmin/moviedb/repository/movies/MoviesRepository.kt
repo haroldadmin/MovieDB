@@ -1,6 +1,5 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.movies
 
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.local.model.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -11,23 +10,42 @@ class MoviesRepository(
     private val remoteMoviesSource: RemoteMoviesSource
 ) {
 
-    fun getMovieDetails(id: Int, isAuthenticated: Boolean): Flowable<Movie> {
+    fun getMovieDetailsFlowable(id: Int, isAuthenticated: Boolean): Flowable<Movie> {
         return localMoviesSource.isMovieInDatabase(id)
-            .subscribeOn(Schedulers.io())
-            .flatMapPublisher { count: Int ->
+            .flatMapPublisher<Movie> { count: Int ->
                 if (count > 0) {
                     log("Movie already exists in database")
-                    localMoviesSource.getMovie(id)
-                }
-                else {
+                    localMoviesSource.getMovieSingle(id).toFlowable()
+                        .doOnComplete { log("debug: Completed emitting movie details from db") }
+                } else {
                     log("Fetching movie from the network")
-                    remoteMoviesSource.getMovieDetails(id, isAuthenticated)
+                    remoteMoviesSource.getMovieDetails(id, isAuthenticated).toFlowable()
                         .doOnNext { movie ->
                             log("Saving movie to the database")
                             localMoviesSource.saveMovieToDatabase(movie)
                         }
-                        .switchMap {
-                            localMoviesSource.getMovie(id)
+                        .flatMapSingle {
+                            localMoviesSource.getMovieSingle(id)
+                        }
+                }
+            }
+    }
+
+    fun getMovieDetails(id: Int, isAuthenticated: Boolean): Single<Movie> {
+        return localMoviesSource.isMovieInDatabase(id)
+            .flatMap { count ->
+                if (count > 0) {
+                    log("Movie already exists in database")
+                    localMoviesSource.getMovieSingle(id)
+                } else {
+                    log("Fetching movie from the network")
+                    remoteMoviesSource.getMovieDetails(id, isAuthenticated)
+                        .doOnSuccess { movie ->
+                            log("Saving movie to database")
+                            localMoviesSource.saveMovieToDatabase(movie)
+                        }
+                        .flatMap {
+                            localMoviesSource.getMovieSingle(id)
                         }
                 }
             }

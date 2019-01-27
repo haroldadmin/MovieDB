@@ -1,7 +1,6 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.actors
 
 import androidx.room.*
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.local.model.Actor
 import io.reactivex.Flowable
 import io.reactivex.Single
 

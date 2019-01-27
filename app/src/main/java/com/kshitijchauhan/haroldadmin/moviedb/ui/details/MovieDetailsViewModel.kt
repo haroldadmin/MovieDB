@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.ActorsRepository
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.local.model.Actor
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.local.model.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MoviesRepository
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
@@ -37,7 +37,7 @@ class MovieDetailsViewModel(
         get() = _message
 
     fun getMovieDetails(isAuthenticated: Boolean) {
-        moviesRepository.getMovieDetails(movieId, isAuthenticated)
+        moviesRepository.getMovieDetailsFlowable(movieId, isAuthenticated)
             .subscribeOn(Schedulers.io())
             .doOnNext { movie ->
                 getActorsForMovie(movie.castIds)

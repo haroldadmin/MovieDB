@@ -16,7 +16,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.hideKeyboard
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.visible
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -63,7 +62,7 @@ class SearchFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        searchViewModel.searchUpdate.observe(viewLifecycleOwner, Observer {
+        searchViewModel.searchResults.observe(viewLifecycleOwner, Observer {
             searchAdapter.submitList(it)
             if (it.isEmpty()) {
                 TransitionManager.beginDelayedTransition(searchRootView)

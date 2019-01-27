@@ -77,15 +77,15 @@ class HomeFragment : BaseFragment() {
                 getTopRatedMovies()
             }
 
-            popularMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
-                mainViewModel.completeLoadingTask(TAG_GET_POPULAR_MOVIES, viewLifecycleOwner)
-                popularMoviesAdapter.submitList(newList)
-            })
-
-            topRatedMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
-                mainViewModel.completeLoadingTask(TAG_GET_TOP_RATED_MOVIES, viewLifecycleOwner)
-                topRatedMoviesAdapter.submitList(newList)
-            })
+//            popularMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
+//                mainViewModel.completeLoadingTask(TAG_GET_POPULAR_MOVIES, viewLifecycleOwner)
+//                popularMoviesAdapter.submitList(newList)
+//            })
+//
+//            topRatedMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
+//                mainViewModel.completeLoadingTask(TAG_GET_TOP_RATED_MOVIES, viewLifecycleOwner)
+//                topRatedMoviesAdapter.submitList(newList)
+//            })
         }
 
         mainViewModel.updateToolbarTitle(getString(R.string.app_name))

@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.transition.TransitionManager
-import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
@@ -33,6 +32,7 @@ class LibraryFragment : BaseFragment() {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val libraryViewModel: LibraryViewModel by viewModel()
+
     private val glideRequestManager: RequestManager by inject {
         parametersOf(this)
     }
@@ -77,28 +77,33 @@ class LibraryFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        libraryViewModel.message.observe(viewLifecycleOwner, Observer { message ->
+            mainViewModel.showSnackbar(message)
+        })
+
         if (mainViewModel.isAuthenticated) {
             libraryViewModel.apply {
 
-                if (favouriteMoviesUpdate.value == null) {
+                if (favouriteMovies.value == null) {
                     mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_FAVOURITE_MOVIES, viewLifecycleOwner))
-                    getFavouriteMoves(mainViewModel.accountId)
+                    getFavouriteMovies(mainViewModel.accountId)
                 }
 
                 if (watchListMoviesUpdate.value == null) {
                     mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_WATCHLISTED_MOVIES, viewLifecycleOwner))
-                    getWatchlistedeMovies(mainViewModel.accountId)
+                    getWatchlistedMovies(mainViewModel.accountId)
                 }
 
-                favouriteMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
+                favouriteMovies.observe(viewLifecycleOwner, Observer { newList ->
                     mainViewModel.completeLoadingTask(TASK_LOAD_FAVOURITE_MOVIES, viewLifecycleOwner)
                     /**
                      * If the adapter was unpopulated before, the empty view will be removed, the recycler view's new
                      * items will appear. If the new items are not empty, then the watchlist recycler view and its header
                      * will have to be shifted down. We want to animate those changes.
                      */
-                    val isListEmpty = favouriteMoviesAdapter.itemCount == 0
-                    if (isListEmpty) TransitionManager.beginDelayedTransition(libraryContainer)
+                    val isAdapterEmpty = favouriteMoviesAdapter.itemCount == 0
+                    if (isAdapterEmpty)
+                        TransitionManager.beginDelayedTransition(libraryContainer)
                     favouriteMoviesAdapter.submitList(newList)
                 })
 

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.common.GeneralMovieResponse
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.MovieItemType
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieGridItem
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
@@ -17,10 +18,10 @@ import io.reactivex.schedulers.Schedulers
 class SearchViewModel(private val apiManager: ApiManager) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
-    private val _searchUpdate = MutableLiveData<List<MovieGridItem>>()
+    private val _searchResults = MutableLiveData<List<Movie>>()
 
-    val searchUpdate: LiveData<List<MovieGridItem>>
-        get() = _searchUpdate
+    val searchResults: LiveData<List<Movie>>
+        get() = _searchResults
 
     private var currentQuery: Disposable? = null
 
@@ -46,7 +47,8 @@ class SearchViewModel(private val apiManager: ApiManager) : ViewModel() {
             }
             .toList()
             .doOnSuccess {
-                _searchUpdate.postValue(it)
+//                _searchResults.postValue(it)
+                TODO("Update search view model to use a different data type")
             }
             .subscribe()
 

@@ -1,6 +1,5 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.movies
 
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.local.model.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.account.*
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.*
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.firstOrDefault
@@ -14,7 +13,7 @@ class RemoteMoviesSource(
     private val accountService: AccountService
 ) {
 
-    fun getMovieDetails(id: Int, isAuthenticated: Boolean): Flowable<Movie> {
+    fun getMovieDetails(id: Int, isAuthenticated: Boolean): Single<Movie> {
         lateinit var movieResponse: MovieResponse
         lateinit var creditsResponse: MovieCreditsResponse
         lateinit var statesResponse: MovieStatesResponse
@@ -46,8 +45,8 @@ class RemoteMoviesSource(
             .doOnSuccess {
                 statesResponse = it
             }
-            .flatMapPublisher {
-                Flowable.just(mapResponsesToMovieModel(movieResponse, statesResponse, videosResponse, creditsResponse))
+            .flatMap {
+                Single.just(mapResponsesToMovieModel(movieResponse, statesResponse, videosResponse, creditsResponse))
             }
     }
 
