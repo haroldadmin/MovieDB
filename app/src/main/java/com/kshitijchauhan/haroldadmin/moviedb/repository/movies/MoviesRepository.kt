@@ -31,7 +31,7 @@ class MoviesRepository(
             }
     }
 
-    fun getMovieDetails(id: Int, isAuthenticated: Boolean): Single<Movie> {
+    fun getMovieDetails(id: Int, isAuthenticated: Boolean = false): Single<Movie> {
         return localMoviesSource.isMovieInDatabase(id)
             .flatMap { count ->
                 if (count > 0) {

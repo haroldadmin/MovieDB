@@ -5,24 +5,18 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionType
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionsRepository
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MoviesRepository
-import com.kshitijchauhan.haroldadmin.moviedb.ui.MovieItemType
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieGridItem
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getPosterUrl
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.Flowable
-import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.io.IOException
 import java.util.concurrent.TimeoutException
 
 class LibraryViewModel(
-    private val apiManager: ApiManager,
     private val collectionsRepository: CollectionsRepository,
     private val moviesRepository: MoviesRepository,
     private val isAuthenticated: Boolean
@@ -83,32 +77,6 @@ class LibraryViewModel(
                 }
             )
             .disposeWith(compositeDisposable)
-//        apiManager
-//            .getMoviesWatchList(accountId)
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(Schedulers.computation())
-//            .map { response ->
-//                response.results
-//            }
-//            .flatMapObservable { list ->
-//                Observable.fromIterable(list)
-//            }
-//            .map { movie ->
-//                with(movie) {
-//                    MovieGridItem(
-//                        id,
-//                        title,
-//                        this.posterPath.getPosterUrl(),
-//                        MovieItemType.LibraryType.Watchlisted
-//                    )
-//                }
-//            }
-//            .toList()
-//            .doOnSuccess {
-//                _watchlistedMoviesUpdate.postValue(it)
-//            }
-//            .subscribe()
-//            .disposeWith(compositeDisposable)
     }
 
     private fun handleError(error: Throwable) {

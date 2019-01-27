@@ -165,10 +165,10 @@ val uiModule = module {
     single { BottomNavManager() }
     single { ProgressBarManager() }
 
-    viewModel { HomeViewModel(get()) }
+    viewModel { HomeViewModel(get(), get()) }
     viewModel {
         val isAuthenticated = get<SharedPreferences>().getBoolean(Constants.KEY_IS_AUTHENTICATED, false)
-        LibraryViewModel(get(), get(), get(), isAuthenticated)
+        LibraryViewModel(get(), get(), isAuthenticated)
     }
     viewModel { InTheatresViewModel(get()) }
     viewModel { AuthenticationViewModel(get(), get(), get()) }

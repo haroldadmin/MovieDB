@@ -3,89 +3,86 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.ApiManager
-import com.kshitijchauhan.haroldadmin.moviedb.ui.MovieItemType
+import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionType
+import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionsRepository
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MoviesRepository
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieGridItem
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getPosterUrl
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.io.IOException
+import java.util.concurrent.TimeoutException
 
-class HomeViewModel(private val apiManager: ApiManager) : ViewModel() {
+class HomeViewModel(private val collectionsRepository: CollectionsRepository,
+                    private val moviesRepository: MoviesRepository) : ViewModel() {
 
-    private val isPopularMoviesLoading = MutableLiveData<Boolean>()
-    private val isTopRatedMoviesLoading = MutableLiveData<Boolean>()
     private val compositeDisposable = CompositeDisposable()
-    private val _popularMoviesUpdate = MutableLiveData<List<MovieGridItem>>()
-    private val _topRatedMoviesUpdate = MutableLiveData<List<MovieGridItem>>()
+    private val _popularMovies = MutableLiveData<List<Movie>>()
+    private val _topRatedMovies = MutableLiveData<List<Movie>>()
+    private val _message = MutableLiveData<String>()
 
-    val popularMoviesUpdate: LiveData<List<MovieGridItem>>
-        get() = _popularMoviesUpdate
+    val popularMovies: LiveData<List<Movie>>
+        get() = _popularMovies
 
-    val topRatedMoviesUpdate: LiveData<List<MovieGridItem>>
-        get() = _topRatedMoviesUpdate
+    val topRatedMovies: LiveData<List<Movie>>
+        get() = _topRatedMovies
+
+    val message: LiveData<String>
+        get() = _message
 
     fun getPopularMovies() {
-        isPopularMoviesLoading.value = true
-        apiManager
-            .getPopularMovies()
+        collectionsRepository.getCollection(type = CollectionType.Popular)
             .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.computation())
-            .map { response ->
-                response.results
+            .flatMapPublisher { collection ->
+                Flowable.fromIterable(collection.contents)
             }
-            .flatMapObservable { list ->
-                Observable.fromIterable(list)
-            }
-            .map { movie ->
-                with(movie) {
-                    MovieGridItem(
-                        id,
-                        title,
-                        this.posterPath.getPosterUrl(),
-                        MovieItemType.MovieType.Popular
-                    )
-                }
+            .flatMapSingle { id ->
+                moviesRepository.getMovieDetails(id)
             }
             .toList()
-            .doOnSuccess {
-                isPopularMoviesLoading.postValue(false)
-                _popularMoviesUpdate.postValue(it)
-            }
-            .subscribe()
+            .subscribe(
+                { popularMovies ->
+                    _popularMovies.postValue(popularMovies)
+                },
+                { error ->
+                    handleError(error)
+                }
+            )
             .disposeWith(compositeDisposable)
     }
 
     fun getTopRatedMovies() {
-        isTopRatedMoviesLoading.value = true
-        apiManager
-            .getTopRatedMovies()
+        collectionsRepository.getCollection(type = CollectionType.TopRated)
             .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.computation())
-            .map { response ->
-                response.results
+            .flatMapPublisher { collection ->
+                Flowable.fromIterable(collection.contents)
             }
-            .flatMapObservable { list ->
-                Observable.fromIterable(list)
-            }
-            .map { movie ->
-                with (movie) {
-                    MovieGridItem(
-                        id,
-                        title,
-                        this.posterPath.getPosterUrl(),
-                        MovieItemType.MovieType.TopRated
-                    )
-                }
+            .flatMapSingle { id ->
+                moviesRepository.getMovieDetails(id)
             }
             .toList()
-            .doOnSuccess {
-                isTopRatedMoviesLoading.postValue(false)
-                _topRatedMoviesUpdate.postValue(it)
-            }
-            .subscribe()
+            .subscribe(
+                { topRatedMovies ->
+                    _topRatedMovies.postValue(topRatedMovies)
+                },
+                { error ->
+                    handleError(error)
+                }
+            )
             .disposeWith(compositeDisposable)
+    }
+
+    private fun handleError(error: Throwable) {
+        log(error.localizedMessage)
+        when (error) {
+            is IOException -> _message.postValue("Please check your internet connection")
+            is TimeoutException -> _message.postValue("Request timed out")
+            else -> _message.postValue("An error occurred")
+        }
     }
 
     override fun onCleared() {

@@ -37,7 +37,7 @@ class CollectionsRepository(
      * This version of the method is needed to ensure that downstream knows this observable has completed emission.
      * Otherwise, the downstream observers never know when this observable will complete
      */
-    fun getCollection(accountId: Int, type: CollectionType): Single<Collection> {
+    fun getCollection(accountId: Int = 0, type: CollectionType): Single<Collection> {
         return localCollectionsSource.isCollectionInDatabase(type)
             .flatMap<Collection>{ count ->
                 if (count > 0) {

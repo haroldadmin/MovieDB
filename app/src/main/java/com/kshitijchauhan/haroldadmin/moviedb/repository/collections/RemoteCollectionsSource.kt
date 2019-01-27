@@ -5,6 +5,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.com
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.discover.DiscoveryService
 import io.reactivex.Flowable
 import io.reactivex.Single
+import io.reactivex.flowables.ConnectableFlowable
 
 class RemoteCollectionsSource(
     private val discoveryService: DiscoveryService,
@@ -31,11 +32,31 @@ class RemoteCollectionsSource(
         }
     }
 
+    private fun getFavouritesCollectionMovies(accountId: Int): ConnectableFlowable<GeneralMovieResponse> {
+        return accountService.getFavouriteMovies(accountId)
+            .flatMapPublisher { response ->
+                Flowable.fromIterable(response.results)
+            }
+            .publish()
+    }
+
+    private fun getFavouritesCollectionIds(accountId: Int) {
+        getFavouritesCollectionMovies(accountId)
+            .map { generalMoviesResponse ->
+                generalMoviesResponse.id
+            }
+            .toList()
+            .flatMapPublisher { listOfIds ->
+                Flowable.just(Collection(CollectionType.Favourite.name,))
+            }
+    }
+
     private fun getFavouritesCollectionFlowable(accountId: Int): Flowable<Collection> {
         return accountService.getFavouriteMovies(accountId)
             .flatMapPublisher { response ->
                 Flowable.fromIterable(response.results)
             }
+            .publish()
             .map { generalMovieResponse: GeneralMovieResponse ->
                 generalMovieResponse.id
             }

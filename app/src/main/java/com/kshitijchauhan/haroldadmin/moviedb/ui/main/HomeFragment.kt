@@ -67,25 +67,29 @@ class HomeFragment : BaseFragment() {
 
         homeViewModel.apply {
 
-            if (popularMoviesUpdate.value == null) {
+            if (popularMovies.value == null) {
                 mainViewModel.addLoadingTask(LoadingTask(TAG_GET_POPULAR_MOVIES, this@HomeFragment.viewLifecycleOwner))
                 getPopularMovies()
             }
 
-            if (topRatedMoviesUpdate.value == null) {
+            if (topRatedMovies.value == null) {
                 mainViewModel.addLoadingTask(LoadingTask(TAG_GET_TOP_RATED_MOVIES, this@HomeFragment.viewLifecycleOwner))
                 getTopRatedMovies()
             }
 
-//            popularMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
-//                mainViewModel.completeLoadingTask(TAG_GET_POPULAR_MOVIES, viewLifecycleOwner)
-//                popularMoviesAdapter.submitList(newList)
-//            })
-//
-//            topRatedMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
-//                mainViewModel.completeLoadingTask(TAG_GET_TOP_RATED_MOVIES, viewLifecycleOwner)
-//                topRatedMoviesAdapter.submitList(newList)
-//            })
+            popularMovies.observe(viewLifecycleOwner, Observer { newList ->
+                mainViewModel.completeLoadingTask(TAG_GET_POPULAR_MOVIES, viewLifecycleOwner)
+                popularMoviesAdapter.submitList(newList)
+            })
+
+            topRatedMovies.observe(viewLifecycleOwner, Observer { newList ->
+                mainViewModel.completeLoadingTask(TAG_GET_TOP_RATED_MOVIES, viewLifecycleOwner)
+                topRatedMoviesAdapter.submitList(newList)
+            })
+
+            message.observe(viewLifecycleOwner, Observer { message ->
+                mainViewModel.showSnackbar(message)
+            })
         }
 
         mainViewModel.updateToolbarTitle(getString(R.string.app_name))

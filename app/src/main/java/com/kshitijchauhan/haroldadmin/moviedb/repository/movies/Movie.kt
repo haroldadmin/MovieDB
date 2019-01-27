@@ -8,27 +8,27 @@ import java.util.*
 @Entity(tableName = "movies")
 data class Movie(
     @PrimaryKey
-    val id: Int,
+    val id: Int?,
     @ColumnInfo(name = "title")
-    val title: String,
+    val title: String?,
     @ColumnInfo(name = "poster_path")
-    val posterPath: String,
+    val posterPath: String?,
     @ColumnInfo(name = "backdrop_path")
-    val backdropPath: String,
+    val backdropPath: String?,
     @ColumnInfo(name = "overview")
-    val overview: String,
+    val overview: String?,
     @ColumnInfo(name = "vote_average")
-    val voteAverage: Double,
+    val voteAverage: Double?,
     @ColumnInfo(name = "release_date")
-    val releaseDate: Date,
+    val releaseDate: Date?,
     @ColumnInfo(name = "genre")
-    val genre: String,
+    val genre: String?,
     @ColumnInfo(name = "watchlisted")
     val isWatchlisted: Boolean?,
     @ColumnInfo(name = "favourite")
     val isFavourited: Boolean?,
     @ColumnInfo(name = "trailer_url")
-    val trailerUrl: String,
+    val trailerUrl: String?,
     @ColumnInfo(name = "cast_ids")
-    val castIds: List<Int>
+    val castIds: List<Int>?
 )
