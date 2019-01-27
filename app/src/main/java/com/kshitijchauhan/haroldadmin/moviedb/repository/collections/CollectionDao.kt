@@ -1,6 +1,7 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.collections
 
 import androidx.room.*
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import io.reactivex.Flowable
 import io.reactivex.Single
 
@@ -39,6 +40,9 @@ interface CollectionDao {
 
     @Query("SELECT COUNT(*) FROM collections WHERE name = :name")
     fun isCollectionInDatabase(name: String): Single<Int>
+
+    @Query("SELECT * FROM movies WHERE id IN (:ids)")
+    fun getMoviesForCollection(ids: List<Int>): Single<List<Movie>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveCollection(collection: Collection)

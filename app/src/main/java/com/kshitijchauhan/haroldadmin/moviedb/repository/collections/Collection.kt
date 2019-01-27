@@ -1,13 +1,12 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.collections
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionNames.FAVOURITES_NAME
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionNames.IN_THEATRES_NAME
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionNames.POPULAR_NAME
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionNames.TOP_RATED_NAME
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionNames.WATCHLIST_NAME
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 
 @Entity(tableName = "collections")
 data class Collection(
@@ -15,9 +14,11 @@ data class Collection(
     val name: String,
     @ColumnInfo(name="contents")
     val contents: List<Int>
-)
+) {
+    @Ignore
+    var movies: List<Movie>? = null
+}
 
-// Declaring these as top level constants so that they can be used in Room annotations
 object CollectionNames {
     const val FAVOURITES_NAME = "favourite"
     const val WATCHLIST_NAME = "watchlist"

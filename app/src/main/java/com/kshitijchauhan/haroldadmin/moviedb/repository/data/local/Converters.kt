@@ -18,7 +18,7 @@ class Converters {
 
     // List<Int> Converter for IDs
     @TypeConverter
-    fun fromIntList(value: String?): List<Int>? {
+    fun stringToListOfInt(value: String?): List<Int>? {
         val list = mutableListOf<Int>()
         value.takeIf { !it.isNullOrBlank() }
             ?.split(",")
@@ -30,6 +30,21 @@ class Converters {
 
     @TypeConverter
     fun listOfIntToString(value: List<Int>?): String? {
+        return value?.joinToString(separator = ",")
+    }
+
+    // List<String> converter used for genres etc.
+    @TypeConverter
+    fun stringToListOfString(value: String?): List<String>? {
+        return value.takeIf { !it.isNullOrBlank() }
+            ?.split(",")
+            ?.fold(listOf()) { list, s ->
+                list + s
+            }
+    }
+
+    @TypeConverter
+    fun listOfStringToString(value: List<String>?): String? {
         return value?.joinToString(separator = ",")
     }
 

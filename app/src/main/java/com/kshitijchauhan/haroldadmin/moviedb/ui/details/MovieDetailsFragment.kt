@@ -120,7 +120,7 @@ class MovieDetailsFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        movieDetailsViewModel.getMovieDetails(mainViewModel.isAuthenticated)
+        movieDetailsViewModel.getMovieDetails()
         mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner))
 
         movieDetailsViewModel.movie.observe(viewLifecycleOwner, Observer { movie ->
@@ -132,6 +132,10 @@ class MovieDetailsFragment : BaseFragment() {
 
         movieDetailsViewModel.cast.observe(viewLifecycleOwner, Observer { castList ->
             creditsAdapter.submitList(castList)
+        })
+
+        movieDetailsViewModel.accountState.observe(viewLifecycleOwner, Observer { accountState ->
+            handleAccountStates(accountState.isWatchlisted, accountState.isFavourited)
         })
 
         movieDetailsViewModel.message.observe(viewLifecycleOwner, Observer { message ->
@@ -176,20 +180,18 @@ class MovieDetailsFragment : BaseFragment() {
 
             tvTitle.text = movie.title
             chipMovieYear.text = SimpleDateFormat("yyyy").format(movie.releaseDate)
-            chipMovieGenre.text = movie.genre
+            // TODO Fix this
+            chipMovieGenre.text = movie.genres?.first() ?: "Error"
             chipMovieRating.text = String.format("%.2f", movie.voteAverage)
             tvDescription.text = movie.overview
-            ypvTrailer.initialize({ initializedPlayer ->
-                initializedPlayer.addListener(object : AbstractYouTubePlayerListener() {
-                    override fun onReady() {
-                        super.onReady()
-                        initializedPlayer.cueVideo(movie.trailerUrl, 0f)
-                    }
-                })
-            }, true)
-            handleAccountStates(movie.isWatchlisted, movie.isFavourited)
-        } else {
-            handleAccountStates(movie.isWatchlisted, movie.isFavourited)
+//            ypvTrailer.initialize({ initializedPlayer ->
+//                initializedPlayer.addListener(object : AbstractYouTubePlayerListener() {
+//                    override fun onReady() {
+//                        super.onReady()
+//                        initializedPlayer.cueVideo(movie.trailerUrl, 0f)
+//                    }
+//                })
+//            }, true)
         }
     }
 

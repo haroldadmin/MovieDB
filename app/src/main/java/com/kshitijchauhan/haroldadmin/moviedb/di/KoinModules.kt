@@ -152,7 +152,7 @@ val repositoryModule = module {
     factory { RemoteMoviesSource(get(), get()) }
     factory { LocalActorsSource(get()) }
     factory { RemoteActorsSource(get()) }
-    factory { LocalCollectionsSource(get()) }
+    factory { LocalCollectionsSource(get(), get()) }
     factory { RemoteCollectionsSource(get(), get()) }
 
     factory { MoviesRepository(get(), get()) }
@@ -165,7 +165,7 @@ val uiModule = module {
     single { BottomNavManager() }
     single { ProgressBarManager() }
 
-    viewModel { HomeViewModel(get(), get()) }
+    viewModel { HomeViewModel(get()) }
     viewModel {
         val isAuthenticated = get<SharedPreferences>().getBoolean(Constants.KEY_IS_AUTHENTICATED, false)
         LibraryViewModel(get(), get(), isAuthenticated)

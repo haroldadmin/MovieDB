@@ -7,18 +7,15 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionT
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionsRepository
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MoviesRepository
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieGridItem
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.Flowable
-import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.io.IOException
 import java.util.concurrent.TimeoutException
 
-class HomeViewModel(private val collectionsRepository: CollectionsRepository,
-                    private val moviesRepository: MoviesRepository) : ViewModel() {
+class HomeViewModel(private val collectionsRepository: CollectionsRepository) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
     private val _popularMovies = MutableLiveData<List<Movie>>()
@@ -35,15 +32,8 @@ class HomeViewModel(private val collectionsRepository: CollectionsRepository,
         get() = _message
 
     fun getPopularMovies() {
-        collectionsRepository.getCollection(type = CollectionType.Popular)
+        collectionsRepository.getMoviesInCollection(type = CollectionType.Popular)
             .subscribeOn(Schedulers.io())
-            .flatMapPublisher { collection ->
-                Flowable.fromIterable(collection.contents)
-            }
-            .flatMapSingle { id ->
-                moviesRepository.getMovieDetails(id)
-            }
-            .toList()
             .subscribe(
                 { popularMovies ->
                     _popularMovies.postValue(popularMovies)
@@ -56,15 +46,8 @@ class HomeViewModel(private val collectionsRepository: CollectionsRepository,
     }
 
     fun getTopRatedMovies() {
-        collectionsRepository.getCollection(type = CollectionType.TopRated)
+        collectionsRepository.getMoviesInCollection(type = CollectionType.TopRated)
             .subscribeOn(Schedulers.io())
-            .flatMapPublisher { collection ->
-                Flowable.fromIterable(collection.contents)
-            }
-            .flatMapSingle { id ->
-                moviesRepository.getMovieDetails(id)
-            }
-            .toList()
             .subscribe(
                 { topRatedMovies ->
                     _topRatedMovies.postValue(topRatedMovies)

@@ -10,80 +10,126 @@ class MoviesRepository(
     private val remoteMoviesSource: RemoteMoviesSource
 ) {
 
-    fun getMovieDetailsFlowable(id: Int, isAuthenticated: Boolean): Flowable<Movie> {
+    fun getMovieDetailsFlowable(id: Int): Flowable<Movie> {
         return localMoviesSource.isMovieInDatabase(id)
             .flatMapPublisher<Movie> { count: Int ->
                 if (count > 0) {
                     log("Movie already exists in database")
-                    localMoviesSource.getMovieSingle(id).toFlowable()
+                    localMoviesSource.getMovieFlowable(id)
                         .doOnComplete { log("debug: Completed emitting movie details from db") }
                 } else {
                     log("Fetching movie from the network")
-                    remoteMoviesSource.getMovieDetails(id, isAuthenticated).toFlowable()
-                        .doOnNext { movie ->
+                    remoteMoviesSource.getMovieDetails(id)
+                        .doOnSuccess { movie ->
                             log("Saving movie to the database")
                             localMoviesSource.saveMovieToDatabase(movie)
                         }
-                        .flatMapSingle {
-                            localMoviesSource.getMovieSingle(id)
+                        .flatMapPublisher {
+                            localMoviesSource.getMovieFlowable(id)
                         }
                 }
             }
     }
 
-    fun getMovieDetails(id: Int, isAuthenticated: Boolean = false): Single<Movie> {
+    fun getMovieDetails(id: Int): Single<Movie> {
         return localMoviesSource.isMovieInDatabase(id)
             .flatMap { count ->
                 if (count > 0) {
                     log("Movie already exists in database")
-                    localMoviesSource.getMovieSingle(id)
+                    localMoviesSource.getMovie(id)
                 } else {
                     log("Fetching movie from the network")
-                    remoteMoviesSource.getMovieDetails(id, isAuthenticated)
+                    remoteMoviesSource.getMovieDetails(id)
                         .doOnSuccess { movie ->
                             log("Saving movie to database")
                             localMoviesSource.saveMovieToDatabase(movie)
                         }
                         .flatMap {
-                            localMoviesSource.getMovieSingle(id)
+                            localMoviesSource.getMovie(id)
                         }
                 }
             }
     }
 
-    fun toggleMovieFavouriteStatus(isFavourite: Boolean, movieId: Int, accountId: Int): Single<Movie> {
-        return remoteMoviesSource.toggleMovieFavouriteStatus(isFavourite, movieId, accountId)
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.single())
-            /**
-             * The call to get movie must be blocking, otherwise we will get stuck in an infinite loop
-             * Room will try to keep on notifying us of changes to this database object, and therefore flatmap will
-             * keep emitting items
-             **/
-            .flatMap { Single.just(localMoviesSource.getMovieBlocking(movieId)) }
-            .map { movie ->
-                movie.let {
-                    localMoviesSource.updateMovieInDatabase(it.copy(isFavourited = isFavourite))
-                    it
+    fun getMovieDetailsForAll(ids: List<Int>): Single<List<Movie>>? {
+        return Flowable.fromIterable(ids)
+            .flatMapSingle { id ->
+                this.getMovieDetails(id)
+            }
+            .toList()
+    }
+
+    fun getAccountStatesForMovieFlowable(movieId: Int): Flowable<AccountState> {
+        return localMoviesSource.isAccountStateInDatabase(movieId)
+            .flatMapPublisher<AccountState> { count ->
+                if (count > 0) {
+                    log("Account states are already in database")
+                    localMoviesSource.getAccountStateForMovieFlowable(movieId)
+                } else {
+                    log("Fetching account states from the network")
+                    remoteMoviesSource.getMovieAccountStates(movieId)
+                        .doOnSuccess { accountState ->
+                            log("Saving account state to database")
+                            localMoviesSource.updateAccountStatesInDatabase(accountState)
+                        }
+                        .flatMapPublisher {
+                            localMoviesSource.getAccountStateForMovieFlowable(movieId)
+                        }
                 }
             }
     }
 
-    fun toggleMovieWatchlistStatus(isWatchlisted: Boolean, movieId: Int, accountId: Int): Single<Movie> {
-        return remoteMoviesSource.toggleMovieWatchlistStatus(isWatchlisted, movieId, accountId)
+    fun getAccountStatesForMovie(movieId: Int): Single<AccountState> {
+        return localMoviesSource.isAccountStateInDatabase(movieId)
+            .flatMap { count ->
+                if (count > 0){
+                    log("Account states are already in database")
+                    localMoviesSource.getAccountStatesForMovie(movieId)
+                } else {
+                    log("Fetching account states from the network")
+                    remoteMoviesSource.getMovieAccountStates(movieId)
+                        .doOnSuccess { accountState ->
+                            log("Saving account state to database")
+                            localMoviesSource.updateAccountStatesInDatabase(accountState)
+                        }
+                        .flatMap {
+                            localMoviesSource.getAccountStatesForMovie(movieId)
+                        }
+                }
+            }
+    }
+
+    fun toggleMovieFavouriteStatus(movieId: Int, accountId: Int): Single<AccountState> {
+        return localMoviesSource.getAccountStatesForMovie(movieId)
+            .flatMap { accountState ->
+                val newStatus = !accountState.isFavourited
+                remoteMoviesSource.toggleMovieFavouriteStatus(newStatus, movieId, accountId)
+            }
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.single())
-            /**
-             * The call to get movie must be blocking, otherwise we will get stuck in an infinite loop
-             * Room will try to keep on notifying us of changes to this database object, and therefore flatmap will
-             * keep emitting items
-             **/
-            .flatMap { Single.just(localMoviesSource.getMovieBlocking(movieId)) }
-            .map { movie ->
-                movie.let {
-                    localMoviesSource.updateMovieInDatabase(it.copy(isWatchlisted = isWatchlisted))
-                    it
-                }
+            .flatMap {
+                localMoviesSource.getAccountStatesForMovie(movieId)
+            }
+            .doOnSuccess { accountStates ->
+                val newStatus = !accountStates.isFavourited
+                localMoviesSource.updateAccountStatesInDatabase(accountStates.copy(isFavourited = newStatus))
+            }
+    }
+
+    fun toggleMovieWatchlistStatus(movieId: Int, accountId: Int): Single<AccountState> {
+        return localMoviesSource.getAccountStatesForMovie(movieId)
+            .flatMap { accountState ->
+                val newStatus = !accountState.isWatchlisted
+                remoteMoviesSource.toggleMovieWatchlistStatus(newStatus, movieId, accountId)
+            }
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.single())
+            .flatMap {
+                localMoviesSource.getAccountStatesForMovie(movieId)
+            }
+            .doOnSuccess { accountStates ->
+                val newStatus = !accountStates.isFavourited
+                localMoviesSource.updateAccountStatesInDatabase(accountStates.copy(isWatchlisted = newStatus))
             }
     }
 

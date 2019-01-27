@@ -86,12 +86,12 @@ class LibraryFragment : BaseFragment() {
 
                 if (favouriteMovies.value == null) {
                     mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_FAVOURITE_MOVIES, viewLifecycleOwner))
-                    getFavouriteMovies(mainViewModel.accountId)
+//                    getFavouriteMovies(mainViewModel.accountId)
                 }
 
                 if (watchListMoviesUpdate.value == null) {
                     mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_WATCHLISTED_MOVIES, viewLifecycleOwner))
-                    getWatchlistedMovies(mainViewModel.accountId)
+//                    getWatchlistedMovies(mainViewModel.accountId)
                 }
 
                 favouriteMovies.observe(viewLifecycleOwner, Observer { newList ->

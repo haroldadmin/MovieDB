@@ -1,5 +1,6 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.collections
 
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -13,7 +14,7 @@ class CollectionsRepository(
      * This method should be used with care because the upstream observables it is working on may not emit onComplete,
      * and the downstream might suffer because of it
      */
-    fun getCollectionFlowable(accountId: Int, type: CollectionType): Flowable<Collection> {
+    fun getCollectionFlowable(accountId: Int = 0, type: CollectionType): Flowable<Collection> {
         return localCollectionsSource.isCollectionInDatabase(type)
             .flatMapPublisher { count ->
                 if (count > 0) {
@@ -33,13 +34,9 @@ class CollectionsRepository(
             }
     }
 
-    /**
-     * This version of the method is needed to ensure that downstream knows this observable has completed emission.
-     * Otherwise, the downstream observers never know when this observable will complete
-     */
     fun getCollection(accountId: Int = 0, type: CollectionType): Single<Collection> {
         return localCollectionsSource.isCollectionInDatabase(type)
-            .flatMap<Collection>{ count ->
+            .flatMap { count ->
                 if (count > 0) {
                     log("Collection already exists in database")
                     localCollectionsSource.getCollection(type)
@@ -47,11 +44,40 @@ class CollectionsRepository(
                     log("Getting collection from network")
                     remoteCollectionsSource.getCollection(accountId, type)
                         .doOnSuccess { collection ->
+                            log("Writing collection to database")
+                            localCollectionsSource.saveCollection(collection)
+                        }
+                        .flatMap {
+                            localCollectionsSource.getCollection(type)
+                        }
+                }
+            }
+    }
+    /**
+     * This version of the method is needed to ensure that downstream knows this observable has completed emission.
+     * Otherwise, the downstream observers never know when this observable will complete
+     */
+    fun getMoviesInCollection(accountId: Int = 0, type: CollectionType): Single<List<Movie>> {
+        return localCollectionsSource.isCollectionInDatabase(type)
+            .flatMap<List<Movie>>{ count ->
+                if (count > 0) {
+                    log("Collection already exists in database")
+                    localCollectionsSource.getCollection(type)
+                        .flatMap { collection ->
+                            localCollectionsSource.getMoviesForCollection(collection)
+                        }
+                        .doOnSuccess { list ->
+                            log("Returning list of ${list.size} movies ")
+                        }
+                } else {
+                    log("Getting collection from network")
+                    remoteCollectionsSource.getCollection(accountId, type)
+                        .doOnSuccess { collection ->
                             log("Writing collection to the database")
                             localCollectionsSource.saveCollection(collection)
                         }
-                        .flatMap<Collection> {
-                            localCollectionsSource.getCollection(type)
+                        .flatMap { collection ->
+                            localCollectionsSource.getMoviesForCollection(collection)
                         }
                 }
             }

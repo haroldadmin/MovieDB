@@ -7,6 +7,9 @@ import android.util.Log
 import android.util.TypedValue
 import com.kshitijchauhan.haroldadmin.moviedb.BuildConfig
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.Config
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.common.GeneralMovieResponse
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.MovieResponse
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -65,4 +68,38 @@ fun String.toYoutubeUrl() = "https://www.youtube.com/watch?v=$this"
 
 fun <T> List<T>.firstOrDefault(default: T): T {
     return this.firstOrNull() ?: default
+}
+
+fun GeneralMovieResponse.toMovie(): Movie {
+    return Movie(
+        this.id,
+        this.title,
+        this.posterPath.getPosterUrl(),
+        this.backdropPath.getBackdropUrl(),
+        this.overview,
+        this.voteAverage,
+        this.releaseDate,
+        this.genreIds,
+        this.isAdultMovie,
+        null,
+        null,
+        null
+    )
+}
+
+fun MovieResponse.toMovie(): Movie {
+    return Movie(
+        id = this.id,
+        title = this.title,
+        posterPath = this.posterPath.getPosterUrl(),
+        backdropPath = this.backdropPath.getBackdropUrl(),
+        overview = this.overview ?: "",
+        voteAverage = this.voteAverage,
+        releaseDate = this.releaseDate,
+        genreIds = this.genres.map { genrePair -> genrePair.id },
+        isAdult = this.isAdult,
+        budget = this.budget,
+        revenue = this.revenue,
+        genres = this.genres.map { genrePair -> genrePair.name }
+    )
 }

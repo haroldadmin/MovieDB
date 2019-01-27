@@ -1,11 +1,12 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.movies
 
+import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.account.*
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.*
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.firstOrDefault
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.MovieService
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getBackdropUrl
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getPosterUrl
-import io.reactivex.Flowable
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getProfilePictureUrl
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.toMovie
 import io.reactivex.Single
 
 class RemoteMoviesSource(
@@ -13,44 +14,48 @@ class RemoteMoviesSource(
     private val accountService: AccountService
 ) {
 
-    fun getMovieDetails(id: Int, isAuthenticated: Boolean): Single<Movie> {
-        lateinit var movieResponse: MovieResponse
-        lateinit var creditsResponse: MovieCreditsResponse
-        lateinit var statesResponse: MovieStatesResponse
-        lateinit var videosResponse: MovieVideosResponse
-
+    fun getMovieDetails(id: Int): Single<Movie> {
         return movieService.getMovieDetails(id)
-            .doOnSuccess {
-                movieResponse = it
-            }
-            .flatMap {
-                movieService.getCreditsForMovie(id)
-            }
-            .doOnSuccess {
-                creditsResponse = it
-            }
-            .flatMap {
-                movieService.getVideosForMovie(id)
-            }
-            .doOnSuccess {
-                videosResponse = it
-            }
-            .flatMap {
-                if (isAuthenticated) {
-                    movieService.getAccountStatesForMovie(id)
-                } else {
-                    Single.just(MovieStatesResponse(isFavourited = null, isWatchlisted = null))
-                }
-            }
-            .doOnSuccess {
-                statesResponse = it
-            }
-            .flatMap {
-                Single.just(mapResponsesToMovieModel(movieResponse, statesResponse, videosResponse, creditsResponse))
+            .map { movieResponse ->
+                movieResponse.toMovie()
             }
     }
 
-    fun toggleMovieFavouriteStatus(isFavourite: Boolean, movieId: Int, accountId: Int): Single<ToggleFavouriteResponse> {
+    fun getMovieAccountStates(movieId: Int): Single<AccountState> {
+        return movieService.getAccountStatesForMovie(movieId)
+            .map { movieStatesResponse ->
+                AccountState(
+                    id = movieId,
+                    isWatchlisted = movieStatesResponse.isWatchlisted ?: false,
+                    isFavourited = movieStatesResponse.isFavourited ?: false,
+                    movieId = movieId
+                )
+            }
+    }
+
+    fun getMovieCast(movieId: Int): Single<Cast> {
+        return movieService.getCreditsForMovie(movieId)
+            .map { creditsResponse ->
+                Cast(
+                    id = movieId,
+                    castMembersIds = creditsResponse.cast.map { castMember -> castMember.id },
+                    castMembers = creditsResponse.cast.map { castMember ->
+                        Actor(
+                            castMember.id,
+                            castMember.profilePath.getProfilePictureUrl(),
+                            castMember.name
+                        )
+                    },
+                    movieId = movieId
+                )
+            }
+    }
+
+    fun toggleMovieFavouriteStatus(
+        isFavourite: Boolean,
+        movieId: Int,
+        accountId: Int
+    ): Single<ToggleFavouriteResponse> {
         return ToggleMediaFavouriteStatusRequest(
             MediaTypes.MOVIE.mediaName,
             movieId,
@@ -60,7 +65,11 @@ class RemoteMoviesSource(
         }
     }
 
-    fun toggleMovieWatchlistStatus(isWatchlisted: Boolean, movieId: Int, accountId: Int): Single<ToggleWatchlistResponse> {
+    fun toggleMovieWatchlistStatus(
+        isWatchlisted: Boolean,
+        movieId: Int,
+        accountId: Int
+    ): Single<ToggleWatchlistResponse> {
         return ToggleMediaWatchlistStatusRequest(
             MediaTypes.MOVIE.mediaName,
             movieId,
@@ -68,34 +77,5 @@ class RemoteMoviesSource(
         ).let { request ->
             accountService.toggleMediaWatchlistStatus(accountId, request)
         }
-    }
-
-    private fun mapResponsesToMovieModel(
-        movieResponse: MovieResponse,
-        accountStatesResponse: MovieStatesResponse,
-        videosResponse: MovieVideosResponse,
-        creditsResponse: MovieCreditsResponse
-    ): Movie {
-        return Movie(
-            movieResponse.id,
-            movieResponse.title,
-            movieResponse.posterPath.getPosterUrl(),
-            movieResponse.backdropPath.getBackdropUrl(),
-            movieResponse.overview ?: "N/A",
-            movieResponse.voteAverage,
-            movieResponse.releaseDate,
-            movieResponse.genres.first().name,
-            accountStatesResponse.isWatchlisted,
-            accountStatesResponse.isFavourited,
-            videosResponse.results
-                .filter { movieVideo ->
-                    movieVideo.site == "YouTube" && movieVideo.type == "Trailer"
-                }
-                .map { movieVideo ->
-                    movieVideo.key
-                }
-                .firstOrDefault(""),
-            creditsResponse.cast.take(8).map { it.id }
-        )
     }
 }
