@@ -163,16 +163,14 @@ class MovieDetailsFragment : BaseFragment() {
 
     private fun initTasks() {
         movieDetailsViewModel.getMovieDetails()
+        movieDetailsViewModel.getMovieAccountStates()
         movieDetailsViewModel.getMovieCast()
         movieDetailsViewModel.getMovieTrailer()
         mainViewModel.apply {
             addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner))
+            addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_ACCOUNT_STATES, viewLifecycleOwner))
             addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_CAST, viewLifecycleOwner))
             addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_VIDEOS, viewLifecycleOwner))
-        }
-        if (mainViewModel.isAuthenticated) {
-            movieDetailsViewModel.getMovieAccountStates()
-            mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_ACCOUNT_STATES, viewLifecycleOwner))
         }
     }
 

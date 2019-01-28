@@ -6,20 +6,16 @@ import androidx.lifecycle.ViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionType
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionsRepository
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
-import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MoviesRepository
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
-import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.io.IOException
 import java.util.concurrent.TimeoutException
 
 class LibraryViewModel(
-    private val collectionsRepository: CollectionsRepository,
-    private val moviesRepository: MoviesRepository,
-    private val isAuthenticated: Boolean
+    private val collectionsRepository: CollectionsRepository
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()

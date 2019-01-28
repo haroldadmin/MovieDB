@@ -76,6 +76,10 @@ class MovieDetailsViewModel(
                     }
                 )
                 .disposeWith(compositeDisposable)
+        } else {
+            AccountState(null, null, movieId).let {
+                _accountStates.postValue(it)
+            }
         }
     }
 

@@ -43,9 +43,9 @@ data class Movie(
 )
 data class AccountState(
     @ColumnInfo(name = "is_watchlisted")
-    val isWatchlisted: Boolean,
+    val isWatchlisted: Boolean?,
     @ColumnInfo(name = "is_favourited")
-    val isFavourited: Boolean,
+    val isFavourited: Boolean?,
     @PrimaryKey
     @ColumnInfo(name = "movie_id")
     val movieId: Int

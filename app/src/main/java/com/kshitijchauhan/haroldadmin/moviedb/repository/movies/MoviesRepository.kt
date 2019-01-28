@@ -154,7 +154,7 @@ class MoviesRepository(
     fun toggleMovieFavouriteStatus(movieId: Int, accountId: Int): Single<AccountState> {
         return localMoviesSource.getAccountStatesForMovie(movieId)
             .flatMap { accountState ->
-                val newStatus = !accountState.isFavourited
+                val newStatus = !accountState.isFavourited!!
                 remoteMoviesSource.toggleMovieFavouriteStatus(newStatus, movieId, accountId)
             }
             .subscribeOn(Schedulers.io())
@@ -163,7 +163,7 @@ class MoviesRepository(
                 localMoviesSource.getAccountStatesForMovie(movieId)
             }
             .doOnSuccess { accountStates ->
-                val newStatus = !accountStates.isFavourited
+                val newStatus = !accountStates.isFavourited!!
                 localMoviesSource.updateAccountStatesInDatabase(accountStates.copy(isFavourited = newStatus))
             }
     }
@@ -171,7 +171,7 @@ class MoviesRepository(
     fun toggleMovieWatchlistStatus(movieId: Int, accountId: Int): Single<AccountState> {
         return localMoviesSource.getAccountStatesForMovie(movieId)
             .flatMap { accountState ->
-                val newStatus = !accountState.isWatchlisted
+                val newStatus = !accountState.isWatchlisted!!
                 remoteMoviesSource.toggleMovieWatchlistStatus(newStatus, movieId, accountId)
             }
             .subscribeOn(Schedulers.io())
@@ -180,7 +180,7 @@ class MoviesRepository(
                 localMoviesSource.getAccountStatesForMovie(movieId)
             }
             .doOnSuccess { accountStates ->
-                val newStatus = !accountStates.isWatchlisted
+                val newStatus = !accountStates.isWatchlisted!!
                 localMoviesSource.updateAccountStatesInDatabase(accountStates.copy(isWatchlisted = newStatus))
             }
     }
