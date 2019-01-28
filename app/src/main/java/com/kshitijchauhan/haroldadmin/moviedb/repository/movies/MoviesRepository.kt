@@ -51,14 +51,6 @@ class MoviesRepository(
             }
     }
 
-    fun getMovieDetailsForAll(ids: List<Int>): Single<List<Movie>>? {
-        return Flowable.fromIterable(ids)
-            .flatMapSingle { id ->
-                this.getMovieDetails(id)
-            }
-            .toList()
-    }
-
     fun getAccountStatesForMovieFlowable(movieId: Int): Flowable<AccountState> {
         return localMoviesSource.isAccountStateInDatabase(movieId)
             .flatMapPublisher<AccountState> { count ->
@@ -70,7 +62,7 @@ class MoviesRepository(
                     remoteMoviesSource.getMovieAccountStates(movieId)
                         .doOnSuccess { accountState ->
                             log("Saving account state to database")
-                            localMoviesSource.updateAccountStatesInDatabase(accountState)
+                            localMoviesSource.saveAccountStateToDatabase(accountState)
                         }
                         .flatMapPublisher {
                             localMoviesSource.getAccountStateForMovieFlowable(movieId)
@@ -90,10 +82,50 @@ class MoviesRepository(
                     remoteMoviesSource.getMovieAccountStates(movieId)
                         .doOnSuccess { accountState ->
                             log("Saving account state to database")
-                            localMoviesSource.updateAccountStatesInDatabase(accountState)
+                            localMoviesSource.saveAccountStateToDatabase(accountState)
                         }
                         .flatMap {
                             localMoviesSource.getAccountStatesForMovie(movieId)
+                        }
+                }
+            }
+    }
+
+    fun getMovieCastFlowable(movieId: Int): Flowable<Cast> {
+        return localMoviesSource.isCastInDatabase(movieId)
+            .flatMapPublisher { count ->
+                if (count > 0) {
+                    log("Cast already exists in database")
+                    localMoviesSource.getCastForMovieFlowable(movieId)
+                } else {
+                    log("Fetching cast from network")
+                        remoteMoviesSource.getMovieCast(movieId)
+                            .doOnSuccess { cast ->
+                                log("Saving cast to database")
+                                localMoviesSource.saveCastToDatabase(cast)
+                            }
+                            .flatMapPublisher {
+                                localMoviesSource.getCastForMovieFlowable(movieId)
+                            }
+                }
+            }
+    }
+
+    fun getMovieActors(movieId: Int): Single<Cast> {
+        return localMoviesSource.isCastInDatabase(movieId)
+            .flatMap { count ->
+                if (count > 0) {
+                    log("Cast already exists in database")
+                    localMoviesSource.getCastForMovie(movieId)
+                } else {
+                    log("Fetching cast from network")
+                    remoteMoviesSource.getMovieCast(movieId)
+                        .doOnSuccess { cast ->
+                            log("Saving cast to database")
+                            localMoviesSource.saveCastToDatabase(cast)
+                        }
+                        .flatMap {
+                            localMoviesSource.getCastForMovie(movieId)
                         }
                 }
             }
@@ -128,7 +160,7 @@ class MoviesRepository(
                 localMoviesSource.getAccountStatesForMovie(movieId)
             }
             .doOnSuccess { accountStates ->
-                val newStatus = !accountStates.isFavourited
+                val newStatus = !accountStates.isWatchlisted
                 localMoviesSource.updateAccountStatesInDatabase(accountStates.copy(isWatchlisted = newStatus))
             }
     }

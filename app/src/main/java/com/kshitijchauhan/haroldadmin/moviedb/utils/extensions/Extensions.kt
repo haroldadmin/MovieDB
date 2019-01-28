@@ -6,8 +6,10 @@ import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
 import com.kshitijchauhan.haroldadmin.moviedb.BuildConfig
+import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.Config
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.common.GeneralMovieResponse
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.CastMember
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.MovieResponse
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import io.reactivex.disposables.CompositeDisposable
@@ -101,5 +103,13 @@ fun MovieResponse.toMovie(): Movie {
         budget = this.budget,
         revenue = this.revenue,
         genres = this.genres.map { genrePair -> genrePair.name }
+    )
+}
+
+fun CastMember.toActor(): Actor {
+    return Actor(
+        this.id,
+        this.profilePath.getProfilePictureUrl(),
+        this.name
     )
 }

@@ -27,7 +27,7 @@ class CreditsAdapter(private val glide: RequestManager) :
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(actor: Actor) {
             itemView.tvCreditActorName.text = actor.name
-            glide.load(actor.profilePictureUrl.getProfilePictureUrl())
+            glide.load(actor.profilePictureUrl)
                 .apply(
                     RequestOptions()
                         .placeholder(R.drawable.ic_round_account_circle_24px)

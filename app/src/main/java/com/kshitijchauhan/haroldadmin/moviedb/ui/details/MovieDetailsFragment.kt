@@ -24,7 +24,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
@@ -40,6 +39,7 @@ class MovieDetailsFragment : BaseFragment() {
 
     private val TASK_LOAD_MOVIE_DETAILS = "load-movie-details"
     private val TASK_LOAD_MOVIE_ACCOUNT_STATES = "load-account-states"
+    private val TASK_LOAD_MOVIE_CAST = "load-movie-cast"
     private val TASK_TOGGLE_FAVOURITE = "mark-as-favourite"
     private val TASK_TOGGLE_WATCHLIST = "add-to-watchlist"
     private val TASK_LOAD_MOVIE_VIDEOS = "load-movie-videos"
@@ -120,8 +120,7 @@ class MovieDetailsFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        movieDetailsViewModel.getMovieDetails()
-        mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner))
+        initTasks()
 
         movieDetailsViewModel.movie.observe(viewLifecycleOwner, Observer { movie ->
             log("Received movie update: $movie")
@@ -131,16 +130,33 @@ class MovieDetailsFragment : BaseFragment() {
         })
 
         movieDetailsViewModel.cast.observe(viewLifecycleOwner, Observer { castList ->
+            log("Received cast update: $castList")
             creditsAdapter.submitList(castList)
+            mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_CAST, viewLifecycleOwner)
         })
 
         movieDetailsViewModel.accountState.observe(viewLifecycleOwner, Observer { accountState ->
+            log("Received account state update")
             handleAccountStates(accountState.isWatchlisted, accountState.isFavourited)
+            mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_ACCOUNT_STATES, viewLifecycleOwner)
         })
 
         movieDetailsViewModel.message.observe(viewLifecycleOwner, Observer { message ->
             mainViewModel.showSnackbar(message)
         })
+    }
+
+    private fun initTasks() {
+        movieDetailsViewModel.getMovieDetails()
+        movieDetailsViewModel.getMovieCast()
+        mainViewModel.apply {
+            addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner))
+            addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_CAST, viewLifecycleOwner))
+        }
+        if (mainViewModel.isAuthenticated) {
+            movieDetailsViewModel.getMovieAccountStates()
+            mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_ACCOUNT_STATES, viewLifecycleOwner))
+        }
     }
 
     private fun updateView(movie: Movie) {
@@ -198,18 +214,18 @@ class MovieDetailsFragment : BaseFragment() {
 
     private fun handleAccountStates(isWatchlisted: Boolean?, isFavourited: Boolean?) {
         if (mainViewModel.isAuthenticated) {
-                btToggleWatchlist.apply {
-                    val watchlisted = isWatchlisted ?: false
-                    setRemoveFromListState(watchlisted)
-                    text = if (watchlisted) {
-                        "Un-Watchlist"
-                    } else {
-                        "Add to Watchlist"
-                    }
-                    setOnClickListener {
-                        movieDetailsViewModel.toggleMovieWatchlistStatus(mainViewModel.accountId)
-                    }
+            btToggleWatchlist.apply {
+                val watchlisted = isWatchlisted ?: false
+                setRemoveFromListState(watchlisted)
+                text = if (watchlisted) {
+                    "Un-Watchlist"
+                } else {
+                    "Add to Watchlist"
                 }
+                setOnClickListener {
+                    movieDetailsViewModel.toggleMovieWatchlistStatus(mainViewModel.accountId)
+                }
+            }
         } else {
             btToggleWatchlist.apply {
                 setUnauthenticatedState(true)

@@ -1,11 +1,8 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.movies
 
-import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.account.*
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.MovieService
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getBackdropUrl
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getPosterUrl
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getProfilePictureUrl
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.toActor
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.toMovie
 import io.reactivex.Single
 
@@ -25,7 +22,6 @@ class RemoteMoviesSource(
         return movieService.getAccountStatesForMovie(movieId)
             .map { movieStatesResponse ->
                 AccountState(
-                    id = movieId,
                     isWatchlisted = movieStatesResponse.isWatchlisted ?: false,
                     isFavourited = movieStatesResponse.isFavourited ?: false,
                     movieId = movieId
@@ -37,17 +33,11 @@ class RemoteMoviesSource(
         return movieService.getCreditsForMovie(movieId)
             .map { creditsResponse ->
                 Cast(
-                    id = movieId,
                     castMembersIds = creditsResponse.cast.map { castMember -> castMember.id },
-                    castMembers = creditsResponse.cast.map { castMember ->
-                        Actor(
-                            castMember.id,
-                            castMember.profilePath.getProfilePictureUrl(),
-                            castMember.name
-                        )
-                    },
-                    movieId = movieId
-                )
+                    movieId = movieId)
+                    .apply {
+                        castMembers = creditsResponse.cast.map { castMember -> castMember.toActor() }
+                    }
             }
     }
 

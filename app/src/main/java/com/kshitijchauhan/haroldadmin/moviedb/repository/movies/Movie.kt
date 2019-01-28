@@ -38,15 +38,15 @@ data class Movie(
     foreignKeys = [ForeignKey(
         entity = Movie::class,
         parentColumns = ["id"],
-        childColumns = ["movie_id"])]
+        childColumns = ["movie_id"]
+    )]
 )
 data class AccountState(
-    @PrimaryKey
-    val id: Int,
     @ColumnInfo(name = "is_watchlisted")
     val isWatchlisted: Boolean,
     @ColumnInfo(name = "is_favourited")
     val isFavourited: Boolean,
+    @PrimaryKey
     @ColumnInfo(name = "movie_id")
     val movieId: Int
 )
@@ -62,11 +62,11 @@ data class AccountState(
 )
 data class Cast(
     @PrimaryKey
-    val id: Int,
     @ColumnInfo(name = "movie_id")
     val movieId: Int,
     @ColumnInfo(name = "cast_members")
-    val castMembersIds: List<Int>,
+    val castMembersIds: List<Int>
+) {
     @Ignore
-    val castMembers: List<Actor>
-)
+    var castMembers: List<Actor>? = null
+}

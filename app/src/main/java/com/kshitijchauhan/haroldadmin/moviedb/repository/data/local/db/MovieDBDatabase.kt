@@ -10,10 +10,11 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.Collection
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.local.Converters
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.AccountState
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Cast
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 
 @Database(
-    entities = [Movie::class, Actor::class, Collection::class, AccountState::class],
+    entities = [Movie::class, Actor::class, Collection::class, AccountState::class, Cast::class],
     version = 1,
     exportSchema = false
 )

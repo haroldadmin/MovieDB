@@ -148,7 +148,7 @@ val repositoryModule = module {
     single { get<MovieDBDatabase>().actorsDao() }
     single { get<MovieDBDatabase>().collectionsDao() }
 
-    factory { LocalMoviesSource(get()) }
+    factory { LocalMoviesSource(get(), get()) }
     factory { RemoteMoviesSource(get(), get()) }
     factory { LocalActorsSource(get()) }
     factory { RemoteActorsSource(get()) }

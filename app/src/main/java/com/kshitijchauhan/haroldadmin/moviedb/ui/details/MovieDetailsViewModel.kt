@@ -44,9 +44,6 @@ class MovieDetailsViewModel(
     fun getMovieDetails() {
         moviesRepository.getMovieDetailsFlowable(movieId)
             .subscribeOn(Schedulers.io())
-//            .doOnNext { movie ->
-//                getActorsForMovie(movie.castIds)
-//            }
             .subscribe(
                 // onNext
                 { movie: Movie ->
@@ -60,16 +57,23 @@ class MovieDetailsViewModel(
             .disposeWith(compositeDisposable)
     }
 
-//    fun getMovieAccountStates() {
-//        moviesRepository.getAccountStatesForMovieFlowable(movieId)
-//            .subscribeOn(Schedulers.io())
-//            .subscribe(
-//                // onNext
-//                { accountState ->
-//
-//                }
-//            )
-//    }
+    fun getMovieAccountStates() {
+        if (isAuthenticated) {
+            moviesRepository.getAccountStatesForMovieFlowable(movieId)
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                    // onNext
+                    { accountState ->
+                        _accountStates.postValue(accountState)
+                    },
+                    // onError
+                    { error ->
+                        handleError(error)
+                    }
+                )
+                .disposeWith(compositeDisposable)
+        }
+    }
 
     fun toggleMovieFavouriteStatus(accountId: Int) {
         if (isAuthenticated) {
@@ -103,13 +107,18 @@ class MovieDetailsViewModel(
         }
     }
 
-    private fun getActorsForMovie(actorIds: List<Int>) {
-        actorsRepository.getAllActors(actorIds)
+    fun getMovieCast() {
+        moviesRepository.getMovieActors(movieId)
+            .flatMap { cast ->
+                actorsRepository.getAllActors(cast.castMembersIds)
+            }
             .subscribeOn(Schedulers.io())
             .subscribe(
+                // onSuccess
                 { actorsList ->
-                    _cast.postValue(actorsList)
+                    actorsList.take(8).let { _cast.postValue(it) }
                 },
+                // onError
                 { error ->
                     handleError(error)
                 }
