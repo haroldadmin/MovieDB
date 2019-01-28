@@ -6,10 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionType
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionsRepository
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
-import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MoviesRepository
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
-import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.io.IOException
@@ -32,7 +30,7 @@ class HomeViewModel(private val collectionsRepository: CollectionsRepository) : 
         get() = _message
 
     fun getPopularMovies() {
-        collectionsRepository.getMoviesInCollection(type = CollectionType.Popular)
+        collectionsRepository.getMoviesInCollectionFlowable(type = CollectionType.Popular)
             .subscribeOn(Schedulers.io())
             .subscribe(
                 { popularMovies ->
@@ -51,6 +49,20 @@ class HomeViewModel(private val collectionsRepository: CollectionsRepository) : 
             .subscribe(
                 { topRatedMovies ->
                     _topRatedMovies.postValue(topRatedMovies)
+                },
+                { error ->
+                    handleError(error)
+                }
+            )
+            .disposeWith(compositeDisposable)
+    }
+
+    fun forceRefreshCollection(collectionType: CollectionType) {
+        collectionsRepository.forceRefreshCollection(type = collectionType)
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                {
+                    log("Successfully refreshed collection of type: ${collectionType.name}")
                 },
                 { error ->
                     handleError(error)

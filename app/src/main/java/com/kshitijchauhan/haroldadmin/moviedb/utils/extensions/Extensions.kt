@@ -87,7 +87,8 @@ fun GeneralMovieResponse.toMovie(): Movie {
         this.isAdultMovie,
         null,
         null,
-        null
+        null,
+        isModelComplete = false
     )
 }
 
@@ -104,7 +105,8 @@ fun MovieResponse.toMovie(): Movie {
         isAdult = this.isAdult,
         budget = this.budget,
         revenue = this.revenue,
-        genres = this.genres.map { genrePair -> genrePair.name }
+        genres = this.genres.map { genrePair -> genrePair.name },
+        isModelComplete = true
     )
 }
 

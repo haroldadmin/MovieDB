@@ -53,13 +53,10 @@ class CollectionsRepository(
                 }
             }
     }
-    /**
-     * This version of the method is needed to ensure that downstream knows this observable has completed emission.
-     * Otherwise, the downstream observers never know when this observable will complete
-     */
+
     fun getMoviesInCollection(accountId: Int = 0, type: CollectionType): Single<List<Movie>> {
         return localCollectionsSource.isCollectionInDatabase(type)
-            .flatMap<List<Movie>>{ count ->
+            .flatMap<List<Movie>> { count ->
                 if (count > 0) {
                     log("Collection already exists in database")
                     localCollectionsSource.getCollection(type)
@@ -80,6 +77,38 @@ class CollectionsRepository(
                             localCollectionsSource.getMoviesForCollection(collection)
                         }
                 }
+            }
+    }
+
+    fun getMoviesInCollectionFlowable(accountId: Int = 0, type: CollectionType): Flowable<List<Movie>> {
+        return localCollectionsSource.isCollectionInDatabase(type)
+            .flatMapPublisher { count ->
+                if (count > 0) {
+                    log("Collection already exists in database")
+                    localCollectionsSource.getCollectionFlowable(type)
+                        .flatMap { collection ->
+                            localCollectionsSource.getMoviesForCollectionFlowable(collection)
+                        }
+                } else {
+                    log("Fetching collection from the network")
+                    remoteCollectionsSource.getCollectionFlowable(accountId, type)
+                        .doOnNext { collection ->
+                            log("Writing collection to the database")
+                            localCollectionsSource.saveCollection(collection)
+                        }
+                        .flatMap { collection ->
+                            localCollectionsSource.getMoviesForCollectionFlowable(collection)
+                        }
+                }
+            }
+    }
+
+    fun forceRefreshCollection(accountId: Int = 0, type: CollectionType): Single<Collection> {
+        log("Force refreshing collection")
+        return remoteCollectionsSource.getCollection(accountId, type)
+            .doOnSuccess { collection ->
+                log("Writing collection to the database")
+                localCollectionsSource.saveCollection(collection)
             }
     }
 }

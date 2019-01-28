@@ -44,6 +44,9 @@ interface CollectionDao {
     @Query("SELECT * FROM movies WHERE id IN (:ids)")
     fun getMoviesForCollection(ids: List<Int>): Single<List<Movie>>
 
+    @Query("SELECT * FROM movies WHERE id IN (:ids)")
+    fun getMoviesForCollectionFlowable(ids: List<Int>): Flowable<List<Movie>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveCollection(collection: Collection)
 

@@ -34,7 +34,7 @@ class LibraryViewModel(
 
 
     fun getFavouriteMovies(accountId: Int) {
-        collectionsRepository.getMoviesInCollection(accountId, CollectionType.Favourite)
+        collectionsRepository.getMoviesInCollectionFlowable(accountId, CollectionType.Favourite)
             .subscribeOn(Schedulers.io())
             .subscribe(
                 // onSuccess
@@ -49,7 +49,7 @@ class LibraryViewModel(
     }
 
     fun getWatchlistedMovies(accountId: Int) {
-        collectionsRepository.getMoviesInCollection(accountId, CollectionType.Watchlist)
+        collectionsRepository.getMoviesInCollectionFlowable(accountId, CollectionType.Watchlist)
             .subscribeOn(Schedulers.io())
             .subscribe(
                 { watchlist ->
@@ -69,6 +69,16 @@ class LibraryViewModel(
             is TimeoutException -> _message.postValue("Request timed out")
             else -> _message.postValue("An error occurred")
         }
+    }
+
+    fun forceRefreshCollection(accountId: Int, type: CollectionType) {
+        collectionsRepository.forceRefreshCollection(accountId, type)
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                { log("Successfully refresh collection of type: ${type.name}") },
+                { error -> handleError(error) }
+            )
+            .disposeWith(compositeDisposable)
     }
 
     override fun onCleared() {

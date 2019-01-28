@@ -48,6 +48,12 @@ class MovieDetailsViewModel(
     fun getMovieDetails() {
         moviesRepository.getMovieDetailsFlowable(movieId)
             .subscribeOn(Schedulers.io())
+            .doOnNext { movie ->
+                if (!movie.isModelComplete) {
+                    log("Movie model is incomplete, force refreshing")
+                    this.forceRefreshMovieDetails()
+                }
+            }
             .subscribe(
                 // onNext
                 { movie: Movie ->
@@ -141,6 +147,22 @@ class MovieDetailsViewModel(
                 // onSuccess
                 { trailer ->
                     _trailerKey.postValue(trailer.youtubeVideoKey)
+                },
+                // onError
+                { error ->
+                    handleError(error)
+                }
+            )
+            .disposeWith(compositeDisposable)
+    }
+
+    fun forceRefreshMovieDetails() {
+        moviesRepository.forceRefreshMovieDetails(movieId)
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                // onSuccess
+                { movie ->
+                    log("Successfully retrieved complete movie details")
                 },
                 // onError
                 { error ->

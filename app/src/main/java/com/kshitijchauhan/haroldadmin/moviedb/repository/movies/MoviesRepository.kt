@@ -74,7 +74,7 @@ class MoviesRepository(
     fun getAccountStatesForMovie(movieId: Int): Single<AccountState> {
         return localMoviesSource.isAccountStateInDatabase(movieId)
             .flatMap { count ->
-                if (count > 0){
+                if (count > 0) {
                     log("Account states are already in database")
                     localMoviesSource.getAccountStatesForMovie(movieId)
                 } else {
@@ -99,14 +99,14 @@ class MoviesRepository(
                     localMoviesSource.getCastForMovieFlowable(movieId)
                 } else {
                     log("Fetching cast from network")
-                        remoteMoviesSource.getMovieCast(movieId)
-                            .doOnSuccess { cast ->
-                                log("Saving cast to database")
-                                localMoviesSource.saveCastToDatabase(cast)
-                            }
-                            .flatMapPublisher {
-                                localMoviesSource.getCastForMovieFlowable(movieId)
-                            }
+                    remoteMoviesSource.getMovieCast(movieId)
+                        .doOnSuccess { cast ->
+                            log("Saving cast to database")
+                            localMoviesSource.saveCastToDatabase(cast)
+                        }
+                        .flatMapPublisher {
+                            localMoviesSource.getCastForMovieFlowable(movieId)
+                        }
                 }
             }
     }
@@ -140,7 +140,7 @@ class MoviesRepository(
                 } else {
                     log("Fetching trailer from network")
                     remoteMoviesSource.getMovieTrailer(movieId)
-                        .doOnSuccess {  trailer ->
+                        .doOnSuccess { trailer ->
                             log("Saving trailer to database")
                             localMoviesSource.saveMovieTrailerToDatabase(trailer)
                         }
@@ -182,6 +182,15 @@ class MoviesRepository(
             .doOnSuccess { accountStates ->
                 val newStatus = !accountStates.isWatchlisted!!
                 localMoviesSource.updateAccountStatesInDatabase(accountStates.copy(isWatchlisted = newStatus))
+            }
+    }
+
+    fun forceRefreshMovieDetails(movieId: Int): Single<Movie> {
+        log("Force refreshing movie")
+        return remoteMoviesSource.getMovieDetails(movieId)
+            .doOnSuccess { movie ->
+                log("Saving refreshed movie model to database")
+                localMoviesSource.updateMovieInDatabase(movie)
             }
     }
 

@@ -24,7 +24,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_movie_details.*
@@ -62,8 +61,6 @@ class MovieDetailsFragment : BaseFragment() {
     private val creditsAdapter: CreditsAdapter by inject {
         parametersOf(glideRequestManager)
     }
-
-    private var movie: Movie? = null
 
     override val associatedUIState: UIState =
         UIState.DetailsScreenState(this.arguments?.getInt(Constants.KEY_MOVIE_ID) ?: -1)
@@ -127,7 +124,6 @@ class MovieDetailsFragment : BaseFragment() {
         movieDetailsViewModel.movie.observe(viewLifecycleOwner, Observer { movie ->
             log("Received movie update: $movie")
             updateView(movie)
-            this.movie = movie
             mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner)
         })
 
@@ -175,47 +171,45 @@ class MovieDetailsFragment : BaseFragment() {
     }
 
     private fun updateView(movie: Movie) {
-        if (this.movie == null) {
-            mainViewModel.updateToolbarTitle(movie.title)
-            glideRequestManager
-                .load(movie.posterPath)
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(
-                        e: GlideException?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        startPostponedEnterTransition()
-                        return false
-                    }
+        mainViewModel.updateToolbarTitle(movie.title)
+        glideRequestManager
+            .load(movie.posterPath)
+            .listener(object : RequestListener<Drawable> {
+                override fun onLoadFailed(
+                    e: GlideException?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    startPostponedEnterTransition()
+                    return false
+                }
 
-                    override fun onResourceReady(
-                        resource: Drawable?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        dataSource: DataSource?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        startPostponedEnterTransition()
-                        return false
-                    }
-                })
-                .into(ivPoster)
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    startPostponedEnterTransition()
+                    return false
+                }
+            })
+            .into(ivPoster)
 
-            glideRequestManager
-                .asBitmap()
-                .transition(BitmapTransitionOptions.withCrossFade())
-                .load(movie.backdropPath)
-                .into(ivBackdrop)
+        glideRequestManager
+            .asBitmap()
+            .transition(BitmapTransitionOptions.withCrossFade())
+            .load(movie.backdropPath)
+            .into(ivBackdrop)
 
-            tvTitle.text = movie.title
-            chipMovieYear.text = SimpleDateFormat("yyyy").format(movie.releaseDate)
-            // TODO Fix this
-            chipMovieGenre.text = movie.genres?.first() ?: "Error"
-            chipMovieRating.text = String.format("%.2f", movie.voteAverage)
-            tvDescription.text = movie.overview
-        }
+        tvTitle.text = movie.title
+        chipMovieYear.text = SimpleDateFormat("yyyy").format(movie.releaseDate)
+        // TODO Fix this
+        chipMovieGenre.text = movie.genres?.first() ?: "Error"
+        chipMovieRating.text = String.format("%.2f", movie.voteAverage)
+        tvDescription.text = movie.overview
     }
 
 

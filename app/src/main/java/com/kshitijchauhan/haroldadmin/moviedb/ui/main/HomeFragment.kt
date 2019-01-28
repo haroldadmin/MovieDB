@@ -11,6 +11,7 @@ import com.jakewharton.rxbinding2.internal.Notification
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxrelay2.PublishRelay
 import com.kshitijchauhan.haroldadmin.moviedb.R
+import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionType
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.MoviesListAdapter
@@ -73,7 +74,12 @@ class HomeFragment : BaseFragment() {
             }
 
             if (topRatedMovies.value == null) {
-                mainViewModel.addLoadingTask(LoadingTask(TAG_GET_TOP_RATED_MOVIES, this@HomeFragment.viewLifecycleOwner))
+                mainViewModel.addLoadingTask(
+                    LoadingTask(
+                        TAG_GET_TOP_RATED_MOVIES,
+                        this@HomeFragment.viewLifecycleOwner
+                    )
+                )
                 getTopRatedMovies()
             }
 
@@ -90,6 +96,9 @@ class HomeFragment : BaseFragment() {
             message.observe(viewLifecycleOwner, Observer { message ->
                 mainViewModel.showSnackbar(message)
             })
+
+            forceRefreshCollection(CollectionType.Popular)
+            forceRefreshCollection(CollectionType.TopRated)
         }
 
         mainViewModel.updateToolbarTitle(getString(R.string.app_name))

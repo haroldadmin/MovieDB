@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.transition.TransitionManager
 import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.R
+import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionType
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.MoviesListAdapter
@@ -111,6 +112,9 @@ class LibraryFragment : BaseFragment() {
                     mainViewModel.completeLoadingTask(TASK_LOAD_WATCHLISTED_MOVIES, viewLifecycleOwner)
                     watchListedMoviesAdapter.submitList(newList)
                 })
+
+                forceRefreshCollection(mainViewModel.accountId, CollectionType.Favourite)
+                forceRefreshCollection(mainViewModel.accountId, CollectionType.Watchlist)
             }
         }
 

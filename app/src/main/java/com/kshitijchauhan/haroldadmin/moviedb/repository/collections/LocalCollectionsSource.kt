@@ -36,6 +36,11 @@ class LocalCollectionsSource(
         return collectionsDao.getMoviesForCollection(collection.contents)
     }
 
+    fun getMoviesForCollectionFlowable(collection: Collection): Flowable<List<Movie>> {
+        log("Querying DB for collection movies: ${collection.contents}")
+        return collectionsDao.getMoviesForCollectionFlowable(collection.contents)
+    }
+
     fun saveMoviesInCollection(collection: Collection) {
         log("Saving movies in collection")
         collection.movies?.let {
