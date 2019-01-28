@@ -1,10 +1,7 @@
 package com.kshitijchauhan.haroldadmin.moviedb.utils
 
 import android.annotation.SuppressLint
-import android.app.Application
-import android.content.Context
 import android.content.SharedPreferences
-import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import kotlin.reflect.KProperty
 
@@ -14,23 +11,11 @@ class SharedPreferencesDelegate<T>(
     private val defaultValue: T
 ) {
 
-    constructor(application: Application, key: String, defaultValue: T) : this(
-        application.getSharedPreferences(application.getString(R.string.app_name), Context.MODE_PRIVATE),
-        key,
-        defaultValue
-    )
-
-    // TODO Cache most recent value in memory
     operator fun getValue(thisRef: Any?, property: KProperty<*>): T {
-        log("Request received from: ${thisRef?.javaClass?.simpleName}")
-        log("Retrieving value for: ${property.name}")
         return findPreferences(key, defaultValue)
     }
 
-    // TODO Invalidate cached value whenever a new value is set
     operator fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
-        log("Request received from: ${thisRef?.javaClass?.simpleName}")
-        log("Saving value for: ${property.name}")
         savePreference(key, value)
     }
 
@@ -64,6 +49,5 @@ class SharedPreferencesDelegate<T>(
                 else -> throw IllegalArgumentException()
             }.apply()
         }
-        log("Saved value: $value")
     }
 }

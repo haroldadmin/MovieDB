@@ -206,8 +206,7 @@ class MovieDetailsFragment : BaseFragment() {
 
         tvTitle.text = movie.title
         chipMovieYear.text = SimpleDateFormat("yyyy").format(movie.releaseDate)
-        // TODO Fix this
-        chipMovieGenre.text = movie.genres?.first() ?: "Error"
+        chipMovieGenre.text = movie.genres?.first() ?: "..."
         chipMovieRating.text = String.format("%.2f", movie.voteAverage)
         tvDescription.text = movie.overview
     }
