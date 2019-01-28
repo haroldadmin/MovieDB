@@ -21,6 +21,9 @@ interface MovieDao {
     @Query("SELECT * FROM casts")
     fun getAllCasts(): Flowable<List<Cast>>
 
+    @Query("SELECT * FROM movie_trailers")
+    fun getAllTrailers(): Flowable<List<MovieTrailer>>
+
     @Query("SELECT * FROM movies WHERE id = :id")
     fun getMovieFlowable(id: Int): Flowable<Movie>
 
@@ -29,6 +32,9 @@ interface MovieDao {
 
     @Query("SELECT * FROM casts WHERE movie_id = :movieId")
     fun getCastForMovieFlowable(movieId: Int): Flowable<Cast>
+
+    @Query("SELECT * FROM movie_trailers WHERE movie_id = :movieId")
+    fun getTrailerForMovieFlowable(movieId: Int): Flowable<MovieTrailer>
 
     @Query("SELECT * FROM movies WHERE id = :id")
     fun getMovie(id: Int): Single<Movie>
@@ -39,6 +45,9 @@ interface MovieDao {
     @Query("SELECT * FROM casts WHERE movie_id = :movieId")
     fun getCastForMovie(movieId: Int): Single<Cast>
 
+    @Query("SELECT * FROM movie_trailers WHERE movie_id = :movieId")
+    fun getTrailerForMovie(movieId: Int): Single<MovieTrailer>
+
     @Query("SELECT COUNT(*) FROM movies WHERE id = :id")
     fun isMovieInDatabase(id: Int): Single<Int>
 
@@ -47,6 +56,9 @@ interface MovieDao {
 
     @Query("SELECT COUNT(*) FROM casts WHERE movie_id = :movieId")
     fun isCastInDatabase(movieId: Int): Single<Int>
+
+    @Query("SELECT COUNT(*) FROM movie_trailers WHERE movie_id = :movieId")
+    fun isMovieTrailerInDatabase(movieId: Int): Single<Int>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveMovie(movie: Movie)
@@ -58,6 +70,9 @@ interface MovieDao {
     fun saveCast(cast: Cast)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun saveMovieTrailer(movieTrailer: MovieTrailer)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveMovies(vararg movie: Movie)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -67,6 +82,9 @@ interface MovieDao {
     fun saveCasts(vararg cast: Cast)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun saveMovieTrailers(vararg movieTrailer: MovieTrailer)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAllMovies(movies: List<Movie>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -74,6 +92,9 @@ interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAllCasts(casts: List<Cast>)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun saveAllMovieTrailers(trailers: List<MovieTrailer>)
 
     @Update
     fun updateMovie(movie: Movie)
@@ -85,6 +106,9 @@ interface MovieDao {
     fun updateCast(cast: Cast)
 
     @Update
+    fun updateMovieTrailer(movieTrailer: MovieTrailer)
+
+    @Update
     fun updateMovies(vararg movie: Movie)
 
     @Update
@@ -94,6 +118,9 @@ interface MovieDao {
     fun updateCasts(vararg cast: Cast)
 
     @Update
+    fun updateTrailers(vararg trailer: MovieTrailer)
+
+    @Update
     fun updateAllMovies(movies: List<Movie>)
 
     @Update
@@ -101,6 +128,9 @@ interface MovieDao {
 
     @Update
     fun updateAllCasts(casts: List<Cast>)
+
+    @Update
+    fun updateAllTrailers(trailers: List<MovieTrailer>)
 
     @Delete
     fun deleteMovie(movie: Movie)
@@ -112,6 +142,9 @@ interface MovieDao {
     fun deleteCast(cast: Cast)
 
     @Delete
+    fun deleteMovieTrailer(movieTrailer: MovieTrailer)
+
+    @Delete
     fun deleteMovies(vararg movie: Movie)
 
     @Delete
@@ -121,6 +154,9 @@ interface MovieDao {
     fun deleteCasts(vararg cast: Cast)
 
     @Delete
+    fun deleteMovieTrailers(vararg movieTrailer: MovieTrailer)
+
+    @Delete
     fun deleteAllMovies(movies: List<Movie>)
 
     @Delete
@@ -128,5 +164,8 @@ interface MovieDao {
 
     @Delete
     fun deleteAllCasts(casts: List<Cast>)
+
+    @Delete
+    fun deleteAllMovieTrailers(movieTrailers: List<MovieTrailer>)
 
 }

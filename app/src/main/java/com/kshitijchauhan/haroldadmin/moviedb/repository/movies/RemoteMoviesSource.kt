@@ -4,6 +4,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.acc
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.MovieService
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.toActor
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.toMovie
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.toMovieTrailer
+import io.reactivex.Flowable
 import io.reactivex.Single
 
 class RemoteMoviesSource(
@@ -39,6 +41,18 @@ class RemoteMoviesSource(
                         castMembers = creditsResponse.cast.map { castMember -> castMember.toActor() }
                     }
             }
+    }
+
+    fun getMovieTrailer(movieId: Int): Single<MovieTrailer> {
+        return movieService.getVideosForMovie(movieId)
+            .flatMapPublisher { movieVideosResponse ->
+                Flowable.fromIterable(movieVideosResponse.results)
+            }
+            .filter { movieVideo ->
+                movieVideo.site == "YouTube" && movieVideo.type == "Trailer"
+            }
+            .map { movieVideo -> movieVideo.toMovieTrailer(movieId) }
+            .firstOrError()
     }
 
     fun toggleMovieFavouriteStatus(

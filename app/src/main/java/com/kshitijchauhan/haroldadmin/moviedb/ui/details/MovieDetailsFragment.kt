@@ -24,6 +24,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
@@ -141,6 +143,19 @@ class MovieDetailsFragment : BaseFragment() {
             mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_ACCOUNT_STATES, viewLifecycleOwner)
         })
 
+        movieDetailsViewModel.trailerKey.observe(viewLifecycleOwner, Observer { url ->
+            log("Received trailer url: $url")
+            ypvTrailer.initialize({ initializedPlayer ->
+                initializedPlayer.addListener(object : AbstractYouTubePlayerListener() {
+                    override fun onReady() {
+                        super.onReady()
+                        initializedPlayer.cueVideo(url, 0f)
+                    }
+                })
+            }, true)
+            mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_VIDEOS, viewLifecycleOwner)
+        })
+
         movieDetailsViewModel.message.observe(viewLifecycleOwner, Observer { message ->
             mainViewModel.showSnackbar(message)
         })
@@ -149,9 +164,11 @@ class MovieDetailsFragment : BaseFragment() {
     private fun initTasks() {
         movieDetailsViewModel.getMovieDetails()
         movieDetailsViewModel.getMovieCast()
+        movieDetailsViewModel.getMovieTrailer()
         mainViewModel.apply {
             addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner))
             addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_CAST, viewLifecycleOwner))
+            addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_VIDEOS, viewLifecycleOwner))
         }
         if (mainViewModel.isAuthenticated) {
             movieDetailsViewModel.getMovieAccountStates()
@@ -200,14 +217,6 @@ class MovieDetailsFragment : BaseFragment() {
             chipMovieGenre.text = movie.genres?.first() ?: "Error"
             chipMovieRating.text = String.format("%.2f", movie.voteAverage)
             tvDescription.text = movie.overview
-//            ypvTrailer.initialize({ initializedPlayer ->
-//                initializedPlayer.addListener(object : AbstractYouTubePlayerListener() {
-//                    override fun onReady() {
-//                        super.onReady()
-//                        initializedPlayer.cueVideo(movie.trailerUrl, 0f)
-//                    }
-//                })
-//            }, true)
         }
     }
 

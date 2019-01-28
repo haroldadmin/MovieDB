@@ -11,7 +11,9 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.Config
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.common.GeneralMovieResponse
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.CastMember
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.MovieResponse
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.MovieVideo
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MovieTrailer
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -66,7 +68,7 @@ fun Float.getNumberOfColumns(context: Context): Int {
     return screenWidth.div(this).toInt()
 }
 
-fun String.toYoutubeUrl() = "https://www.youtube.com/watch?v=$this"
+fun String.getYoutubeUrl() = "https://www.youtube.com/watch?v=$this"
 
 fun <T> List<T>.firstOrDefault(default: T): T {
     return this.firstOrNull() ?: default
@@ -111,5 +113,12 @@ fun CastMember.toActor(): Actor {
         this.id,
         this.profilePath.getProfilePictureUrl(),
         this.name
+    )
+}
+
+fun MovieVideo.toMovieTrailer(movieId: Int): MovieTrailer {
+    return MovieTrailer(
+        movieId,
+        this.key
     )
 }

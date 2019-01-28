@@ -5,16 +5,13 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.ActorsDao
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionDao
-import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MovieDao
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.Collection
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.local.Converters
-import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.AccountState
-import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Cast
-import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.*
 
 @Database(
-    entities = [Movie::class, Actor::class, Collection::class, AccountState::class, Cast::class],
+    entities = [Movie::class, Actor::class, Collection::class, AccountState::class, Cast::class, MovieTrailer::class],
     version = 1,
     exportSchema = false
 )

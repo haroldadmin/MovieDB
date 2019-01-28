@@ -70,3 +70,20 @@ data class Cast(
     @Ignore
     var castMembers: List<Actor>? = null
 }
+
+@Entity(
+    tableName = "movie_trailers",
+    foreignKeys = [ForeignKey(
+        entity = Movie::class,
+        parentColumns = ["id"],
+        childColumns = ["movie_id"],
+        onDelete = ForeignKey.CASCADE
+    )]
+)
+data class MovieTrailer(
+    @PrimaryKey
+    @ColumnInfo(name = "movie_id")
+    val movieId: Int,
+    @ColumnInfo(name = "key")
+    val youtubeVideoKey: String
+)

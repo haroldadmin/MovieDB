@@ -111,7 +111,7 @@ class MoviesRepository(
             }
     }
 
-    fun getMovieActors(movieId: Int): Single<Cast> {
+    fun getMovieCast(movieId: Int): Single<Cast> {
         return localMoviesSource.isCastInDatabase(movieId)
             .flatMap { count ->
                 if (count > 0) {
@@ -126,6 +126,26 @@ class MoviesRepository(
                         }
                         .flatMap {
                             localMoviesSource.getCastForMovie(movieId)
+                        }
+                }
+            }
+    }
+
+    fun getMovieTrailer(movieId: Int): Single<MovieTrailer> {
+        return localMoviesSource.isMovieTrailerInDatabase(movieId)
+            .flatMap { count ->
+                if (count > 0) {
+                    log("Trailer already exists in database")
+                    localMoviesSource.getMovieTrailer(movieId)
+                } else {
+                    log("Fetching trailer from network")
+                    remoteMoviesSource.getMovieTrailer(movieId)
+                        .doOnSuccess {  trailer ->
+                            log("Saving trailer to database")
+                            localMoviesSource.saveMovieTrailerToDatabase(trailer)
+                        }
+                        .flatMap {
+                            localMoviesSource.getMovieTrailer(movieId)
                         }
                 }
             }

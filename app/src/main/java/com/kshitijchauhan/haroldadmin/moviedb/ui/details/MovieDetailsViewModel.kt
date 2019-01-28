@@ -27,6 +27,7 @@ class MovieDetailsViewModel(
     private val _movie = MutableLiveData<Movie>()
     private val _cast = MutableLiveData<List<Actor>>()
     private val _accountStates = MutableLiveData<AccountState>()
+    private val _trailerKey = MutableLiveData<String>()
     private val _message = SingleLiveEvent<String>()
 
     val movie: LiveData<Movie>
@@ -37,6 +38,9 @@ class MovieDetailsViewModel(
 
     val accountState: LiveData<AccountState>
         get() = _accountStates
+
+    val trailerKey: LiveData<String>
+        get() = _trailerKey
 
     val message: LiveData<String>
         get() = _message
@@ -108,7 +112,7 @@ class MovieDetailsViewModel(
     }
 
     fun getMovieCast() {
-        moviesRepository.getMovieActors(movieId)
+        moviesRepository.getMovieCast(movieId)
             .flatMap { cast ->
                 actorsRepository.getAllActors(cast.castMembersIds)
             }
@@ -117,6 +121,22 @@ class MovieDetailsViewModel(
                 // onSuccess
                 { actorsList ->
                     actorsList.take(8).let { _cast.postValue(it) }
+                },
+                // onError
+                { error ->
+                    handleError(error)
+                }
+            )
+            .disposeWith(compositeDisposable)
+    }
+
+    fun getMovieTrailer() {
+        moviesRepository.getMovieTrailer(movieId)
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                // onSuccess
+                { trailer ->
+                    _trailerKey.postValue(trailer.youtubeVideoKey)
                 },
                 // onError
                 { error ->
