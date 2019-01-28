@@ -8,6 +8,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.Collections
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MoviesRepository
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
@@ -36,47 +37,34 @@ class LibraryViewModel(
         get() = _message
 
 
-//    fun getFavouriteMovies(accountId: Int) {
-//        collectionsRepository.getMoviesInCollection(accountId, CollectionType.Favourite)
-//            .subscribeOn(Schedulers.io())
-//            .flatMapPublisher { collection ->
-//                Flowable.fromIterable(collection.contents)
-//            }
-//            .flatMap { id ->
-//                moviesRepository.getMovieDetailsFlowable(id, isAuthenticated)
-//            }
-//            .toList()
-//            .subscribe(
-//                { favouritesList: List<Movie> ->
-//                    _favouriteMovies.postValue(favouritesList)
-//                },
-//                { error ->
-//                    handleError(error)
-//                }
-//            )
-//            .disposeWith(compositeDisposable)
-//    }
-//
-//    fun getWatchlistedMovies(accountId: Int) {
-//        collectionsRepository.getMoviesInCollection(accountId, CollectionType.Watchlist)
-//            .subscribeOn(Schedulers.io())
-//            .flatMapPublisher { collection ->
-//                Flowable.fromIterable(collection.contents)
-//            }
-//            .flatMapSingle { id ->
-//                moviesRepository.getMovieDetails(id, isAuthenticated)
-//            }
-//            .toList()
-//            .subscribe(
-//                { watchlist ->
-//                    _watchlistedMovies.postValue(watchlist)
-//                },
-//                { error ->
-//                    handleError(error)
-//                }
-//            )
-//            .disposeWith(compositeDisposable)
-//    }
+    fun getFavouriteMovies(accountId: Int) {
+        collectionsRepository.getMoviesInCollection(accountId, CollectionType.Favourite)
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                // onSuccess
+                { favouriteMovies ->
+                    _favouriteMovies.postValue(favouriteMovies)
+                },
+                { error ->
+                    handleError(error)
+                }
+            )
+            .disposeWith(compositeDisposable)
+    }
+
+    fun getWatchlistedMovies(accountId: Int) {
+        collectionsRepository.getMoviesInCollection(accountId, CollectionType.Watchlist)
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                { watchlist ->
+                    _watchlistedMovies.postValue(watchlist)
+                },
+                { error ->
+                    handleError(error)
+                }
+            )
+            .disposeWith(compositeDisposable)
+    }
 
     private fun handleError(error: Throwable) {
         log(error.localizedMessage)
