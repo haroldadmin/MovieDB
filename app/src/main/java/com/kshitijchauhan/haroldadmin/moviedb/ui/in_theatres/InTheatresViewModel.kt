@@ -3,51 +3,59 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.recyclerview.widget.DiffUtil
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.ApiManager
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.Config
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.common.GeneralMovieResponse
-import com.kshitijchauhan.haroldadmin.moviedb.utils.RxDiffUtil
+import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionType
+import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionsRepository
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
-import io.reactivex.Observable
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.io.IOException
+import java.util.concurrent.TimeoutException
 
-class InTheatresViewModel(private val apiManager: ApiManager) : ViewModel() {
+class InTheatresViewModel(private val collectionsRepository: CollectionsRepository) : ViewModel() {
 
-    private val _moviesUpdate = MutableLiveData<Pair<List<GeneralMovieResponse>, DiffUtil.DiffResult>>()
+    private val _inTheatreMovies = MutableLiveData<List<Movie>>()
+    private val _message = MutableLiveData<String>()
     private val compositeDisposable = CompositeDisposable()
 
-    val moviesUpdate: LiveData<Pair<List<GeneralMovieResponse>, DiffUtil.DiffResult>>
-        get() = _moviesUpdate
+    val moviesUpdate: LiveData<List<Movie>>
+        get() = _inTheatreMovies
+
+    val message: LiveData<String>
+        get() = _message
 
     fun getPopularMovies() {
-        apiManager
-            .getMoviesInTheatres()
+        collectionsRepository.getMoviesInCollection(type = CollectionType.InTheatres)
             .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.computation())
-            .map { response ->
-                response.results
-            }
-            .flatMapObservable { list ->
-                Observable.fromIterable(list)
-            }
-            .map { movie ->
-                movie.posterPath = "${Config.BASE_IMAGE_URL}${Config.DEFAULT_POSTER_SIZE}${movie.posterPath}"
-                movie.voteAverage = movie.voteAverage.div(10.0).times(5)
-//                movie.releaseDate = movie.releaseDate.split("-")[0]
-                movie
-            }
-            .toList()
-            .toObservable()
-            .compose(RxDiffUtil.calculateDiff { oldList, newList ->
-                MoviesDiffUtil(oldList, newList)
-            })
-            .doOnNext {
-                _moviesUpdate.postValue(it)
-            }
-            .subscribe()
+            .subscribe(
+                { list ->
+                    _inTheatreMovies.postValue(list)
+                },
+                { error ->
+                    handleError(error)
+                }
+            )
             .disposeWith(compositeDisposable)
+    }
+
+    fun forceRefreshInTheatresCollection() {
+        collectionsRepository.forceRefreshCollection(type = CollectionType.InTheatres)
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                { log("Successfully refreshed in theatres collection") },
+                { error -> handleError(error) }
+            )
+            .disposeWith(compositeDisposable)
+    }
+
+    private fun handleError(error: Throwable) {
+        log(error.localizedMessage)
+        when (error) {
+            is IOException -> _message.postValue("Please check your internet connection")
+            is TimeoutException -> _message.postValue("Request timed out")
+            else -> _message.postValue("An error occurred")
+        }
     }
 
     override fun onCleared() {

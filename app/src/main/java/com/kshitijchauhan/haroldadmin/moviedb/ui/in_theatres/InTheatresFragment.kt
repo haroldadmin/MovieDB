@@ -31,7 +31,7 @@ class InTheatresFragment : BaseFragment() {
         parametersOf(this)
     }
     private val moviesAdapter: MoviesAdapter by inject {
-        parametersOf(glideRequestManager, mutableListOf<GeneralMovieResponse>(), { id: Int ->
+        parametersOf(glideRequestManager, { id: Int ->
             mainViewModel.updateStateTo(UIState.DetailsScreenState(id))
         })
     }
@@ -64,9 +64,15 @@ class InTheatresFragment : BaseFragment() {
             getPopularMovies()
 
             moviesUpdate.observe(viewLifecycleOwner, Observer {
-                moviesAdapter.updateList(it)
+                moviesAdapter.submitList(it)
                 mainViewModel.completeLoadingTask(TASK_LOAD_IN_THEATRES_MOVIES, viewLifecycleOwner)
             })
+
+            message.observe(viewLifecycleOwner, Observer { message ->
+                mainViewModel.showSnackbar(message)
+            })
+
+            forceRefreshInTheatresCollection()
         }
     }
 

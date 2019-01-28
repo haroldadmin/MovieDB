@@ -180,8 +180,8 @@ val uiModule = module {
 
     factory("fragment-glide-request-manager") { (fragment: Fragment) -> Glide.with(fragment) }
     factory { (glide: RequestManager) -> CreditsAdapter(glide) }
-    factory { (glide: RequestManager, moviesList: MutableList<GeneralMovieResponse>, clickListener: (movieId: Int) -> Unit) ->
-        MoviesAdapter(glide, moviesList, clickListener)
+    factory { (glide: RequestManager, clickListener: (movieId: Int) -> Unit) ->
+        MoviesAdapter(glide, clickListener)
     }
     factory { (glide: RequestManager, clickListener: (movieId: Int, transitionName: String, sharedView: View) -> Unit) ->
         MoviesListAdapter(glide, clickListener)
