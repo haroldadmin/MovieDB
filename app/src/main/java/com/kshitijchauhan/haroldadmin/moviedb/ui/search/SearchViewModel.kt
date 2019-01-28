@@ -10,6 +10,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.MovieItemType
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.MovieGridItem
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getPosterUrl
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.toMovie
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
@@ -38,17 +39,11 @@ class SearchViewModel(private val apiManager: ApiManager) : ViewModel() {
                 Observable.fromIterable(response.results)
             }
             .map { generalMovieResponse: GeneralMovieResponse ->
-                MovieGridItem(
-                    generalMovieResponse.id,
-                    generalMovieResponse.title,
-                    generalMovieResponse.posterPath.getPosterUrl(),
-                    MovieItemType.MovieType.SearchResult
-                )
+                generalMovieResponse.toMovie()
             }
             .toList()
             .doOnSuccess {
-//                _searchResults.postValue(it)
-                TODO("Update search view model to use a different data type")
+                _searchResults.postValue(it)
             }
             .subscribe()
 

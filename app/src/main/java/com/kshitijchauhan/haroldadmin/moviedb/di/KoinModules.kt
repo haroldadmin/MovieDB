@@ -44,6 +44,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchResultsAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
+import com.kshitijchauhan.haroldadmin.moviedb.utils.SafeRfc3339DateJsonAdapter
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.Rfc3339DateJsonAdapter
 import okhttp3.Cache
@@ -96,7 +97,7 @@ val retrofitModule = module {
             .also {
                 if (BuildConfig.DEBUG)
                     it.addInterceptor(get<HttpLoggingInterceptor> {
-                        parametersOf(HttpLoggingInterceptor.Level.BASIC)
+                        parametersOf(HttpLoggingInterceptor.Level.BODY)
                     })
             }
             .cache(get())
@@ -104,8 +105,9 @@ val retrofitModule = module {
     }
 
     single {
+        val adapter = SafeRfc3339DateJsonAdapter(Rfc3339DateJsonAdapter())
         Moshi.Builder()
-            .add(Date::class.java, Rfc3339DateJsonAdapter())
+            .add(Date::class.java, adapter)
             .build()
             .let { moshi -> MoshiConverterFactory.create(moshi) }
     }

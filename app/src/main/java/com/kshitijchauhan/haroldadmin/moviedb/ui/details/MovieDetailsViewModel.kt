@@ -178,7 +178,7 @@ class MovieDetailsViewModel(
     }
 
     private fun handleError(error: Throwable) {
-        log(error.localizedMessage)
+        error.localizedMessage?.let { log(it) }
         when (error) {
             is IOException -> _message.postValue("Please check your internet connection")
             is TimeoutException -> _message.postValue("Request timed out")
