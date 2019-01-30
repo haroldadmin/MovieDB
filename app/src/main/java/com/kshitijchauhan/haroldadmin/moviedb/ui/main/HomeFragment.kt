@@ -33,7 +33,7 @@ class HomeFragment : BaseFragment() {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val homeViewModel: HomeViewModel by viewModel()
-    private val glideRequestManager: RequestManager by inject {
+    private val glideRequestManager: RequestManager by inject("fragment-glide-request-manager") {
         parametersOf(this)
     }
     private val popularMoviesAdapter: MoviesListAdapter by inject {

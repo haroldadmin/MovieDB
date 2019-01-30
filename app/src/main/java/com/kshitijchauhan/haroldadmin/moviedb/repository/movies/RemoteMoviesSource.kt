@@ -7,6 +7,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.toMovie
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.toMovieTrailer
 import io.reactivex.Flowable
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 
 class RemoteMoviesSource(
     private val movieService: MovieService,
@@ -15,6 +16,8 @@ class RemoteMoviesSource(
 
     fun getMovieDetails(id: Int): Single<Movie> {
         return movieService.getMovieDetails(id)
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
             .map { movieResponse ->
                 movieResponse.toMovie()
             }
@@ -22,6 +25,8 @@ class RemoteMoviesSource(
 
     fun getMovieAccountStates(movieId: Int): Single<AccountState> {
         return movieService.getAccountStatesForMovie(movieId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
             .map { movieStatesResponse ->
                 AccountState(
                     isWatchlisted = movieStatesResponse.isWatchlisted ?: false,
@@ -33,6 +38,8 @@ class RemoteMoviesSource(
 
     fun getMovieCast(movieId: Int): Single<Cast> {
         return movieService.getCreditsForMovie(movieId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
             .map { creditsResponse ->
                 Cast(
                     castMembersIds = creditsResponse.cast.map { castMember -> castMember.id },
@@ -45,6 +52,8 @@ class RemoteMoviesSource(
 
     fun getMovieTrailer(movieId: Int): Single<MovieTrailer> {
         return movieService.getVideosForMovie(movieId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
             .flatMapPublisher { movieVideosResponse ->
                 Flowable.fromIterable(movieVideosResponse.results)
             }
@@ -66,6 +75,7 @@ class RemoteMoviesSource(
             isFavourite
         ).let { request ->
             accountService.toggleMediaFavouriteStatus(accountId, request)
+                .subscribeOn(Schedulers.io())
         }
     }
 
@@ -80,6 +90,7 @@ class RemoteMoviesSource(
             isWatchlisted
         ).let { request ->
             accountService.toggleMediaWatchlistStatus(accountId, request)
+                .subscribeOn(Schedulers.io())
         }
     }
 }

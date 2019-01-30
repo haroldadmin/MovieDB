@@ -10,6 +10,7 @@ import androidx.transition.TransitionManager
 import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionType
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.MoviesListAdapter
@@ -18,8 +19,12 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.visible
+import com.mikepenz.itemanimators.AlphaInAnimator
+import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import kotlinx.android.synthetic.main.fragment_library.*
+import kotlinx.android.synthetic.main.fragment_logged_out.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -34,19 +39,17 @@ class LibraryFragment : BaseFragment() {
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val libraryViewModel: LibraryViewModel by viewModel()
 
-    private val glideRequestManager: RequestManager by inject {
-        parametersOf(this)
-    }
-    private val favouriteMoviesAdapter: MoviesListAdapter by inject {
-        parametersOf(glideRequestManager, { id: Int, transitionName: String, sharedView: View ->
+    private var favouritesList = listOf<Movie>()
+    private var watchlist = listOf<Movie>()
+
+
+    private val callbacks = object: AllMoviesController.Callbacks {
+        override fun onMovieItemClicked(id: Int, transitionName: String, sharedView: View?) {
             mainViewModel.updateStateTo(UIState.DetailsScreenState(id, transitionName, sharedView))
-        })
+        }
     }
-    private val watchListedMoviesAdapter: MoviesListAdapter by inject {
-        parametersOf(glideRequestManager, { id: Int, transitionName: String, sharedView: View ->
-            mainViewModel.updateStateTo(UIState.DetailsScreenState(id, transitionName, sharedView))
-        })
-    }
+
+    private val moviesController = AllMoviesController(callbacks)
 
     override val associatedUIState: UIState = UIState.LibraryScreenState
 
@@ -72,7 +75,15 @@ class LibraryFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         updateToolbarTitle()
-        setupRecyclerViews()
+        moviesController.setData(favouritesList, watchlist, mainViewModel.isAuthenticated)
+        epoxyRv.apply {
+            val columns = resources.getDimension(R.dimen.movie_grid_poster_width).getNumberOfColumns(context!!)
+            val space = resources.getDimension(R.dimen.movie_grid_item_space)
+            layoutManager = GridLayoutManager(context, columns)
+            itemAnimator = AlphaInAnimator()
+            setController(moviesController)
+            addItemDecoration(EqualSpaceGridItemDecoration(space.roundToInt()))
+        }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -97,20 +108,14 @@ class LibraryFragment : BaseFragment() {
 
                 favouriteMovies.observe(viewLifecycleOwner, Observer { newList ->
                     mainViewModel.completeLoadingTask(TASK_LOAD_FAVOURITE_MOVIES, viewLifecycleOwner)
-                    /**
-                     * If the adapter was unpopulated before, the empty view will be removed, the recycler view's new
-                     * items will appear. If the new items are not empty, then the watchlist recycler view and its header
-                     * will have to be shifted down. We want to animate those changes.
-                     */
-                    val isAdapterEmpty = favouriteMoviesAdapter.itemCount == 0
-                    if (isAdapterEmpty)
-                        TransitionManager.beginDelayedTransition(libraryContainer)
-                    favouriteMoviesAdapter.submitList(newList)
+                    favouritesList = newList
+                    moviesController.setData(favouritesList, watchlist, true)
                 })
 
                 watchListMoviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
                     mainViewModel.completeLoadingTask(TASK_LOAD_WATCHLISTED_MOVIES, viewLifecycleOwner)
-                    watchListedMoviesAdapter.submitList(newList)
+                    watchlist = newList
+                    moviesController.setData(favouritesList, watchlist, true)
                 })
 
                 forceRefreshCollection(mainViewModel.accountId, CollectionType.Favourite)
@@ -119,37 +124,5 @@ class LibraryFragment : BaseFragment() {
         }
 
         mainViewModel.updateToolbarTitle("Library")
-    }
-
-    override fun onStart() {
-        super.onStart()
-        if (mainViewModel.isAuthenticated) {
-            TransitionManager.beginDelayedTransition(libraryContainer)
-            infoGroup.gone()
-            moviesGroup.visible()
-        } else {
-            TransitionManager.beginDelayedTransition(libraryContainer)
-            moviesGroup.gone()
-            infoGroup.visible()
-        }
-    }
-
-    private fun setupRecyclerViews() {
-        val columns = resources.getDimension(R.dimen.movie_grid_poster_width).getNumberOfColumns(context!!)
-        val space = resources.getDimension(R.dimen.movie_grid_item_space)
-
-        rvFavourites.apply {
-            setEmptyView(emptyViewFavourites)
-            layoutManager = GridLayoutManager(context, columns)
-            addItemDecoration(EqualSpaceGridItemDecoration(space.roundToInt()))
-            adapter = favouriteMoviesAdapter
-        }
-
-        rvWatchlist.apply {
-            setEmptyView(emptyViewWatchlist)
-            layoutManager = GridLayoutManager(context, columns)
-            addItemDecoration(EqualSpaceGridItemDecoration(space.roundToInt()))
-            adapter = watchListedMoviesAdapter
-        }
     }
 }

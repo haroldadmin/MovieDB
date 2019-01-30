@@ -91,8 +91,7 @@
     </style>
 
     <style name="TextAppearance.MaterialComponents.Body2.EmptyViewTextStyle">
-        <item name="android:textColor">@color/colorSurface</item>
-        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/colorSurfaceLight</item>
     </style>
 
 </resources>

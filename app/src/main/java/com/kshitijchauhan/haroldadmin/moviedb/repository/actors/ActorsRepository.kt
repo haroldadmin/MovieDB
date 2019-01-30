@@ -61,8 +61,9 @@ class ActorsRepository(
             }
     }
 
-    fun getAllActors(ids: List<Int>): Single<List<Actor>> {
+    fun getAllActors(ids: List<Int>, itemsCount: Int = ids.size): Single<List<Actor>> {
         return Flowable.fromIterable(ids)
+            .take(itemsCount.toLong())
             .flatMapSingle { id ->
                 this.getActor(id)
             }

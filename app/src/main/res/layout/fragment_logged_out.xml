@@ -12,7 +12,7 @@
         android:id="@+id/ivKey"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/tvInfo"
+        app:layout_constraintBottom_toTopOf="@+id/tvNeedToLogin"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/guideline"
@@ -22,7 +22,7 @@
         app:srcCompat="@drawable/ic_icons8_key" />
 
     <TextView
-        android:id="@+id/tvInfo"
+        android:id="@+id/tvNeedToLogin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="You need to login to your TMDb account to view this section"
@@ -60,7 +60,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/tvInfo" />
+        app:layout_constraintTop_toBottomOf="@+id/tvNeedToLogin" />
 
 
     <WebView
@@ -105,7 +105,7 @@
         android:id="@+id/infoGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="btLogin,guideline2,guideline,tvInfo,ivKey"
+        app:constraint_referenced_ids="btLogin,guideline2,guideline,tvNeedToLogin,ivKey"
         tools:visibility="visible" />
 
     <androidx.constraintlayout.widget.Group

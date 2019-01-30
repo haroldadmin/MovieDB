@@ -99,7 +99,7 @@ class LoggedOutFragment : BaseFragment() {
                 addTransition(
                     Slide(Gravity.TOP)
                         .addTarget(ivKey)
-                        .addTarget(tvInfo)
+                        .addTarget(tvNeedToLogin)
                         .addTarget(btLogin)
                         .setDuration(300)
                 )

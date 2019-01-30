@@ -31,7 +31,6 @@ class SharedPreferencesDelegate<T>(
                 is String -> getString(key, defaultValue)
                 else -> throw IllegalArgumentException()
             }
-            log("Retrieved value: $result")
             return result as T
         }
     }

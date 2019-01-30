@@ -104,6 +104,13 @@ dependencies {
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'me.zhanghai.android.materialprogressbar:library:1.6.1'
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:9.0.1'
+    implementation 'com.airbnb.android:epoxy:3.1.0'
+    kapt 'com.airbnb.android:epoxy-processor:3.1.0'
 }
 
 apply plugin: 'kotlin-kapt'
+
+// For Epoxy
+kapt {
+    correctErrorTypes = true
+}
