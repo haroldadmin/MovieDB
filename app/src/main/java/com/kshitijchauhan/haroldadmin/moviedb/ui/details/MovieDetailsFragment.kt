@@ -47,12 +47,13 @@ class MovieDetailsFragment : BaseFragment() {
 
     private val compositeDisposable = CompositeDisposable()
 
-    private val movieDetailsViewModel: MovieDetailsViewModel by viewModel {
-        val movieId = arguments?.getInt(Constants.KEY_MOVIE_ID, -1)
-        parametersOf(movieId)
-    }
-
     private val mainViewModel: MainViewModel by sharedViewModel()
+
+    private val movieDetailsViewModel: MovieDetailsViewModel by viewModel {
+        val isAuthenticated = mainViewModel.isAuthenticated
+        val movieId = arguments?.getInt(Constants.KEY_MOVIE_ID, -1)
+        parametersOf(isAuthenticated, movieId)
+    }
 
     private val glideRequestManager: RequestManager by inject("fragment-glide-request-manager") {
         parametersOf(this)
@@ -158,10 +159,6 @@ class MovieDetailsFragment : BaseFragment() {
     }
 
     private fun initTasks() {
-//        movieDetailsViewModel.getMovieDetails()
-//        movieDetailsViewModel.getMovieAccountStates()
-//        movieDetailsViewModel.getMovieCast()
-//        movieDetailsViewModel.getMovieTrailer()
         movieDetailsViewModel.getAllMovieInfo()
         mainViewModel.apply {
             addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner))

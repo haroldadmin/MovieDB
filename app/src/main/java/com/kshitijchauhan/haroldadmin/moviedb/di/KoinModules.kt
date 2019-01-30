@@ -97,7 +97,7 @@ val retrofitModule = module {
             .also {
                 if (BuildConfig.DEBUG)
                     it.addInterceptor(get<HttpLoggingInterceptor> {
-                        parametersOf(HttpLoggingInterceptor.Level.BODY)
+                        parametersOf(HttpLoggingInterceptor.Level.BASIC)
                     })
             }
             .cache(get())
@@ -172,13 +172,13 @@ val uiModule = module {
     viewModel { InTheatresViewModel(get()) }
     viewModel { AuthenticationViewModel(get(), get(), get()) }
     viewModel { SearchViewModel(get()) }
-    viewModel { (movieId: Int) ->
-        val isAuthenticated = get<SharedPreferences>().getBoolean(Constants.KEY_IS_AUTHENTICATED, false)
+    viewModel { (isAuthenticated: Boolean, movieId: Int) ->
         MovieDetailsViewModel(isAuthenticated, movieId, get(), get())
     }
     viewModel { MainViewModel(get(), get(), get()) }
 
     factory("fragment-glide-request-manager") { (fragment: Fragment) -> Glide.with(fragment) }
+    factory("view-glide-request-manager") { (view: View) -> Glide.with(view) }
     factory { (glide: RequestManager) -> CreditsAdapter(glide) }
     factory { (glide: RequestManager, clickListener: (movieId: Int) -> Unit) ->
         MoviesAdapter(glide, clickListener)

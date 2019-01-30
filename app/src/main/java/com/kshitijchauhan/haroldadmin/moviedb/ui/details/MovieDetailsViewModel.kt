@@ -56,9 +56,6 @@ class MovieDetailsViewModel(
      */
     fun getAllMovieInfo() {
         this.getMovieDetails()
-            .switchMap {
-                this.getMovieAccountStates()
-            }
             .publish()
             .apply {
                 flatMap { getMovieAccountStates() }
@@ -78,14 +75,16 @@ class MovieDetailsViewModel(
                         { error -> handleError(error, "get-movie-cast") }
                     )
                     .disposeWith(compositeDisposable)
-                connect()
             }
+            .connect()
+            .disposeWith(compositeDisposable)
     }
 
     private fun getMovieDetails(): Flowable<Movie> {
         return moviesRepository.getMovieDetailsFlowable(movieId)
             .subscribeOn(Schedulers.io())
             .doOnNext { movie ->
+                _movie.postValue(movie)
                 if (!movie.isModelComplete) {
                     log("Movie model is incomplete, force refreshing")
                     forceRefreshMovieDetails()
@@ -96,19 +95,18 @@ class MovieDetailsViewModel(
     private fun getMovieAccountStates(): Flowable<AccountState> {
         return if (isAuthenticated) {
             moviesRepository.getAccountStatesForMovieFlowable(movieId)
-                .subscribeOn(Schedulers.io())
         } else {
             Flowable.just(AccountState(null, null, movieId))
-                .doOnNext {
-                    _accountStates.postValue(it)
-                }
+                .doOnNext { _accountStates.postValue(it) }
         }
+            .subscribeOn(Schedulers.io())
     }
 
     fun toggleMovieFavouriteStatus(accountId: Int) {
         if (isAuthenticated) {
             moviesRepository
                 .toggleMovieFavouriteStatus(movieId, accountId)
+                .subscribeOn(Schedulers.io())
                 .subscribe(
                     // OnNext
                     { log("Movie status updated successfully") },
@@ -125,6 +123,7 @@ class MovieDetailsViewModel(
         if (isAuthenticated) {
             moviesRepository
                 .toggleMovieWatchlistStatus(movieId, accountId)
+                .subscribeOn(Schedulers.io())
                 .subscribe(
                     // OnNext
                     { log("Movie status updated successfully") },
@@ -139,17 +138,17 @@ class MovieDetailsViewModel(
 
     private fun getMovieCast(actorsCount: Int = 2): Flowable<List<Actor>> {
         return moviesRepository.getMovieCast(movieId)
+            .subscribeOn(Schedulers.io())
             .toFlowable()
             .flatMapSingle { cast ->
                 actorsRepository.getAllActors(cast.castMembersIds, actorsCount)
             }
-            .subscribeOn(Schedulers.io())
     }
 
     private fun getMovieTrailer(): Flowable<MovieTrailer> {
         return moviesRepository.getMovieTrailer(movieId)
-            .toFlowable()
             .subscribeOn(Schedulers.io())
+            .toFlowable()
     }
 
     private fun forceRefreshMovieDetails() {
@@ -158,7 +157,7 @@ class MovieDetailsViewModel(
             .subscribe(
                 // onSuccess
                 { movie ->
-                    log("Successfully retrieved complete movie details")
+                    log("Successfully retrieved complete movie model")
                 },
                 // onError
                 { error ->

@@ -63,7 +63,7 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveMovie(movie: Movie)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.FAIL)
     fun saveAccountState(accountState: AccountState)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -86,6 +86,13 @@ interface MovieDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAllMovies(movies: List<Movie>)
+
+    /**
+     * Collections have an incomplete movie model. We do not want to overwrite complete movie models with incomplete
+     * ones. Therefore, we adopt the IGNORE strategy for conflicts.
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun saveAllMoviesFromCollection(movies: List<Movie>)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAllAccountStates(accountStates: List<AccountState>)

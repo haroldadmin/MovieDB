@@ -16,10 +16,10 @@ class MoviesRepository(
                 if (count > 0) {
                     log("Movie already exists in database")
                     localMoviesSource.getMovieFlowable(id)
-                        .doOnComplete { log("debug: Completed emitting movie details from db") }
                 } else {
                     log("Fetching movie from the network")
                     remoteMoviesSource.getMovieDetails(id)
+                        .observeOn(Schedulers.single())
                         .doOnSuccess { movie ->
                             log("Saving movie to the database")
                             localMoviesSource.saveMovieToDatabase(movie)
@@ -40,6 +40,7 @@ class MoviesRepository(
                 } else {
                     log("Fetching movie from the network")
                     remoteMoviesSource.getMovieDetails(id)
+                        .observeOn(Schedulers.single())
                         .doOnSuccess { movie ->
                             log("Saving movie to database")
                             localMoviesSource.saveMovieToDatabase(movie)
@@ -60,6 +61,7 @@ class MoviesRepository(
                 } else {
                     log("Fetching account states from the network")
                     remoteMoviesSource.getMovieAccountStates(movieId)
+                        .observeOn(Schedulers.single())
                         .doOnSuccess { accountState ->
                             log("Saving account state to database")
                             localMoviesSource.saveAccountStateToDatabase(accountState)
@@ -80,6 +82,7 @@ class MoviesRepository(
                 } else {
                     log("Fetching account states from the network")
                     remoteMoviesSource.getMovieAccountStates(movieId)
+                        .observeOn(Schedulers.single())
                         .doOnSuccess { accountState ->
                             log("Saving account state to database")
                             localMoviesSource.saveAccountStateToDatabase(accountState)
@@ -100,6 +103,7 @@ class MoviesRepository(
                 } else {
                     log("Fetching cast from network")
                     remoteMoviesSource.getMovieCast(movieId)
+                        .observeOn(Schedulers.single())
                         .doOnSuccess { cast ->
                             log("Saving cast to database")
                             localMoviesSource.saveCastToDatabase(cast)
@@ -120,6 +124,7 @@ class MoviesRepository(
                 } else {
                     log("Fetching cast from network")
                     remoteMoviesSource.getMovieCast(movieId)
+                        .observeOn(Schedulers.single())
                         .doOnSuccess { cast ->
                             log("Saving cast to database")
                             localMoviesSource.saveCastToDatabase(cast)
@@ -140,6 +145,7 @@ class MoviesRepository(
                 } else {
                     log("Fetching trailer from network")
                     remoteMoviesSource.getMovieTrailer(movieId)
+                        .observeOn(Schedulers.single())
                         .doOnSuccess { trailer ->
                             log("Saving trailer to database")
                             localMoviesSource.saveMovieTrailerToDatabase(trailer)
@@ -157,11 +163,10 @@ class MoviesRepository(
                 val newStatus = !accountState.isFavourited!!
                 remoteMoviesSource.toggleMovieFavouriteStatus(newStatus, movieId, accountId)
             }
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.single())
             .flatMap {
                 localMoviesSource.getAccountStatesForMovie(movieId)
             }
+            .observeOn(Schedulers.single())
             .doOnSuccess { accountStates ->
                 val newStatus = !accountStates.isFavourited!!
                 localMoviesSource.updateAccountStatesInDatabase(accountStates.copy(isFavourited = newStatus))
@@ -174,11 +179,10 @@ class MoviesRepository(
                 val newStatus = !accountState.isWatchlisted!!
                 remoteMoviesSource.toggleMovieWatchlistStatus(newStatus, movieId, accountId)
             }
-            .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.single())
             .flatMap {
                 localMoviesSource.getAccountStatesForMovie(movieId)
             }
+            .observeOn(Schedulers.single())
             .doOnSuccess { accountStates ->
                 val newStatus = !accountStates.isWatchlisted!!
                 localMoviesSource.updateAccountStatesInDatabase(accountStates.copy(isWatchlisted = newStatus))
@@ -188,6 +192,7 @@ class MoviesRepository(
     fun forceRefreshMovieDetails(movieId: Int): Single<Movie> {
         log("Force refreshing movie")
         return remoteMoviesSource.getMovieDetails(movieId)
+            .observeOn(Schedulers.single())
             .doOnSuccess { movie ->
                 log("Saving refreshed movie model to database")
                 localMoviesSource.updateMovieInDatabase(movie)

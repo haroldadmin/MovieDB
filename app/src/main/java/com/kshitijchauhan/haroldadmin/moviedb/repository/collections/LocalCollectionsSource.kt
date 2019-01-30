@@ -44,7 +44,7 @@ class LocalCollectionsSource(
     fun saveMoviesInCollection(collection: Collection) {
         log("Saving movies in collection")
         collection.movies?.let {
-            moviesDao.saveAllMovies(it)
+            moviesDao.saveAllMoviesFromCollection(it)
         }
     }
 
