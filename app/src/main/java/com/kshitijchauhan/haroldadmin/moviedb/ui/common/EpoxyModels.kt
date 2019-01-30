@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.ui.library
+package com.kshitijchauhan.haroldadmin.moviedb.ui.common
 
 import android.view.View
 import android.widget.ImageView
@@ -7,7 +7,6 @@ import androidx.core.view.ViewCompat
 import com.airbnb.epoxy.*
 import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.R
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.KotlinEpoxyHolder
 import org.koin.core.parameter.parametersOf
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.get

@@ -1,12 +1,12 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.library
 
-import android.view.View
 import com.airbnb.epoxy.AutoModel
 import com.airbnb.epoxy.Typed3EpoxyController
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.*
 
-class AllMoviesController(
-    private val callbacks: Callbacks
+class LibraryEpoxyController(
+    private val callbacks: EpoxyCallbacks
 ) : Typed3EpoxyController<List<Movie>, List<Movie>, Boolean>() {
 
     @AutoModel
@@ -16,61 +16,57 @@ class AllMoviesController(
     @AutoModel
     lateinit var needToLoginModel: NeedToLoginModel_
 
-    interface Callbacks {
-        fun onMovieItemClicked(id: Int, transitionName: String, sharedView: View?)
-    }
-
-    override fun buildModels(popularMovies: List<Movie>?, topRatedMovies: List<Movie>?, isAuthenticated: Boolean?) {
+    override fun buildModels(favouriteMovies: List<Movie>?, watchlistedMovies: List<Movie>?, isAuthenticated: Boolean?) {
         if (isAuthenticated == false) {
             needToLoginModel
                 .spanSizeOverride { totalSpanCount, _, _ ->  totalSpanCount}
                 .also { add(it) }
         } else {
             header {
-                id("popular")
+                id("favourites")
                 title("Favourites")
                 spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
             }
 
-            if (popularMovies.isNullOrEmpty()) {
+            if (favouriteMovies.isNullOrEmpty()) {
                 emptyListModelFavourited
                     .text("You have not favourited any movies yet.")
                     .spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                     .also { this.add(it) }
             } else {
-                popularMovies.forEach { popularMovie: Movie ->
+                favouriteMovies.forEach { favouriteMovie ->
                     movie {
-                        id(popularMovie.id)
-                        movieId(popularMovie.id)
-                        posterUrl(popularMovie.posterPath)
-                        transitionName("poster-${popularMovie.id}")
+                        id(favouriteMovie.id)
+                        movieId(favouriteMovie.id)
+                        posterUrl(favouriteMovie.posterPath)
+                        transitionName("poster-${favouriteMovie.id}")
                         clickListener { model, _, clickedView, position ->
-                            callbacks.onMovieItemClicked(model.movieId!!, model.transitionName, clickedView)
+                            callbacks.onMovieItemClicked(model.movieId!!, model.transitionName(), clickedView)
                         }
                     }
                 }
             }
 
             header {
-                id("top-rated")
+                id("watchlist")
                 title("Watchlist")
                 spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
             }
 
-            if (topRatedMovies.isNullOrEmpty()) {
+            if (watchlistedMovies.isNullOrEmpty()) {
                 emptyListModelWatchlist
                     .text("You have not watchlisted any movies yet")
                     .spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                     .also { this.add(it) }
             } else {
-                topRatedMovies.forEach { topRatedMovie ->
+                watchlistedMovies.forEach { watchlistedMovie ->
                     movie {
-                        id(topRatedMovie.id)
-                        movieId(topRatedMovie.id)
-                        posterUrl(topRatedMovie.posterPath)
-                        transitionName("poster-${topRatedMovie.id}")
-                        clickListener { model, _, clickedView, position ->
-                            callbacks.onMovieItemClicked(model.movieId!!, "poster-${model.id()}", clickedView)
+                        id(watchlistedMovie.id)
+                        movieId(watchlistedMovie.id)
+                        posterUrl(watchlistedMovie.posterPath)
+                        transitionName("poster-${watchlistedMovie.id}")
+                        clickListener { model, _, clickedView, _ ->
+                            callbacks.onMovieItemClicked(model.movieId!!, model.transitionName(), clickedView)
                         }
                     }
                 }

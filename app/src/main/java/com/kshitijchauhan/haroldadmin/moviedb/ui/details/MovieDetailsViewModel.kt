@@ -136,7 +136,7 @@ class MovieDetailsViewModel(
         }
     }
 
-    private fun getMovieCast(actorsCount: Int = 2): Flowable<List<Actor>> {
+    private fun getMovieCast(actorsCount: Int = 8): Flowable<List<Actor>> {
         return moviesRepository.getMovieCast(movieId)
             .subscribeOn(Schedulers.io())
             .toFlowable()

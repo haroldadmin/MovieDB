@@ -14,10 +14,12 @@ import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionType
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.MoviesListAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
+import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.view_searchbox.view.*
 import org.koin.android.ext.android.inject
@@ -33,19 +35,14 @@ class HomeFragment : BaseFragment() {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val homeViewModel: HomeViewModel by viewModel()
-    private val glideRequestManager: RequestManager by inject("fragment-glide-request-manager") {
-        parametersOf(this)
-    }
-    private val popularMoviesAdapter: MoviesListAdapter by inject {
-        parametersOf(glideRequestManager, { id: Int, transitionName: String, sharedView: View ->
+
+    private val callbacks = object: EpoxyCallbacks {
+        override fun onMovieItemClicked(id: Int, transitionName: String, sharedView: View?) {
             mainViewModel.updateStateTo(UIState.DetailsScreenState(id, transitionName, sharedView))
-        })
+        }
     }
-    private val topRatedMoviesAdapter: MoviesListAdapter by inject {
-        parametersOf(glideRequestManager, { id: Int, transitionName: String, sharedView: View ->
-            mainViewModel.updateStateTo(UIState.DetailsScreenState(id, transitionName, sharedView))
-        })
-    }
+
+    private val homeEpoxyController = HomeEpoxyController(callbacks)
 
     private val onDestroyView: PublishRelay<Any> = PublishRelay.create()
 
@@ -65,7 +62,7 @@ class HomeFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        homeEpoxyController.setData(null, null)
         homeViewModel.apply {
 
             if (popularMovies.value == null) {
@@ -85,12 +82,12 @@ class HomeFragment : BaseFragment() {
 
             popularMovies.observe(viewLifecycleOwner, Observer { newList ->
                 mainViewModel.completeLoadingTask(TAG_GET_POPULAR_MOVIES, viewLifecycleOwner)
-                popularMoviesAdapter.submitList(newList)
+                homeEpoxyController.setData(newList, homeViewModel.topRatedMovies.value)
             })
 
             topRatedMovies.observe(viewLifecycleOwner, Observer { newList ->
                 mainViewModel.completeLoadingTask(TAG_GET_TOP_RATED_MOVIES, viewLifecycleOwner)
-                topRatedMoviesAdapter.submitList(newList)
+                homeEpoxyController.setData(homeViewModel.popularMovies.value, newList)
             })
 
             message.observe(viewLifecycleOwner, Observer { message ->
@@ -108,13 +105,26 @@ class HomeFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        postponeEnterTransition()
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         updateToolbarTitle()
-        setupRecyclerViews()
+        rvHome.apply {
+            val columns = resources.getDimension(R.dimen.movie_grid_poster_width).getNumberOfColumns(context!!)
+            val space = resources.getDimension(R.dimen.movie_grid_item_space)
+            layoutManager = GridLayoutManager(context, columns)
+            itemAnimator = AlphaInAnimator()
+            addItemDecoration(EqualSpaceGridItemDecoration(space.roundToInt()))
+            setController(homeEpoxyController)
+        }
+        (view.parent as ViewGroup).viewTreeObserver
+            .addOnPreDrawListener {
+                startPostponedEnterTransition()
+                true
+            }
         setupSearchBox()
     }
 
@@ -129,23 +139,6 @@ class HomeFragment : BaseFragment() {
             }
             .takeUntil(onDestroyView)
             .subscribe()
-    }
-
-    private fun setupRecyclerViews() {
-        val columns = resources.getDimension(R.dimen.movie_grid_poster_width).getNumberOfColumns(context!!)
-        val space = resources.getDimension(R.dimen.movie_grid_item_space)
-
-        popularMoviesRecyclerView.apply {
-            layoutManager = GridLayoutManager(context, columns)
-            addItemDecoration(EqualSpaceGridItemDecoration((space).roundToInt()))
-            adapter = popularMoviesAdapter
-        }
-
-        topRatedMoviesRecyclerView.apply {
-            layoutManager = GridLayoutManager(context, columns)
-            addItemDecoration(EqualSpaceGridItemDecoration((space).roundToInt()))
-            adapter = topRatedMoviesAdapter
-        }
     }
 
     override fun onDestroyView() {

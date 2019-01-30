@@ -23,7 +23,7 @@ class LibraryViewModel(
     private val _watchlistedMovies = MutableLiveData<List<Movie>>()
     private val _message = SingleLiveEvent<String>()
 
-    val watchListMoviesUpdate: LiveData<List<Movie>>
+    val watchListMovies: LiveData<List<Movie>>
         get() = _watchlistedMovies
 
     val favouriteMovies: LiveData<List<Movie>>
