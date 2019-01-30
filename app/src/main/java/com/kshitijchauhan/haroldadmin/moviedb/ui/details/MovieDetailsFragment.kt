@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.RequestManager
@@ -25,7 +26,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener
-import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
 import org.koin.android.ext.android.inject
@@ -44,8 +44,6 @@ class MovieDetailsFragment : BaseFragment() {
     private val TASK_TOGGLE_FAVOURITE = "mark-as-favourite"
     private val TASK_TOGGLE_WATCHLIST = "add-to-watchlist"
     private val TASK_LOAD_MOVIE_VIDEOS = "load-movie-videos"
-
-    private val compositeDisposable = CompositeDisposable()
 
     private val mainViewModel: MainViewModel by sharedViewModel()
 
@@ -86,15 +84,11 @@ class MovieDetailsFragment : BaseFragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        postponeEnterTransition()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        postponeEnterTransition()
         val view = inflater.inflate(R.layout.fragment_movie_details, container, false)
         ViewCompat.setTransitionName(view.ivPoster, arguments?.getString(Constants.KEY_TRANSITION_NAME))
         return view
@@ -254,10 +248,5 @@ class MovieDetailsFragment : BaseFragment() {
                 }
             }
         }
-    }
-
-    override fun onStop() {
-        super.onStop()
-        compositeDisposable.dispose()
     }
 }

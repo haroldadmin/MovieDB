@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.RequestManager
@@ -120,11 +121,9 @@ class HomeFragment : BaseFragment() {
             addItemDecoration(EqualSpaceGridItemDecoration(space.roundToInt()))
             setController(homeEpoxyController)
         }
-        (view.parent as ViewGroup).viewTreeObserver
-            .addOnPreDrawListener {
-                startPostponedEnterTransition()
-                true
-            }
+        (view.parent as ViewGroup).doOnPreDraw {
+            startPostponedEnterTransition()
+        }
         setupSearchBox()
     }
 

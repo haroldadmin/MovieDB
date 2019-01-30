@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.kshitijchauhan.haroldadmin.moviedb.R
@@ -55,6 +56,7 @@ class LibraryFragment : BaseFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        postponeEnterTransition()
         return inflater.inflate(R.layout.fragment_library, container, false)
     }
 
@@ -68,6 +70,9 @@ class LibraryFragment : BaseFragment() {
             itemAnimator = AlphaInAnimator()
             addItemDecoration(EqualSpaceGridItemDecoration(space.roundToInt()))
             setController(libraryEpoxyController)
+        }
+        (view.parent as ViewGroup).doOnPreDraw {
+            startPostponedEnterTransition()
         }
     }
 
