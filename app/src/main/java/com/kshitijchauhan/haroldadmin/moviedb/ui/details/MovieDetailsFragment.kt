@@ -70,7 +70,7 @@ class MovieDetailsFragment : BaseFragment() {
     }
 
     override fun updateToolbarTitle() {
-        mainViewModel.updateToolbarTitle("Movie")
+        // The title will be updated when the movie details are retrieved
     }
 
     companion object {
@@ -158,10 +158,11 @@ class MovieDetailsFragment : BaseFragment() {
     }
 
     private fun initTasks() {
-        movieDetailsViewModel.getMovieDetails()
-        movieDetailsViewModel.getMovieAccountStates()
-        movieDetailsViewModel.getMovieCast()
-        movieDetailsViewModel.getMovieTrailer()
+//        movieDetailsViewModel.getMovieDetails()
+//        movieDetailsViewModel.getMovieAccountStates()
+//        movieDetailsViewModel.getMovieCast()
+//        movieDetailsViewModel.getMovieTrailer()
+        movieDetailsViewModel.getAllMovieInfo()
         mainViewModel.apply {
             addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner))
             addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_ACCOUNT_STATES, viewLifecycleOwner))

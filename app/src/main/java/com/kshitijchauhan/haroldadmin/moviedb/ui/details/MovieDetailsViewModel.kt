@@ -7,10 +7,12 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.ActorsRepository
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.AccountState
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MovieTrailer
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MoviesRepository
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
+import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.io.IOException
@@ -45,47 +47,61 @@ class MovieDetailsViewModel(
     val message: LiveData<String>
         get() = _message
 
-    fun getMovieDetails() {
-        moviesRepository.getMovieDetailsFlowable(movieId)
+
+    /**
+     * Methods for Movie account states, trailer, and cast should be executed after the movie details have been fully
+     * retrieved because all their database entities have a foreign key constraint on the movie ID. If we try to save
+     * them to the database before the movie has been fully retrieved, we will run into an SQLite Foreign Key Constraint
+     * error.
+     */
+    fun getAllMovieInfo() {
+        this.getMovieDetails()
+            .switchMap {
+                this.getMovieAccountStates()
+            }
+            .publish()
+            .apply {
+                flatMap { getMovieAccountStates() }
+                    .subscribe(
+                        { accountState -> _accountStates.postValue(accountState) },
+                        { error -> handleError(error, "get-account-states") })
+                    .disposeWith(compositeDisposable)
+                flatMap { getMovieTrailer() }
+                    .subscribe(
+                        { trailer -> _trailerKey.postValue(trailer.youtubeVideoKey) },
+                        { error -> handleError(error, "get-movie-trailer") }
+                    )
+                    .disposeWith(compositeDisposable)
+                flatMap { getMovieCast() }
+                    .subscribe(
+                        { actorsList -> _cast.postValue(actorsList) },
+                        { error -> handleError(error, "get-movie-cast") }
+                    )
+                    .disposeWith(compositeDisposable)
+                connect()
+            }
+    }
+
+    private fun getMovieDetails(): Flowable<Movie> {
+        return moviesRepository.getMovieDetailsFlowable(movieId)
             .subscribeOn(Schedulers.io())
             .doOnNext { movie ->
                 if (!movie.isModelComplete) {
                     log("Movie model is incomplete, force refreshing")
-                    this.forceRefreshMovieDetails()
+                    forceRefreshMovieDetails()
                 }
             }
-            .subscribe(
-                // onNext
-                { movie: Movie ->
-                    _movie.postValue(movie)
-                },
-                // onError
-                {
-                    handleError(it)
-                }
-            )
-            .disposeWith(compositeDisposable)
     }
 
-    fun getMovieAccountStates() {
-        if (isAuthenticated) {
+    private fun getMovieAccountStates(): Flowable<AccountState> {
+        return if (isAuthenticated) {
             moviesRepository.getAccountStatesForMovieFlowable(movieId)
                 .subscribeOn(Schedulers.io())
-                .subscribe(
-                    // onNext
-                    { accountState ->
-                        _accountStates.postValue(accountState)
-                    },
-                    // onError
-                    { error ->
-                        handleError(error)
-                    }
-                )
-                .disposeWith(compositeDisposable)
         } else {
-            AccountState(null, null, movieId).let {
-                _accountStates.postValue(it)
-            }
+            Flowable.just(AccountState(null, null, movieId))
+                .doOnNext {
+                    _accountStates.postValue(it)
+                }
         }
     }
 
@@ -97,7 +113,7 @@ class MovieDetailsViewModel(
                     // OnNext
                     { log("Movie status updated successfully") },
                     // onError
-                    { error -> handleError(error) }
+                    { error -> handleError(error, "toggle-favourite") }
                 )
                 .disposeWith(compositeDisposable)
         } else {
@@ -113,7 +129,7 @@ class MovieDetailsViewModel(
                     // OnNext
                     { log("Movie status updated successfully") },
                     // onError
-                    { error -> handleError(error) }
+                    { error -> handleError(error, "toggle-watchlist") }
                 )
                 .disposeWith(compositeDisposable)
         } else {
@@ -121,42 +137,22 @@ class MovieDetailsViewModel(
         }
     }
 
-    fun getMovieCast() {
-        moviesRepository.getMovieCast(movieId)
-            .flatMap { cast ->
-                actorsRepository.getAllActors(cast.castMembersIds)
+    private fun getMovieCast(actorsCount: Int = 2): Flowable<List<Actor>> {
+        return moviesRepository.getMovieCast(movieId)
+            .toFlowable()
+            .flatMapSingle { cast ->
+                actorsRepository.getAllActors(cast.castMembersIds, actorsCount)
             }
             .subscribeOn(Schedulers.io())
-            .subscribe(
-                // onSuccess
-                { actorsList ->
-                    actorsList.take(8).let { _cast.postValue(it) }
-                },
-                // onError
-                { error ->
-                    handleError(error)
-                }
-            )
-            .disposeWith(compositeDisposable)
     }
 
-    fun getMovieTrailer() {
-        moviesRepository.getMovieTrailer(movieId)
+    private fun getMovieTrailer(): Flowable<MovieTrailer> {
+        return moviesRepository.getMovieTrailer(movieId)
+            .toFlowable()
             .subscribeOn(Schedulers.io())
-            .subscribe(
-                // onSuccess
-                { trailer ->
-                    _trailerKey.postValue(trailer.youtubeVideoKey)
-                },
-                // onError
-                { error ->
-                    handleError(error)
-                }
-            )
-            .disposeWith(compositeDisposable)
     }
 
-    fun forceRefreshMovieDetails() {
+    private fun forceRefreshMovieDetails() {
         moviesRepository.forceRefreshMovieDetails(movieId)
             .subscribeOn(Schedulers.io())
             .subscribe(
@@ -166,7 +162,7 @@ class MovieDetailsViewModel(
                 },
                 // onError
                 { error ->
-                    handleError(error)
+                    handleError(error, "force-refresh-movie-details")
                 }
             )
             .disposeWith(compositeDisposable)
@@ -177,8 +173,8 @@ class MovieDetailsViewModel(
         compositeDisposable.dispose()
     }
 
-    private fun handleError(error: Throwable) {
-        error.localizedMessage?.let { log(it) }
+    private fun handleError(error: Throwable, caller: String) {
+        error.localizedMessage?.let { log("$caller -> $it") }
         when (error) {
             is IOException -> _message.postValue("Please check your internet connection")
             is TimeoutException -> _message.postValue("Request timed out")
