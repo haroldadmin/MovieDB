@@ -58,18 +58,18 @@ class MovieDetailsViewModel(
         this.getMovieDetails()
             .publish()
             .apply {
-                flatMap { getMovieAccountStates() }
+                switchMap { getMovieAccountStates() }
                     .subscribe(
                         { accountState -> _accountStates.postValue(accountState) },
                         { error -> handleError(error, "get-account-states") })
                     .disposeWith(compositeDisposable)
-                flatMap { getMovieTrailer() }
+                switchMap { getMovieTrailer() }
                     .subscribe(
                         { trailer -> _trailerKey.postValue(trailer.youtubeVideoKey) },
                         { error -> handleError(error, "get-movie-trailer") }
                     )
                     .disposeWith(compositeDisposable)
-                flatMap { getMovieCast() }
+                switchMap { getMovieCast() }
                     .subscribe(
                         { actorsList -> _cast.postValue(actorsList) },
                         { error -> handleError(error, "get-movie-cast") }
@@ -140,8 +140,9 @@ class MovieDetailsViewModel(
         return moviesRepository.getMovieCast(movieId)
             .subscribeOn(Schedulers.io())
             .toFlowable()
-            .flatMapSingle { cast ->
-                actorsRepository.getAllActors(cast.castMembersIds, actorsCount)
+            .map { cast -> cast.castMembersIds.take(8) }
+            .flatMapSingle { ids ->
+                actorsRepository.getAllActors(ids)
             }
     }
 
@@ -173,7 +174,12 @@ class MovieDetailsViewModel(
     }
 
     private fun handleError(error: Throwable, caller: String) {
-        error.localizedMessage?.let { log("$caller -> $it") }
+        error.localizedMessage?.let {
+            log("ERROR $caller -> $it")
+        } ?: log("ERROR $caller ->")
+            .also {
+                error.printStackTrace()
+            }
         when (error) {
             is IOException -> _message.postValue("Please check your internet connection")
             is TimeoutException -> _message.postValue("Request timed out")

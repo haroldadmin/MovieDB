@@ -62,6 +62,7 @@ class RemoteMoviesSource(
             }
             .map { movieVideo -> movieVideo.toMovieTrailer(movieId) }
             .firstOrError()
+            .onErrorReturnItem(MovieTrailer(movieId, ""))
     }
 
     fun toggleMovieFavouriteStatus(

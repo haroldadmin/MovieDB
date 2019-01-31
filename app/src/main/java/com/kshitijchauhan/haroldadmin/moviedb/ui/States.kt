@@ -1,6 +1,8 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui
 
 import android.view.View
+import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.AccountState
 
 sealed class UIState {
 
@@ -10,7 +12,11 @@ sealed class UIState {
     object SearchScreenState: UIState()
     data class DetailsScreenState(val movieId: Int = -1,
                                   val transitionName: String? = null,
-                                  val sharedView: View? = null): UIState()
+                                  val sharedView: View? = null,
+                                  val trailerKey: String? = null,
+                                  val actors: List<Actor>? = null,
+                                  val accountStates: AccountState? = null,
+                                  val overview: String? = null): UIState()
     sealed class AccountScreenState: UIState() {
         object AuthenticatedScreenState: AccountScreenState()
         object UnauthenticatedScreenState: AccountScreenState()

@@ -10,9 +10,9 @@ class LibraryEpoxyController(
 ) : Typed3EpoxyController<List<Movie>, List<Movie>, Boolean>() {
 
     @AutoModel
-    lateinit var emptyListModelFavourited: EmptyListModel_
+    lateinit var emptyListModelFavourited: InfoTextModel_
     @AutoModel
-    lateinit var emptyListModelWatchlist: EmptyListModel_
+    lateinit var emptyListModelWatchlist: InfoTextModel_
     @AutoModel
     lateinit var needToLoginModel: NeedToLoginModel_
 

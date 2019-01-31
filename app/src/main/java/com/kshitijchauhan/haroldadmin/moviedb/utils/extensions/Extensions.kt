@@ -16,6 +16,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MovieTrailer
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import java.text.SimpleDateFormat
+import java.util.*
 
 fun Any.log(message: String) {
     if (BuildConfig.DEBUG) {
@@ -70,8 +72,8 @@ fun Float.getNumberOfColumns(context: Context): Int {
 
 fun String.getYoutubeUrl() = "https://www.youtube.com/watch?v=$this"
 
-fun <T> List<T>.firstOrDefault(default: T): T {
-    return this.firstOrNull() ?: default
+fun <T> List<T>?.firstOrDefault(default: T): T {
+    return this?.firstOrNull() ?: default
 }
 
 fun GeneralMovieResponse.toMovie(): Movie {
@@ -124,3 +126,7 @@ fun MovieVideo.toMovieTrailer(movieId: Int): MovieTrailer {
         this.key
     )
 }
+
+fun Date.format(pattern: String) = SimpleDateFormat(pattern).format(this)
+
+fun Number?.format(pattern: String) = String.format(pattern, this)

@@ -31,6 +31,7 @@ class CustomMaterialButton @JvmOverloads constructor(
 
     fun setRemoveFromListState(value: Boolean) {
         this.stateRemoveFromList = value
+        this.stateUnauthenticated = false
         refreshDrawableState()
     }
 

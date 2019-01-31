@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
-import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.RequestManager
@@ -23,16 +22,16 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.format
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener
+import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import java.text.SimpleDateFormat
 import kotlin.math.roundToInt
 
 
@@ -47,6 +46,25 @@ class MovieDetailsFragment : BaseFragment() {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
 
+    private val callbacks = object: DetailsEpoxyController.MovieDetailsCallbacks {
+        override fun toggleMovieFavouriteStatus() {
+            if (mainViewModel.isAuthenticated) {
+                movieDetailsViewModel.toggleMovieFavouriteStatus(mainViewModel.accountId)
+            } else {
+                mainViewModel.showSnackbar("You need to login to do that")
+            }
+        }
+
+        override fun toggleMovieWatchlistStatus() {
+            if (mainViewModel.isAuthenticated) {
+                movieDetailsViewModel.toggleMovieWatchlistStatus(mainViewModel.accountId)
+            } else {
+                mainViewModel.showSnackbar("You need to login to do that")
+            }
+        }
+    }
+    private val detailsEpoxyController = DetailsEpoxyController(callbacks)
+
     private val movieDetailsViewModel: MovieDetailsViewModel by viewModel {
         val isAuthenticated = mainViewModel.isAuthenticated
         val movieId = arguments?.getInt(Constants.KEY_MOVIE_ID, -1)
@@ -55,10 +73,6 @@ class MovieDetailsFragment : BaseFragment() {
 
     private val glideRequestManager: RequestManager by inject("fragment-glide-request-manager") {
         parametersOf(this)
-    }
-
-    private val creditsAdapter: CreditsAdapter by inject {
-        parametersOf(glideRequestManager)
     }
 
     override val associatedUIState: UIState =
@@ -96,54 +110,59 @@ class MovieDetailsFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         updateToolbarTitle()
-
-        lifecycle.addObserver(ypvTrailer)
-
-        val columns = resources.getDimension(R.dimen.cast_member_picture_size).getNumberOfColumns(view.context)
-        val space = resources.getDimension(R.dimen.cast_member_picture_space)
-
-        rvCredits.apply {
-            layoutManager = GridLayoutManager(context, columns)
-            adapter = creditsAdapter
+        rvDetails.apply {
+            val columns = resources.getDimension(R.dimen.cast_member_picture_size).getNumberOfColumns(view.context)
+            val space = resources.getDimension(R.dimen.cast_member_picture_space)
+            layoutManager = GridLayoutManager(context, columns).apply { recycleChildrenOnDetach = true }
+            itemAnimator = AlphaInAnimator()
             addItemDecoration(EqualSpaceGridItemDecoration(space.roundToInt()))
+            setController(detailsEpoxyController)
         }
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        detailsEpoxyController.setData(null, null, null, null)
         initTasks()
 
         movieDetailsViewModel.movie.observe(viewLifecycleOwner, Observer { movie ->
             log("Received movie update: $movie")
             updateView(movie)
+            mainViewModel.updateToolbarTitle(movie.title)
             mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner)
+            detailsEpoxyController.setData(movie,
+                movieDetailsViewModel.accountState.value,
+                movieDetailsViewModel.trailerKey.value,
+                movieDetailsViewModel.cast.value)
         })
 
         movieDetailsViewModel.cast.observe(viewLifecycleOwner, Observer { castList ->
             log("Received cast update: $castList")
-            creditsAdapter.submitList(castList)
             mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_CAST, viewLifecycleOwner)
+            detailsEpoxyController.setData(movieDetailsViewModel.movie.value,
+                movieDetailsViewModel.accountState.value,
+                movieDetailsViewModel.trailerKey.value,
+                castList)
         })
 
         movieDetailsViewModel.accountState.observe(viewLifecycleOwner, Observer { accountState ->
-            log("Received account state update")
-            handleAccountStates(accountState.isWatchlisted, accountState.isFavourited)
+            log("Received account state update: $accountState")
+            detailsEpoxyController.setData(
+                movieDetailsViewModel.movie.value,
+                accountState,
+                movieDetailsViewModel.trailerKey.value,
+                movieDetailsViewModel.cast.value)
             mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_ACCOUNT_STATES, viewLifecycleOwner)
         })
 
         movieDetailsViewModel.trailerKey.observe(viewLifecycleOwner, Observer { url ->
             log("Received trailer url: $url")
-            ypvTrailer.initialize({ initializedPlayer ->
-                initializedPlayer.addListener(object : AbstractYouTubePlayerListener() {
-                    override fun onReady() {
-                        super.onReady()
-                        initializedPlayer.cueVideo(url, 0f)
-                    }
-                })
-            }, true)
+            detailsEpoxyController.setData(
+                movieDetailsViewModel.movie.value,
+                movieDetailsViewModel.accountState.value,
+                url,
+                movieDetailsViewModel.cast.value)
             mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_VIDEOS, viewLifecycleOwner)
         })
 
@@ -197,56 +216,8 @@ class MovieDetailsFragment : BaseFragment() {
             .into(ivBackdrop)
 
         tvTitle.text = movie.title
-        chipMovieYear.text = SimpleDateFormat("yyyy").format(movie.releaseDate)
+        chipMovieYear.text = movie.releaseDate.format("yyyy")
         chipMovieGenre.text = movie.genres?.first() ?: "..."
-        chipMovieRating.text = String.format("%.2f", movie.voteAverage)
-        tvDescription.text = movie.overview
-    }
-
-
-    private fun handleAccountStates(isWatchlisted: Boolean?, isFavourited: Boolean?) {
-        if (mainViewModel.isAuthenticated) {
-            btToggleWatchlist.apply {
-                val watchlisted = isWatchlisted ?: false
-                setRemoveFromListState(watchlisted)
-                text = if (watchlisted) {
-                    "Un-Watchlist"
-                } else {
-                    "Add to Watchlist"
-                }
-                setOnClickListener {
-                    movieDetailsViewModel.toggleMovieWatchlistStatus(mainViewModel.accountId)
-                }
-            }
-        } else {
-            btToggleWatchlist.apply {
-                setUnauthenticatedState(true)
-                setOnClickListener {
-                    mainViewModel.showSnackbar("You need to login to do that.")
-                }
-            }
-        }
-
-        if (mainViewModel.isAuthenticated) {
-            btToggleFavourite.apply {
-                val favourite = isFavourited ?: false
-                setRemoveFromListState(favourite)
-                text = if (favourite) {
-                    "Un-Favourite"
-                } else {
-                    "Add to Favourites"
-                }
-                setOnClickListener {
-                    movieDetailsViewModel.toggleMovieFavouriteStatus(mainViewModel.accountId)
-                }
-            }
-        } else {
-            btToggleFavourite.apply {
-                setUnauthenticatedState(true)
-                setOnClickListener {
-                    mainViewModel.showSnackbar("You need to login to do that.")
-                }
-            }
-        }
+        chipMovieRating.text = movie.voteAverage.format("%.2f")
     }
 }

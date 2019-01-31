@@ -3,20 +3,17 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 import com.airbnb.epoxy.AutoModel
 import com.airbnb.epoxy.Typed2EpoxyController
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EmptyListModel_
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.header
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.movie
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.*
 
 class HomeEpoxyController(
     private val callbacks: EpoxyCallbacks
 ) : Typed2EpoxyController<List<Movie>, List<Movie>>() {
 
     @AutoModel
-    lateinit var emptyPopularListModel: EmptyListModel_
+    lateinit var emptyPopularListModel: InfoTextModel_
 
     @AutoModel
-    lateinit var emptyTopRatedListModel: EmptyListModel_
+    lateinit var emptyTopRatedListModel: InfoTextModel_
 
     override fun buildModels(popularMovies: List<Movie>?, topRatedMovies: List<Movie>?) {
         header {

@@ -50,41 +50,12 @@
         android:elevation="4dp"
         android:ellipsize="end"
         android:paddingBottom="8dp"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
         android:textColor="@color/textOnPrimaryHighEmphasis"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ivPoster"
         app:layout_constraintTop_toTopOf="@+id/ivPoster"
         tools:text="Hotel Transylvania 3: Summer Vacation" />
-
-    <TextView
-        android:id="@+id/tvDescriptionHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
-        android:text="Description"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
-        android:textColor="@color/colorSecondary"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btToggleWatchlist" />
-
-    <TextView
-        android:id="@+id/tvDescription"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
-        app:layout_constraintEnd_toEndOf="@+id/tvTitle"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDescriptionHeader"
-        tools:text="Lorem ipsum" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/cgMovieInfo"
@@ -140,86 +111,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivPoster" />
 
-    <com.kshitijchauhan.haroldadmin.moviedb.ui.common.CustomMaterialButton
-        android:id="@+id/btToggleWatchlist"
-        style="@style/Widget.MaterialComponents.Button"
+    <com.airbnb.epoxy.EpoxyRecyclerView
+        android:id="@+id/rvDetails"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="4dp"
-        android:text="Add to Watchlist"
-        app:backgroundTint="@color/color_states_movie_details_buttons"
-        app:layout_constraintEnd_toStartOf="@+id/btToggleFavourite"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/headerBarrier"
-        tools:text="Un-Watchlist" />
-
-    <com.kshitijchauhan.haroldadmin.moviedb.ui.common.CustomMaterialButton
-        android:id="@+id/btToggleFavourite"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:text="Add to Favourites"
-        app:backgroundTint="@color/color_states_movie_details_buttons"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btToggleWatchlist"
-        app:layout_constraintTop_toBottomOf="@id/headerBarrier"
-        tools:text="Un-Favourite" />
-
-    <com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
-        android:id="@+id/ypvTrailer"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTrailerHeader" />
-
-    <TextView
-        android:id="@+id/tvTrailerHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="Trailer"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
-        android:textColor="@color/colorSecondary"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvDescription" />
-
-    <TextView
-        android:id="@+id/tvCastHeader"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:text="Cast"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Overline"
-        android:textColor="@color/colorSecondary"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ypvTrailer" />
-
-    <com.kshitijchauhan.haroldadmin.moviedb.ui.common.CustomRecyclerView
-        android:id="@+id/rvCredits"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:paddingBottom="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvCastHeader"
-        tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        tools:listitem="@layout/item_credit_actor"
-        tools:spanCount="4" />
+        app:layout_constraintTop_toBottomOf="@id/headerBarrier" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
