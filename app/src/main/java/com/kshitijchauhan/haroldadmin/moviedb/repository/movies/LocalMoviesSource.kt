@@ -54,7 +54,7 @@ class LocalMoviesSource(private val moviesDao: MovieDao,
         moviesDao.saveAllCasts(casts)
         casts.forEach { cast ->
             cast.castMembers?.let {
-                actorsDao.saveAllActors(it)
+                actorsDao.saveAllActorsFromCast(it)
             }
         }
     }

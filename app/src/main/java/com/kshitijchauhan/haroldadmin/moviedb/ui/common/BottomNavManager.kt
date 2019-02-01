@@ -32,6 +32,9 @@ class BottomNavManager {
             UIState.AccountScreenState.UnauthenticatedScreenState -> {
                 bottomNavigationView.menu.findItem(R.id.menuAccount).setChecked(true)
             }
+            is UIState.ActorDetailsScreenState -> {
+                Any()
+            }
         }.safe
     }
 

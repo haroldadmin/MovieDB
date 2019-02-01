@@ -21,6 +21,10 @@ sealed class UIState {
         object AuthenticatedScreenState: AccountScreenState()
         object UnauthenticatedScreenState: AccountScreenState()
     }
+
+    data class ActorDetailsScreenState(val actorId: Int,
+                                       val transitionName: String? = null,
+                                       val sharedView: View? = null): UIState()
 }
 
 sealed class MovieItemType(val name: String) {

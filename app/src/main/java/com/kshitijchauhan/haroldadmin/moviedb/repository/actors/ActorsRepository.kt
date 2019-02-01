@@ -3,6 +3,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.repository.actors
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.Flowable
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 
 class ActorsRepository(
     private val localActorsSource: LocalActorsSource,
@@ -14,16 +15,17 @@ class ActorsRepository(
             .flatMapPublisher<Actor> { count ->
                 if (count > 0) {
                     log("Actor already exists in database")
-                    localActorsSource.getActor(id).toFlowable()
+                    localActorsSource.getActorFlowable(id)
                 } else {
                     log("Retrieving actor from api")
-                    remoteActorsSource.getActor(id).toFlowable()
-                        .doOnNext { actor ->
+                    remoteActorsSource.getActor(id)
+                        .observeOn(Schedulers.single())
+                        .doOnSuccess { actor ->
                             log("Saving actor to database")
                             localActorsSource.saveActorToDatabase(actor)
                         }
-                        .flatMapSingle {
-                            localActorsSource.getActor(id)
+                        .flatMapPublisher {
+                            localActorsSource.getActorFlowable(id)
                         }
                 }
             }
@@ -51,7 +53,9 @@ class ActorsRepository(
                 } else {
                     log("Retrieving actor from the network")
                     remoteActorsSource.getActor(id)
+                        .observeOn(Schedulers.single())
                         .doOnSuccess { actor ->
+                            log("Saving actor to database")
                             localActorsSource.saveActorToDatabase(actor)
                         }
                         .flatMap {
@@ -67,5 +71,15 @@ class ActorsRepository(
                 this.getActor(id)
             }
             .toList()
+    }
+
+    fun forceRefreshActor(id: Int): Single<Actor> {
+        log("Force refreshing actor")
+        return remoteActorsSource.getActor(id)
+            .observeOn(Schedulers.single())
+            .doOnSuccess {
+                log("Saving refreshed actor model to database")
+                localActorsSource.saveActorToDatabase(it)
+            }
     }
 }

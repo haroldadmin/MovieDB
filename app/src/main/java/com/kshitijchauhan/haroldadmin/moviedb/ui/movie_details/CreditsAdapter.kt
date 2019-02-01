@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.ui.details
+package com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +9,6 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getProfilePictureUrl
 import kotlinx.android.synthetic.main.item_credit_actor.view.*
 
 class CreditsAdapter(private val glide: RequestManager) :

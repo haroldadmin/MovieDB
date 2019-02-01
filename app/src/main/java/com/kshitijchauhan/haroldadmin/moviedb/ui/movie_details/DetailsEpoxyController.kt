@@ -1,9 +1,11 @@
-package com.kshitijchauhan.haroldadmin.moviedb.ui.details
+package com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details
 
+import android.view.View
 import com.airbnb.epoxy.Typed4EpoxyController
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.AccountState
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.actor
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.header
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.infoText
 
@@ -14,6 +16,7 @@ class DetailsEpoxyController(
     interface MovieDetailsCallbacks {
         fun toggleMovieFavouriteStatus()
         fun toggleMovieWatchlistStatus()
+        fun onActorItemClicked(id: Int, transitionName: String, sharedView: View?)
     }
 
     override fun buildModels(movie: Movie?, accountState: AccountState?, trailerKey: String?, actors: List<Actor>?) {
@@ -69,11 +72,16 @@ class DetailsEpoxyController(
                 spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
             }
 
-            it.takeIf { list -> list.isNotEmpty() }?.forEach { actor ->
+            it.takeIf { list -> list.isNotEmpty() }?.forEach {
                 actor {
-                    id(actor.id)
-                    name(actor.name)
-                    pictureUrl(actor.profilePictureUrl)
+                    id(it.id)
+                    actorId(it.id)
+                    name(it.name)
+                    pictureUrl(it.profilePictureUrl)
+                    transitionName("actor-$it.id")
+                    clickListener { model, _, clickedView, _ ->
+                        callbacks.onActorItemClicked(model.actorId!!, model.transitionName(), clickedView)
+                    }
                 }
             } ?: infoText {
                 id("cast-empty")

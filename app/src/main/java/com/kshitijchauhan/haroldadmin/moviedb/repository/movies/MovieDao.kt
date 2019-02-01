@@ -63,7 +63,7 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveMovie(movie: Movie)
 
-    @Insert(onConflict = OnConflictStrategy.FAIL)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveAccountState(accountState: AccountState)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

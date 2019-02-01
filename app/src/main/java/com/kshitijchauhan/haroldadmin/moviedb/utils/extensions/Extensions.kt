@@ -12,6 +12,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.com
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.CastMember
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.MovieResponse
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.MovieVideo
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.people.PersonResponse
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MovieTrailer
 import io.reactivex.disposables.CompositeDisposable
@@ -116,7 +117,21 @@ fun CastMember.toActor(): Actor {
     return Actor(
         this.id,
         this.profilePath.getProfilePictureUrl(),
-        this.name
+        this.name,
+        null,
+        null,
+        false
+    )
+}
+
+fun PersonResponse.toActor(): Actor {
+    return Actor(
+        this.id,
+        this.profilePath.getProfilePictureUrl(),
+        this.name,
+        this.birthday,
+        this.biography,
+        true
     )
 }
 

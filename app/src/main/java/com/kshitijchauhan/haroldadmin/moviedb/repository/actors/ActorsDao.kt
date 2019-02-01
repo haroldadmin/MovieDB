@@ -14,6 +14,9 @@ interface ActorsDao {
     fun getActor(id: Int): Single<Actor>
 
     @Query("SELECT * FROM actors WHERE id = :id")
+    fun getActorFlowable(id: Int): Flowable<Actor>
+
+    @Query("SELECT * FROM actors WHERE id = :id")
     fun getActorBlocking(id: Int): Actor
 
     @Query("SELECT * FROM actors WHERE id IN (:ids)")
@@ -28,8 +31,11 @@ interface ActorsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun saveActors(vararg actor: Actor)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun saveAllActors(actors: List<Actor>)
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun saveAllActorsFromCast(actors: List<Actor>)
 
     @Update
     fun updateActor(actor: Actor)

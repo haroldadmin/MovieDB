@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorSurfaceDark"
-    tools:context=".ui.details.MovieDetailsFragment">
+    tools:context=".ui.movie_details.MovieDetailsFragment">
 
     <ImageView
         android:id="@+id/ivPoster"
@@ -112,7 +112,7 @@
         app:layout_constraintTop_toBottomOf="@id/ivPoster" />
 
     <com.airbnb.epoxy.EpoxyRecyclerView
-        android:id="@+id/rvDetails"
+        android:id="@+id/rvMovieDetails"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"

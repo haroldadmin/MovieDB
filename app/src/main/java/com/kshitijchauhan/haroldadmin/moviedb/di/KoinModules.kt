@@ -25,17 +25,17 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.Config
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.SessionIdInterceptor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.account.AccountService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.auth.AuthenticationService
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.common.GeneralMovieResponse
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.discover.DiscoveryService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.MovieService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.people.PersonService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.search.SearchService
+import com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details.ActorDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AuthenticationViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.MoviesListAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.ProgressBarManager
-import com.kshitijchauhan.haroldadmin.moviedb.ui.details.CreditsAdapter
-import com.kshitijchauhan.haroldadmin.moviedb.ui.details.MovieDetailsViewModel
+import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.CreditsAdapter
+import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.MovieDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.MoviesAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryViewModel
@@ -176,6 +176,7 @@ val uiModule = module {
         MovieDetailsViewModel(isAuthenticated, movieId, get(), get())
     }
     viewModel { MainViewModel(get(), get(), get()) }
+    viewModel { (actorId: Int) -> ActorDetailsViewModel(actorId, get()) }
 
     factory("fragment-glide-request-manager") { (fragment: Fragment) -> Glide.with(fragment) }
     factory("view-glide-request-manager") { (view: View) -> Glide.with(view) }

@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.ui.details
+package com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -62,6 +62,10 @@ class MovieDetailsFragment : BaseFragment() {
                 mainViewModel.showSnackbar("You need to login to do that")
             }
         }
+
+        override fun onActorItemClicked(id: Int, transitionName: String, sharedView: View?) {
+            mainViewModel.updateStateTo(UIState.ActorDetailsScreenState(id, transitionName, sharedView))
+        }
     }
     private val detailsEpoxyController = DetailsEpoxyController(callbacks)
 
@@ -111,7 +115,7 @@ class MovieDetailsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         updateToolbarTitle()
-        rvDetails.apply {
+        rvMovieDetails.apply {
             val columns = resources.getDimension(R.dimen.cast_member_picture_size).getNumberOfColumns(view.context)
             val space = resources.getDimension(R.dimen.cast_member_picture_space)
             layoutManager = GridLayoutManager(context, columns).apply { recycleChildrenOnDetach = true }

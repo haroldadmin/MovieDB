@@ -26,18 +26,6 @@ object Constants {
         37 to "Western"
     )
 
-    /**
-     * "poster_sizes": [
-
-    ]
-     */
-
-    /**
-     * "backdrop_sizes": [
-
-    ]
-     */
-
     val availableBackdropSizes = mapOf<Int, String>(
         300 to "w300",
         780 to "w780",
@@ -62,4 +50,6 @@ object Constants {
     val KEY_IS_AUTHENTICATED: String = "isAuthenticated"
 
     val KEY_ACCOUNT_ID: String = "accountId"
+
+    val KEY_ACTOR_ID: String = "actorId"
 }

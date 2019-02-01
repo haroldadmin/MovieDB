@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.ui.details
+package com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details
 
 import android.view.View
 import android.widget.ImageView
@@ -16,8 +16,6 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.Abstract
 import org.koin.core.parameter.parametersOf
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
-
-
 
 @EpoxyModelClass(layout = R.layout.view_main_text)
 abstract class MainTextModel: EpoxyModelWithHolder<MainTextModel.MainTextViewHolder>() {
@@ -58,35 +56,8 @@ abstract class TrailerModel: EpoxyModelWithHolder<TrailerModel.TrailerHolder>() 
         holder.youtubePlayer.release()
     }
 
-
     inner class TrailerHolder: KotlinEpoxyHolder() {
         val youtubePlayer by bind<YouTubePlayerView>(R.id.movieTrailer)
-    }
-}
-
-@EpoxyModelClass(layout = R.layout.item_credit_actor)
-abstract class ActorModel: EpoxyModelWithHolder<ActorModel.ActorHolder>() {
-
-    @EpoxyAttribute
-    lateinit var name: String
-
-    @EpoxyAttribute
-    lateinit var pictureUrl: String
-
-    override fun bind(holder: ActorHolder) {
-        super.bind(holder)
-        with(holder) {
-            actorName.text = name
-            glide.load(pictureUrl).into(actorPicture)
-        }
-    }
-
-    inner class ActorHolder: KotlinEpoxyHolder(), KoinComponent {
-        val actorName by bind<TextView>(R.id.tvCreditActorName)
-        val actorPicture by bind <ImageView>(R.id.ivCreditActorPhoto)
-        val glide by inject<RequestManager>("view-glide-request-manager") {
-            parametersOf(actorPicture)
-        }
     }
 }
 

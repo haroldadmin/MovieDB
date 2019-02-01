@@ -9,9 +9,10 @@ import androidx.transition.TransitionInflater
 import androidx.transition.TransitionSet
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
+import com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details.ActorDetailsFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AccountFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoggedOutFragment
-import com.kshitijchauhan.haroldadmin.moviedb.ui.details.MovieDetailsFragment
+import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.MovieDetailsFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchFragment
@@ -184,6 +185,22 @@ class MainActivity : AppCompatActivity() {
                     enterTransition = enterFade,
                     exitTransition = exitFade
                 )
+            }
+            is UIState.ActorDetailsScreenState -> {
+                val transitionSet = TransitionSet()
+                transitionSet.apply {
+                    addTransition(TransitionInflater.from(this@MainActivity).inflateTransition(android.R.transition.move))
+                    duration = 300
+                }
+
+                replaceFragment(
+                    ActorDetailsFragment.newInstance(state.actorId, state.transitionName ?: ""),
+                    R.id.fragment_container,
+                    enterTransition = enterFade,
+                    exitTransition = exitFade,
+                    sharedElementTransition = transitionSet,
+                    sharedElement = state.sharedView
+                    )
             }
         }.safe
     }

@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.ui.details
+package com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -136,7 +136,7 @@ class MovieDetailsViewModel(
         }
     }
 
-    private fun getMovieCast(actorsCount: Int = 8): Flowable<List<Actor>> {
+    private fun getMovieCast(): Flowable<List<Actor>> {
         return moviesRepository.getMovieCast(movieId)
             .subscribeOn(Schedulers.io())
             .toFlowable()

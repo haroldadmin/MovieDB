@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.ui.details
+package com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details
 
 import androidx.recyclerview.widget.DiffUtil
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor

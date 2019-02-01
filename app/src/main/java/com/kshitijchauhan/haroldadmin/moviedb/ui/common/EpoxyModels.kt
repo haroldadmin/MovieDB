@@ -8,6 +8,7 @@ import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import org.koin.core.parameter.parametersOf
 import org.koin.standalone.KoinComponent
@@ -85,5 +86,50 @@ abstract class NeedToLoginModel : EpoxyModelWithHolder<NeedToLoginModel.NeedToLo
 
     inner class NeedToLoginViewHolder : KotlinEpoxyHolder() {
         val textview by bind<TextView>(R.id.tvNeedToLogin)
+    }
+}
+
+@EpoxyModelClass(layout = R.layout.item_credit_actor)
+abstract class ActorModel: EpoxyModelWithHolder<ActorModel.ActorHolder>() {
+
+    @EpoxyAttribute
+    var actorId: Int? = null
+
+    @EpoxyAttribute
+    lateinit var name: String
+
+    @EpoxyAttribute
+    lateinit var pictureUrl: String
+
+    @EpoxyAttribute
+    lateinit var transitionName: String
+
+    @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
+    lateinit var clickListener: View.OnClickListener
+
+    override fun bind(holder: ActorHolder) {
+        super.bind(holder)
+        with(holder) {
+            actorName.text = name
+            glide
+                .load(pictureUrl)
+                .apply(
+                    RequestOptions()
+                        .placeholder(R.drawable.ic_round_account_circle_24px)
+                        .error(R.drawable.ic_round_account_circle_24px)
+                        .fallback(R.drawable.ic_round_account_circle_24px)
+                )
+                .into(actorPicture)
+            actorPicture.setOnClickListener(clickListener)
+            ViewCompat.setTransitionName(actorPicture, transitionName)
+        }
+    }
+
+    inner class ActorHolder: KotlinEpoxyHolder(), KoinComponent {
+        val actorName by bind<TextView>(R.id.tvCreditActorName)
+        val actorPicture by bind <ImageView>(R.id.ivCreditActorPhoto)
+        val glide by inject<RequestManager>("view-glide-request-manager") {
+            parametersOf(actorPicture)
+        }
     }
 }
