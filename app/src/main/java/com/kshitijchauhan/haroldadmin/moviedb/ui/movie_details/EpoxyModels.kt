@@ -2,13 +2,17 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details
 
 import android.view.View
 import android.widget.TextView
+import androidx.lifecycle.Lifecycle
 import com.airbnb.epoxy.EpoxyAttribute
+import com.airbnb.epoxy.EpoxyHolder
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.AccountState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.CustomMaterialButton
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.KotlinEpoxyHolder
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
+import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener
 
@@ -36,23 +40,63 @@ abstract class TrailerModel : EpoxyModelWithHolder<TrailerModel.TrailerHolder>()
 
     override fun bind(holder: TrailerHolder) {
         super.bind(holder)
-        holder.youtubePlayer.initialize({ initializedPlayer ->
-            initializedPlayer.addListener(object : AbstractYouTubePlayerListener() {
-                override fun onReady() {
-                    super.onReady()
-                    initializedPlayer.cueVideo(trailerKey, 0f)
-                }
-            })
-        }, true)
+        if (holder.isInitialized) {
+            holder.youTubePlayer.cueVideo(trailerKey, 0f)
+        } else {
+            holder.cueVideo(trailerKey)
+        }
     }
 
     override fun unbind(holder: TrailerHolder) {
         super.unbind(holder)
-        holder.youtubePlayer.release()
+        // We should not release the player here, otherwise subsequent video requests will be not loaded
+        holder.youTubePlayer.pause()
     }
 
-    inner class TrailerHolder : KotlinEpoxyHolder() {
-        val youtubePlayer by bind<YouTubePlayerView>(R.id.movieTrailer)
+    /**
+     * To create this view holder for Epoxy, we are using [EpoxyHolder] instead of [KotlinEpoxyHolder] because we need
+     * to initialize the youtube player view. For this, we need a reference to the inflated view object this holder is
+     * working with. [KotlinEpoxyHolder] does not provide this view object.
+     */
+    inner class TrailerHolder : EpoxyHolder() {
+        // Actual view inside the view hierarchy
+        lateinit var youTubePlayerView: YouTubePlayerView
+
+        // Youtube player backing the player view
+        lateinit var youTubePlayer: YouTubePlayer
+
+        // Used to provide access to outside classes to the initialized status of the youtube player
+        var isInitialized = false
+
+        // If the youtube player is uninitialized when binding to it, we can store the video key in this variable.
+        // The youtube player view will cue this video upon initialization.
+        var videoKey: String = ""
+
+        fun cueVideo(key: String) {
+            videoKey = key
+        }
+
+        override fun bindView(itemView: View) {
+            youTubePlayerView = itemView.findViewById<YouTubePlayerView>(R.id.movieTrailer)
+                .apply {
+                    initialize(
+                        { initializedPlayer ->
+                            initializedPlayer.addListener(object : AbstractYouTubePlayerListener() {
+                                override fun onReady() {
+                                    super.onReady()
+                                    youTubePlayer = initializedPlayer
+                                    isInitialized = true
+                                    if (videoKey != "") {
+                                        initializedPlayer.cueVideo(videoKey, 0f)
+                                    }
+                                }
+                            })
+                        },
+                        true
+                    )
+                }
+        }
+
     }
 }
 

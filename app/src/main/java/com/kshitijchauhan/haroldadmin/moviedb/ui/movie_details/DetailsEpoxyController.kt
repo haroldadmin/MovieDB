@@ -1,6 +1,7 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details
 
 import android.view.View
+import androidx.lifecycle.Lifecycle
 import com.airbnb.epoxy.Typed4EpoxyController
 import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
