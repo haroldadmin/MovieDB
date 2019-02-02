@@ -12,6 +12,7 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
@@ -103,6 +104,12 @@ class ActorDetailsFragment : BaseFragment() {
         mainViewModel.updateToolbarTitle(actor.name)
         glideRequestManager
             .load(actor.profilePictureUrl)
+            .apply {
+                RequestOptions()
+                    .fallback(R.drawable.ic_round_account_circle_24px)
+                    .error(R.drawable.ic_round_account_circle_24px)
+                    .placeholder(R.drawable.ic_round_account_circle_24px)
+            }
             .listener(object: RequestListener<Drawable> {
                 override fun onLoadFailed(
                     e: GlideException?,
