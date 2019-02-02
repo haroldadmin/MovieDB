@@ -132,6 +132,8 @@ class HomeFragment : BaseFragment(), BackPressListener {
             startPostponedEnterTransition()
         }
         setupSearchBox()
+        // To make sure the search box does not have focus
+        getView()?.requestFocus()
     }
 
     private fun setupSearchBox() {
