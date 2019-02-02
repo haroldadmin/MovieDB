@@ -199,4 +199,8 @@ class MoviesRepository(
             }
     }
 
+    fun getSearchResultsForQuery(query: String): Single<List<Movie>> {
+        return remoteMoviesSource.getSearchResultsForQuery(query)
+    }
+
 }

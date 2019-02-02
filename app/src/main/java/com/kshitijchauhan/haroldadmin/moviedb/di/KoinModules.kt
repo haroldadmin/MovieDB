@@ -41,8 +41,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.MoviesAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.HomeViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchResultsAdapter
-import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SafeRfc3339DateJsonAdapter
 import com.squareup.moshi.Moshi
@@ -151,7 +149,7 @@ val repositoryModule = module {
     single { get<MovieDBDatabase>().collectionsDao() }
 
     factory { LocalMoviesSource(get(), get()) }
-    factory { RemoteMoviesSource(get(), get()) }
+    factory { RemoteMoviesSource(get(), get(), get()) }
     factory { LocalActorsSource(get()) }
     factory { RemoteActorsSource(get()) }
     factory { LocalCollectionsSource(get(), get()) }
@@ -167,11 +165,10 @@ val uiModule = module {
     single { BottomNavManager() }
     single { ProgressBarManager() }
 
-    viewModel { HomeViewModel(get()) }
+    viewModel { HomeViewModel(get(), get()) }
     viewModel { LibraryViewModel(get()) }
     viewModel { InTheatresViewModel(get()) }
     viewModel { AuthenticationViewModel(get(), get(), get()) }
-    viewModel { SearchViewModel(get()) }
     viewModel { (isAuthenticated: Boolean, movieId: Int) ->
         MovieDetailsViewModel(isAuthenticated, movieId, get(), get())
     }
@@ -186,9 +183,6 @@ val uiModule = module {
     }
     factory { (glide: RequestManager, clickListener: (movieId: Int, transitionName: String, sharedView: View) -> Unit) ->
         MoviesListAdapter(glide, clickListener)
-    }
-    factory { (onItemClick: (movieId: Int) -> Unit) ->
-        SearchResultsAdapter(onItemClick)
     }
 }
 

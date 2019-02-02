@@ -21,7 +21,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
-import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.format
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
@@ -32,7 +31,6 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import kotlin.math.roundToInt
 
 
 class MovieDetailsFragment : BaseFragment() {
@@ -107,9 +105,13 @@ class MovieDetailsFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View? {
         postponeEnterTransition()
-        val view = inflater.inflate(R.layout.fragment_movie_details, container, false)
-        ViewCompat.setTransitionName(view.ivPoster, arguments?.getString(Constants.KEY_TRANSITION_NAME))
-        return view
+        inflater.inflate(R.layout.fragment_movie_details, container, false)
+            .apply {
+                ViewCompat.setTransitionName(this.ivPoster, arguments?.getString(Constants.KEY_TRANSITION_NAME))
+            }
+            .also {
+                return it
+            }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -117,10 +119,8 @@ class MovieDetailsFragment : BaseFragment() {
         updateToolbarTitle()
         rvMovieDetails.apply {
             val columns = resources.getDimension(R.dimen.cast_member_picture_size).getNumberOfColumns(view.context)
-            val space = resources.getDimension(R.dimen.cast_member_picture_space)
             layoutManager = GridLayoutManager(context, columns).apply { recycleChildrenOnDetach = true }
             itemAnimator = AlphaInAnimator()
-            addItemDecoration(EqualSpaceGridItemDecoration(space.roundToInt()))
             setController(detailsEpoxyController)
         }
     }

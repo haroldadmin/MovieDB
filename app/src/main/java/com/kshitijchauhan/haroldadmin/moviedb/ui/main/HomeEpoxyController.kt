@@ -2,12 +2,13 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
 import com.airbnb.epoxy.AutoModel
 import com.airbnb.epoxy.Typed2EpoxyController
+import com.airbnb.epoxy.Typed3EpoxyController
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.*
 
 class HomeEpoxyController(
     private val callbacks: EpoxyCallbacks
-) : Typed2EpoxyController<List<Movie>, List<Movie>>() {
+) : Typed3EpoxyController<List<Movie>, List<Movie>, List<Movie>>() {
 
     @AutoModel
     lateinit var emptyPopularListModel: InfoTextModel_
@@ -15,7 +16,46 @@ class HomeEpoxyController(
     @AutoModel
     lateinit var emptyTopRatedListModel: InfoTextModel_
 
-    override fun buildModels(popularMovies: List<Movie>?, topRatedMovies: List<Movie>?) {
+    override fun buildModels(popularMovies: List<Movie>?, topRatedMovies: List<Movie>?, searchResults: List<Movie>?) {
+        if (searchResults.isNullOrEmpty()) {
+            buildHomeModel(popularMovies, topRatedMovies)
+        } else {
+            buildSearchModel(searchResults)
+        }
+    }
+
+    private fun buildSearchModel(searchResults: List<Movie>?) {
+        header {
+            id("search-results")
+            title("Search Results")
+            spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
+        }
+
+        if (searchResults.isNullOrEmpty()) {
+            infoText {
+                id("search-info")
+                text("Start typing. Search results will appear here.")
+                spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
+            }
+        } else {
+            searchResults.forEach { searchResult ->
+                movieSearchResult {
+                    with(searchResult) {
+                        id(id)
+                        movieId(id)
+                        movieTitle(title)
+                        posterUrl(posterPath)
+                        transitionName("poster-$id")
+                        clickListener { model, _, clickedView, _ ->
+                            callbacks.onMovieItemClicked(model.movieId!!, model.transitionName, clickedView)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun buildHomeModel(popularMovies: List<Movie>?, topRatedMovies: List<Movie>?) {
         header {
             id("popular")
             title("Popular")

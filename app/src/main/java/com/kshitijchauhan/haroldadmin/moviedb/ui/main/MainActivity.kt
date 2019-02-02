@@ -12,18 +12,18 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details.ActorDetailsFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AccountFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoggedOutFragment
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BackPressListener
 import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.MovieDetailsFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryFragment
-import com.kshitijchauhan.haroldadmin.moviedb.ui.search.SearchFragment
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.*
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by viewModel()
+    private var backPressListener: BackPressListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +51,10 @@ class MainActivity : AppCompatActivity() {
             supportActionBar?.apply {
                 title = newTitle
             }
+        })
+
+        mainViewModel.backPressListener.observe(this, Observer { listener ->
+            this.backPressListener = listener
         })
 
         savedInstanceState ?: replaceFragment(
@@ -144,23 +148,6 @@ class MainActivity : AppCompatActivity() {
                 )
             }
 
-            is UIState.SearchScreenState -> {
-                val transitionSet = TransitionSet()
-                transitionSet.apply {
-                    addTransition(TransitionInflater.from(this@MainActivity).inflateTransition(android.R.transition.move))
-                    duration = 500
-                }
-
-                replaceFragment(
-                    SearchFragment.newInstance(),
-                    R.id.fragment_container,
-                    enterTransition = enterFade,
-                    exitTransition = exitFade,
-                    sharedElement = searchBox,
-                    sharedElementTransition = transitionSet
-                )
-            }
-
             is UIState.DetailsScreenState -> {
 
                 val transitionSet = TransitionSet()
@@ -203,5 +190,11 @@ class MainActivity : AppCompatActivity() {
                     )
             }
         }.safe
+    }
+
+    override fun onBackPressed() {
+        if (backPressListener == null || backPressListener?.onBackPressed() == true) {
+            super.onBackPressed()
+        }
     }
 }

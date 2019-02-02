@@ -20,9 +20,6 @@ class BottomNavManager {
             UIState.InTheatresScreenState -> {
                 bottomNavigationView.menu.findItem(R.id.menuInTheatres).setChecked(true)
             }
-            UIState.SearchScreenState -> {
-                Any()
-            }
             is UIState.DetailsScreenState -> {
                 Any()
             }

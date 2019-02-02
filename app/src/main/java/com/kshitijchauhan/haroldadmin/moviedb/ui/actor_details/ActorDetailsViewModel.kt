@@ -33,7 +33,7 @@ class ActorDetailsViewModel(
             .doOnNext {
                 if (!it.isModelComplete) {
                     log("Actor model is incomplete, force refreshing")
-                    forceRefreshActorDetails(actorId)
+                    forceRefreshActorDetails()
                 }
             }
             .subscribe(
@@ -62,7 +62,7 @@ class ActorDetailsViewModel(
         }
     }
 
-    fun forceRefreshActorDetails(id: Int) {
+    fun forceRefreshActorDetails() {
         actorsRepository.forceRefreshActor(actorId)
             .subscribeOn(Schedulers.io())
             .subscribe(

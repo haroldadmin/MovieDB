@@ -1,24 +1,19 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details
 
 import android.view.View
-import android.widget.ImageView
 import android.widget.TextView
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
-import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.AccountState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.CustomMaterialButton
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.KotlinEpoxyHolder
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener
-import org.koin.core.parameter.parametersOf
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
 
 @EpoxyModelClass(layout = R.layout.view_main_text)
-abstract class MainTextModel: EpoxyModelWithHolder<MainTextModel.MainTextViewHolder>() {
+abstract class MainTextModel : EpoxyModelWithHolder<MainTextModel.MainTextViewHolder>() {
 
     @EpoxyAttribute
     lateinit var text: String
@@ -28,13 +23,13 @@ abstract class MainTextModel: EpoxyModelWithHolder<MainTextModel.MainTextViewHol
         holder.mainText.text = text
     }
 
-    inner class MainTextViewHolder: KotlinEpoxyHolder() {
+    inner class MainTextViewHolder : KotlinEpoxyHolder() {
         val mainText by bind<TextView>(R.id.tvMainText)
     }
 }
 
 @EpoxyModelClass(layout = R.layout.view_youtube_player)
-abstract class TrailerModel: EpoxyModelWithHolder<TrailerModel.TrailerHolder>() {
+abstract class TrailerModel : EpoxyModelWithHolder<TrailerModel.TrailerHolder>() {
 
     @EpoxyAttribute
     lateinit var trailerKey: String
@@ -42,7 +37,7 @@ abstract class TrailerModel: EpoxyModelWithHolder<TrailerModel.TrailerHolder>() 
     override fun bind(holder: TrailerHolder) {
         super.bind(holder)
         holder.youtubePlayer.initialize({ initializedPlayer ->
-            initializedPlayer.addListener(object: AbstractYouTubePlayerListener() {
+            initializedPlayer.addListener(object : AbstractYouTubePlayerListener() {
                 override fun onReady() {
                     super.onReady()
                     initializedPlayer.cueVideo(trailerKey, 0f)
@@ -56,13 +51,13 @@ abstract class TrailerModel: EpoxyModelWithHolder<TrailerModel.TrailerHolder>() 
         holder.youtubePlayer.release()
     }
 
-    inner class TrailerHolder: KotlinEpoxyHolder() {
+    inner class TrailerHolder : KotlinEpoxyHolder() {
         val youtubePlayer by bind<YouTubePlayerView>(R.id.movieTrailer)
     }
 }
 
 @EpoxyModelClass(layout = R.layout.view_movie_info_bar)
-abstract class InfoBarModel: EpoxyModelWithHolder<InfoBarModel.InfoBarHolder>() {
+abstract class InfoBarModel : EpoxyModelWithHolder<InfoBarModel.InfoBarHolder>() {
 
     @EpoxyAttribute
     lateinit var accountStates: AccountState
@@ -111,7 +106,7 @@ abstract class InfoBarModel: EpoxyModelWithHolder<InfoBarModel.InfoBarHolder>() 
         }
     }
 
-    inner class InfoBarHolder: KotlinEpoxyHolder() {
+    inner class InfoBarHolder : KotlinEpoxyHolder() {
         val favouriteButton by bind<CustomMaterialButton>(R.id.btToggleFavourite)
         val watchlistButton by bind<CustomMaterialButton>(R.id.btToggleWatchlist)
     }

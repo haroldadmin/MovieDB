@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 
 abstract class BaseFragment: Fragment() {
@@ -24,8 +25,10 @@ abstract class BaseFragment: Fragment() {
         // If the transition remains postponed even after 1 second, we should resume it
         if (isTransitionPostponed) {
             view?.postDelayed(1000) {
-                log("Force resuming enter transition for ${this::class.java.simpleName}")
-                startPostponedEnterTransition()
+                if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+                    log("Force resuming enter transition for ${this::class.java.simpleName}")
+                    startPostponedEnterTransition()
+                }
             }
         }
     }

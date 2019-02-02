@@ -133,3 +133,40 @@ abstract class ActorModel: EpoxyModelWithHolder<ActorModel.ActorHolder>() {
         }
     }
 }
+
+@EpoxyModelClass(layout = R.layout.item_movie_search_result)
+abstract class MovieSearchResultModel: EpoxyModelWithHolder<MovieSearchResultModel.MovieSearchResultHolder>() {
+
+    @EpoxyAttribute
+    lateinit var posterUrl: String
+
+    @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
+    lateinit var clickListener: View.OnClickListener
+
+    @EpoxyAttribute
+    lateinit var transitionName: String
+
+    @EpoxyAttribute
+    var movieId: Int? = null
+
+    @EpoxyAttribute
+    lateinit var movieTitle: String
+
+    override fun bind(holder: MovieSearchResultModel.MovieSearchResultHolder) {
+        super.bind(holder)
+        with (holder) {
+            glide.load(posterUrl).into(poster)
+            ViewCompat.setTransitionName(poster, transitionName)
+            poster.setOnClickListener(clickListener)
+            title.text = movieTitle
+        }
+    }
+
+    inner class MovieSearchResultHolder: KotlinEpoxyHolder(), KoinComponent {
+        val poster by bind<ImageView>(R.id.ivPosterSearchResult)
+        val title by bind<TextView>(R.id.tvTitleSearchResult)
+        val glide by inject<RequestManager>("view-glide-request-manager") {
+            parametersOf(poster)
+        }
+    }
+}

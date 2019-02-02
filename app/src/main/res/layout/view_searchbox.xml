@@ -6,7 +6,8 @@
     android:elevation="16dp"
     app:cardBackgroundColor="@color/colorSurface"
     app:cardCornerRadius="8dp"
-    android:transitionName="@string/searchBoxTransName">
+    android:transitionName="@string/searchBoxTransName"
+    android:focusableInTouchMode="false">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

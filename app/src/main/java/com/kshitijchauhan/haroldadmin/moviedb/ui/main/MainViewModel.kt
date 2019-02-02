@@ -3,9 +3,11 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 import android.content.SharedPreferences
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BackPressListener
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.ProgressBarManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
@@ -28,6 +30,7 @@ class MainViewModel(
     private var _isAuthenticated by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_IS_AUTHENTICATED, false)
     private var _sessionId by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_SESSION_ID, "")
     private var _accountId by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_ACCOUNT_ID, -1)
+    private var _backPressListener = MutableLiveData<BackPressListener>()
 
     val state: LiveData<UIState>
         get() = _state
@@ -52,6 +55,9 @@ class MainViewModel(
 
     val toolbarTitle: LiveData<String>
         get() = _toolbarTitle
+
+    val backPressListener: LiveData<BackPressListener>
+        get() = _backPressListener
 
     fun <T : UIState> updateStateTo(state: T) {
         log("Updating view to: ${state::class.java.simpleName}")
@@ -103,4 +109,6 @@ class MainViewModel(
     }
 
     fun getBottomNavView() = bottomNavManager.bottomNavigationView
+
+    fun setBackPressListener(listener: BackPressListener?) = _backPressListener.postValue(listener)
 }

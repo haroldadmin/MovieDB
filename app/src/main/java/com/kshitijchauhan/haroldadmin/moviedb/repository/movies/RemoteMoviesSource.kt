@@ -2,6 +2,8 @@ package com.kshitijchauhan.haroldadmin.moviedb.repository.movies
 
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.account.*
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.MovieService
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.search.SearchResponse
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.search.SearchService
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.toActor
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.toMovie
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.toMovieTrailer
@@ -11,7 +13,8 @@ import io.reactivex.schedulers.Schedulers
 
 class RemoteMoviesSource(
     private val movieService: MovieService,
-    private val accountService: AccountService
+    private val accountService: AccountService,
+    private val searchService: SearchService
 ) {
 
     fun getMovieDetails(id: Int): Single<Movie> {
@@ -93,5 +96,17 @@ class RemoteMoviesSource(
             accountService.toggleMediaWatchlistStatus(accountId, request)
                 .subscribeOn(Schedulers.io())
         }
+    }
+
+    fun getSearchResultsForQuery(query: String): Single<List<Movie>> {
+        return searchService
+            .searchForMovie(query)
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
+            .flatMapPublisher { searchResponse ->
+                Flowable.fromIterable(searchResponse.results)
+            }
+            .map { generalMovieResponse -> generalMovieResponse.toMovie() }
+            .toList()
     }
 }

@@ -40,7 +40,7 @@ class LibraryEpoxyController(
                         movieId(favouriteMovie.id)
                         posterUrl(favouriteMovie.posterPath)
                         transitionName("poster-${favouriteMovie.id}")
-                        clickListener { model, _, clickedView, position ->
+                        clickListener { model, _, clickedView, _ ->
                             callbacks.onMovieItemClicked(model.movieId!!, model.transitionName(), clickedView)
                         }
                     }
