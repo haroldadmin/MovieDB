@@ -7,11 +7,12 @@
     android:background="@color/colorSurfaceDark"
     tools:context=".ui.in_theatres.InTheatresFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.airbnb.epoxy.EpoxyRecyclerView
         android:id="@+id/rvMovies"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/item_movielist"
+        tools:listitem="@layout/item_moviegrid"
+        app:spanCount="4"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
