@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.RequestManager
 import com.jakewharton.rxbinding2.widget.RxSearchView
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
@@ -17,8 +18,10 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
 import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_in_theatres.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import kotlin.math.roundToInt
 
 class InTheatresFragment : BaseFragment() {
@@ -36,7 +39,11 @@ class InTheatresFragment : BaseFragment() {
         }
     }
 
-    private val inTheatresEpoxyController = InTheatresEpoxyController(callbacks)
+    private val glideRequestManager: RequestManager by inject("fragment-glide-request-manager") {
+        parametersOf(this)
+    }
+
+    private val inTheatresEpoxyController by lazy { InTheatresEpoxyController(callbacks, glideRequestManager) }
 
     override fun notifyBottomNavManager() {
         mainViewModel.updateBottomNavManagerState(this.associatedUIState)

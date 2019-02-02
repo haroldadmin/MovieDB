@@ -35,11 +35,11 @@ class ActorDetailsFragment : BaseFragment() {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
 
-    private val actorDetailsEpoxyController = ActorDetailsEpoxyController()
-
     private val glideRequestManager: RequestManager by inject("fragment-glide-request-manager") {
         parametersOf(this)
     }
+
+    private val actorDetailsEpoxyController by lazy { ActorDetailsEpoxyController(glideRequestManager) }
 
     override val associatedUIState: UIState = UIState.ActorDetailsScreenState(
         this.arguments?.getInt(Constants.KEY_ACTOR_ID, -1) ?: -1

@@ -3,11 +3,13 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 import com.airbnb.epoxy.AutoModel
 import com.airbnb.epoxy.Typed2EpoxyController
 import com.airbnb.epoxy.Typed3EpoxyController
+import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.*
 
 class HomeEpoxyController(
-    private val callbacks: EpoxyCallbacks
+    private val callbacks: EpoxyCallbacks,
+    private val glide: RequestManager
 ) : Typed3EpoxyController<List<Movie>, List<Movie>, List<Movie>>() {
 
     @AutoModel
@@ -49,6 +51,7 @@ class HomeEpoxyController(
                         id(id)
                         movieId(id)
                         movieTitle(title)
+                        glide(glide)
                         posterUrl(posterPath)
                         transitionName("poster-$id")
                         clickListener { model, _, clickedView, _ ->
@@ -78,6 +81,7 @@ class HomeEpoxyController(
                 movie {
                     id(popularMovie.id)
                     movieId(popularMovie.id)
+                    glide(glide)
                     posterUrl(popularMovie.posterPath)
                     transitionName("poster-${popularMovie.id}")
                     clickListener { model, _, clickedView, _ ->
@@ -103,6 +107,7 @@ class HomeEpoxyController(
                 movie {
                     id(topRatedMovie.id)
                     movieId(topRatedMovie.id)
+                    glide(glide)
                     posterUrl(topRatedMovie.posterPath)
                     transitionName("poster-${topRatedMovie.id}")
                     clickListener { model, _, clickedView, _ ->

@@ -13,6 +13,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
 import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
@@ -65,16 +66,17 @@ class MovieDetailsFragment : BaseFragment() {
             mainViewModel.updateStateTo(UIState.ActorDetailsScreenState(id, transitionName, sharedView))
         }
     }
-    private val detailsEpoxyController = DetailsEpoxyController(callbacks)
+
+    private val glideRequestManager: RequestManager by inject("fragment-glide-request-manager") {
+        parametersOf(this)
+    }
+
+    private val detailsEpoxyController by lazy { DetailsEpoxyController(callbacks, glideRequestManager) }
 
     private val movieDetailsViewModel: MovieDetailsViewModel by viewModel {
         val isAuthenticated = mainViewModel.isAuthenticated
         val movieId = arguments?.getInt(Constants.KEY_MOVIE_ID, -1)
         parametersOf(isAuthenticated, movieId)
-    }
-
-    private val glideRequestManager: RequestManager by inject("fragment-glide-request-manager") {
-        parametersOf(this)
     }
 
     override val associatedUIState: UIState =
@@ -189,6 +191,12 @@ class MovieDetailsFragment : BaseFragment() {
         mainViewModel.updateToolbarTitle(movie.title)
         glideRequestManager
             .load(movie.posterPath)
+            .apply {
+                RequestOptions()
+                    .placeholder(R.drawable.ic_round_local_movies_24px)
+                    .error(R.drawable.ic_round_local_movies_24px)
+                    .fallback(R.drawable.ic_round_local_movies_24px)
+            }
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
                     e: GlideException?,

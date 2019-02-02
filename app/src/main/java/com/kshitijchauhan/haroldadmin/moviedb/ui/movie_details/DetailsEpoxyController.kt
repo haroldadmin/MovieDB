@@ -2,6 +2,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details
 
 import android.view.View
 import com.airbnb.epoxy.Typed4EpoxyController
+import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.AccountState
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
@@ -10,7 +11,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.header
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.infoText
 
 class DetailsEpoxyController(
-    private val callbacks: MovieDetailsCallbacks
+    private val callbacks: MovieDetailsCallbacks,
+    private val glide: RequestManager
 ) : Typed4EpoxyController<Movie?, AccountState?, String?, List<Actor>?>() {
 
     interface MovieDetailsCallbacks {
@@ -77,6 +79,7 @@ class DetailsEpoxyController(
                     id(it.id)
                     actorId(it.id)
                     name(it.name)
+                    glide(glide)
                     pictureUrl(it.profilePictureUrl)
                     transitionName("actor-$it.id")
                     clickListener { model, _, clickedView, _ ->

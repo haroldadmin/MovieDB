@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.RequestManager
 import com.jakewharton.rxbinding2.internal.Notification
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay
@@ -24,8 +25,10 @@ import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.view_searchbox.view.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
@@ -44,7 +47,11 @@ class HomeFragment : BaseFragment(), BackPressListener {
         }
     }
 
-    private val homeEpoxyController = HomeEpoxyController(callbacks)
+    private val glideRequestManager: RequestManager by inject("fragment-glide-request-manager") {
+        parametersOf(this)
+    }
+
+    private val homeEpoxyController by lazy { HomeEpoxyController(callbacks, glideRequestManager) }
 
     private val onDestroyView: PublishRelay<Any> = PublishRelay.create()
 

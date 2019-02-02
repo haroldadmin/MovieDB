@@ -1,6 +1,7 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres
 
 import com.airbnb.epoxy.TypedEpoxyController
+import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.header
@@ -8,7 +9,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.infoText
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.movie
 
 class InTheatresEpoxyController(
-    private val callbacks: EpoxyCallbacks
+    private val callbacks: EpoxyCallbacks,
+    private val glide: RequestManager
 ): TypedEpoxyController<List<Movie>>() {
 
     override fun buildModels(movies: List<Movie>?) {
@@ -30,6 +32,7 @@ class InTheatresEpoxyController(
                 movie {
                     id(inTheatreMovie.id)
                     movieId(inTheatreMovie.id)
+                    glide(glide)
                     posterUrl(inTheatreMovie.posterPath)
                     transitionName("poster-${inTheatreMovie.id}")
                     clickListener { model, _, clickedView, _ ->

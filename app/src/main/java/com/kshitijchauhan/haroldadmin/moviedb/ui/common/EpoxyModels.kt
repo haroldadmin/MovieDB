@@ -8,6 +8,7 @@ import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import org.koin.core.parameter.parametersOf
@@ -48,10 +49,19 @@ abstract class MovieModel : EpoxyModelWithHolder<MovieModel.MovieViewHolder>() {
     @EpoxyAttribute
     var movieId: Int? = null
 
+    @EpoxyAttribute
+    lateinit var glide: RequestManager
+
     override fun bind(holder: MovieViewHolder) {
         super.bind(holder)
-        holder.glide
-            .load(posterUrl)
+        glide.load(posterUrl)
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .apply {
+                RequestOptions()
+                    .placeholder(R.drawable.ic_round_local_movies_24px)
+                    .error(R.drawable.ic_round_local_movies_24px)
+                    .fallback(R.drawable.ic_round_local_movies_24px)
+            }
             .into(holder.poster)
         ViewCompat.setTransitionName(holder.poster, transitionName)
         holder.poster.setOnClickListener(clickListener)
@@ -59,9 +69,6 @@ abstract class MovieModel : EpoxyModelWithHolder<MovieModel.MovieViewHolder>() {
 
     inner class MovieViewHolder : KotlinEpoxyHolder(), KoinComponent {
         val poster by bind<ImageView>(R.id.ivPoster)
-        val glide by inject<RequestManager>("view-glide-request-manager") {
-            parametersOf(poster)
-        }
     }
 }
 
@@ -90,7 +97,7 @@ abstract class NeedToLoginModel : EpoxyModelWithHolder<NeedToLoginModel.NeedToLo
 }
 
 @EpoxyModelClass(layout = R.layout.item_credit_actor)
-abstract class ActorModel: EpoxyModelWithHolder<ActorModel.ActorHolder>() {
+abstract class ActorModel : EpoxyModelWithHolder<ActorModel.ActorHolder>() {
 
     @EpoxyAttribute
     var actorId: Int? = null
@@ -107,12 +114,16 @@ abstract class ActorModel: EpoxyModelWithHolder<ActorModel.ActorHolder>() {
     @EpoxyAttribute(EpoxyAttribute.Option.DoNotHash)
     lateinit var clickListener: View.OnClickListener
 
+    @EpoxyAttribute
+    lateinit var glide: RequestManager
+
     override fun bind(holder: ActorHolder) {
         super.bind(holder)
         with(holder) {
             actorName.text = name
             glide
                 .load(pictureUrl)
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .apply(
                     RequestOptions()
                         .placeholder(R.drawable.ic_round_account_circle_24px)
@@ -125,17 +136,14 @@ abstract class ActorModel: EpoxyModelWithHolder<ActorModel.ActorHolder>() {
         }
     }
 
-    inner class ActorHolder: KotlinEpoxyHolder(), KoinComponent {
+    inner class ActorHolder : KotlinEpoxyHolder(), KoinComponent {
         val actorName by bind<TextView>(R.id.tvCreditActorName)
-        val actorPicture by bind <ImageView>(R.id.ivCreditActorPhoto)
-        val glide by inject<RequestManager>("view-glide-request-manager") {
-            parametersOf(actorPicture)
-        }
+        val actorPicture by bind<ImageView>(R.id.ivCreditActorPhoto)
     }
 }
 
 @EpoxyModelClass(layout = R.layout.item_movie_search_result)
-abstract class MovieSearchResultModel: EpoxyModelWithHolder<MovieSearchResultModel.MovieSearchResultHolder>() {
+abstract class MovieSearchResultModel : EpoxyModelWithHolder<MovieSearchResultModel.MovieSearchResultHolder>() {
 
     @EpoxyAttribute
     lateinit var posterUrl: String
@@ -150,23 +158,31 @@ abstract class MovieSearchResultModel: EpoxyModelWithHolder<MovieSearchResultMod
     var movieId: Int? = null
 
     @EpoxyAttribute
+    lateinit var glide: RequestManager
+
+    @EpoxyAttribute
     lateinit var movieTitle: String
 
     override fun bind(holder: MovieSearchResultModel.MovieSearchResultHolder) {
         super.bind(holder)
-        with (holder) {
-            glide.load(posterUrl).into(poster)
+        with(holder) {
             ViewCompat.setTransitionName(poster, transitionName)
             poster.setOnClickListener(clickListener)
             title.text = movieTitle
+            glide.load(posterUrl)
+                .transition(DrawableTransitionOptions.withCrossFade())
+                .apply {
+                    RequestOptions()
+                        .placeholder(R.drawable.ic_round_local_movies_24px)
+                        .error(R.drawable.ic_round_local_movies_24px)
+                        .fallback(R.drawable.ic_round_local_movies_24px)
+                }
+                .into(holder.poster)
         }
     }
 
-    inner class MovieSearchResultHolder: KotlinEpoxyHolder(), KoinComponent {
+    inner class MovieSearchResultHolder : KotlinEpoxyHolder(), KoinComponent {
         val poster by bind<ImageView>(R.id.ivPosterSearchResult)
         val title by bind<TextView>(R.id.tvTitleSearchResult)
-        val glide by inject<RequestManager>("view-glide-request-manager") {
-            parametersOf(poster)
-        }
     }
 }
