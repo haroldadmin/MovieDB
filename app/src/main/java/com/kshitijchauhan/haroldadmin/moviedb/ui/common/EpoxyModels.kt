@@ -129,6 +129,7 @@ abstract class ActorModel : EpoxyModelWithHolder<ActorModel.ActorHolder>() {
                         .placeholder(R.drawable.ic_round_account_circle_24px)
                         .error(R.drawable.ic_round_account_circle_24px)
                         .fallback(R.drawable.ic_round_account_circle_24px)
+                        .circleCrop()
                 )
                 .into(actorPicture)
             actorPicture.setOnClickListener(clickListener)

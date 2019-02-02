@@ -5,11 +5,11 @@
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/ivCreditActorPhoto"
         android:layout_width="88dp"
         android:layout_height="88dp"
-        android:src="@drawable/ic_round_account_circle_24px"
+        tools:src="@drawable/ic_round_account_circle_24px"
         android:layout_gravity="center"/>
 
     <TextView
