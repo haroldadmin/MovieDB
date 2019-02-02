@@ -19,6 +19,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
@@ -140,7 +141,8 @@ class HomeFragment : BaseFragment(), BackPressListener {
             .takeUntil(onDestroyView)
             .doOnNext { query ->
                 homeViewModel.getSearchResultsForQuery(query)
-                mainViewModel.addLoadingTask(LoadingTask(TASK_GET_SEARCH_RESULTS, viewLifecycleOwner))
+                if (query.length > 2)
+                    mainViewModel.addLoadingTask(LoadingTask(TASK_GET_SEARCH_RESULTS, viewLifecycleOwner))
             }
             .subscribe()
     }

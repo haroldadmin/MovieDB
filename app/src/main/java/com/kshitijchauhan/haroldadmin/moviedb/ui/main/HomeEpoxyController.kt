@@ -17,7 +17,7 @@ class HomeEpoxyController(
     lateinit var emptyTopRatedListModel: InfoTextModel_
 
     override fun buildModels(popularMovies: List<Movie>?, topRatedMovies: List<Movie>?, searchResults: List<Movie>?) {
-        if (searchResults.isNullOrEmpty()) {
+        if (searchResults == null) {
             buildHomeModel(popularMovies, topRatedMovies)
         } else {
             buildSearchModel(searchResults)
@@ -31,14 +31,19 @@ class HomeEpoxyController(
             spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
         }
 
-        if (searchResults.isNullOrEmpty()) {
-            infoText {
+        when {
+            searchResults == null -> infoText {
+                id("search-away")
                 id("search-info")
                 text("Start typing. Search results will appear here.")
                 spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
             }
-        } else {
-            searchResults.forEach { searchResult ->
+            searchResults.isEmpty() -> infoText {
+                id("no-results-found")
+                text("No movies found for this query")
+                spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
+            }
+            else -> searchResults.forEach { searchResult ->
                 movieSearchResult {
                     with(searchResult) {
                         id(id)

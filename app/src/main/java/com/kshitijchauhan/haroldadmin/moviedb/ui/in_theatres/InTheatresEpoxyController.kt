@@ -23,6 +23,7 @@ class InTheatresEpoxyController(
             infoText {
                 id("in-theatres-info")
                 text("We can't find any movies in theatres near you")
+                spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
             }
         } else {
             movies.forEach { inTheatreMovie ->

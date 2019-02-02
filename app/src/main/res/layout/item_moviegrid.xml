@@ -2,8 +2,10 @@
 
 <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ivPoster"
     android:layout_width="match_parent"
     android:layout_height="@dimen/movie_grid_poster_height"
-    android:scaleType="fitXY"
+    android:scaleType="centerCrop"
+    app:layout_constraintDimensionRatio="2:3"
     tools:srcCompat="@tools:sample/avatars" />
