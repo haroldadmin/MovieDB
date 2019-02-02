@@ -2,7 +2,6 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details
 
 import android.view.View
 import android.widget.TextView
-import androidx.lifecycle.Lifecycle
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyHolder
 import com.airbnb.epoxy.EpoxyModelClass
@@ -11,7 +10,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.AccountState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.CustomMaterialButton
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.KotlinEpoxyHolder
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
 import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener
@@ -41,7 +39,7 @@ abstract class TrailerModel : EpoxyModelWithHolder<TrailerModel.TrailerHolder>()
     override fun bind(holder: TrailerHolder) {
         super.bind(holder)
         if (holder.isInitialized) {
-            holder.youTubePlayer.cueVideo(trailerKey, 0f)
+            holder.youTubePlayer?.cueVideo(trailerKey, 0f)
         } else {
             holder.cueVideo(trailerKey)
         }
@@ -50,7 +48,7 @@ abstract class TrailerModel : EpoxyModelWithHolder<TrailerModel.TrailerHolder>()
     override fun unbind(holder: TrailerHolder) {
         super.unbind(holder)
         // We should not release the player here, otherwise subsequent video requests will be not loaded
-        holder.youTubePlayer.pause()
+        holder.youTubePlayer?.pause()
     }
 
     /**
@@ -60,10 +58,10 @@ abstract class TrailerModel : EpoxyModelWithHolder<TrailerModel.TrailerHolder>()
      */
     inner class TrailerHolder : EpoxyHolder() {
         // Actual view inside the view hierarchy
-        lateinit var youTubePlayerView: YouTubePlayerView
+        private var youTubePlayerView: YouTubePlayerView? = null
 
         // Youtube player backing the player view
-        lateinit var youTubePlayer: YouTubePlayer
+        var youTubePlayer: YouTubePlayer? = null
 
         // Used to provide access to outside classes to the initialized status of the youtube player
         var isInitialized = false
