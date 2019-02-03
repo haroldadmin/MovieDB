@@ -67,6 +67,11 @@ abstract class MovieModel : EpoxyModelWithHolder<MovieModel.MovieViewHolder>() {
         holder.poster.setOnClickListener(clickListener)
     }
 
+    override fun unbind(holder: MovieViewHolder) {
+        super.unbind(holder)
+        glide.clear(holder.poster)
+    }
+
     inner class MovieViewHolder : KotlinEpoxyHolder(), KoinComponent {
         val poster by bind<ImageView>(R.id.ivPoster)
     }
@@ -137,6 +142,11 @@ abstract class ActorModel : EpoxyModelWithHolder<ActorModel.ActorHolder>() {
         }
     }
 
+    override fun unbind(holder: ActorHolder) {
+        super.unbind(holder)
+        glide.clear(holder.actorPicture)
+    }
+
     inner class ActorHolder : KotlinEpoxyHolder(), KoinComponent {
         val actorName by bind<TextView>(R.id.tvCreditActorName)
         val actorPicture by bind<ImageView>(R.id.ivCreditActorPhoto)
@@ -180,6 +190,11 @@ abstract class MovieSearchResultModel : EpoxyModelWithHolder<MovieSearchResultMo
                 }
                 .into(holder.poster)
         }
+    }
+
+    override fun unbind(holder: MovieSearchResultHolder) {
+        super.unbind(holder)
+        glide.clear(holder.poster)
     }
 
     inner class MovieSearchResultHolder : KotlinEpoxyHolder(), KoinComponent {
