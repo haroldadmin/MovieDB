@@ -134,12 +134,12 @@ val databaseModule = module {
 }
 
 val apiModule = module {
-    factory { get<Retrofit>().create(AuthenticationService::class.java) }
-    factory { get<Retrofit>().create(DiscoveryService::class.java) }
-    factory { get<Retrofit>().create(SearchService::class.java) }
-    factory { get<Retrofit>().create(MovieService::class.java) }
-    factory { get<Retrofit>().create(AccountService::class.java) }
-    factory { get<Retrofit>().create(PersonService::class.java) }
+    single { get<Retrofit>().create(AuthenticationService::class.java) }
+    single { get<Retrofit>().create(DiscoveryService::class.java) }
+    single { get<Retrofit>().create(SearchService::class.java) }
+    single { get<Retrofit>().create(MovieService::class.java) }
+    single { get<Retrofit>().create(AccountService::class.java) }
+    single { get<Retrofit>().create(PersonService::class.java) }
     single { ApiManager(get(), get(), get(), get(), get()) }
 }
 
@@ -148,16 +148,16 @@ val repositoryModule = module {
     single { get<MovieDBDatabase>().actorsDao() }
     single { get<MovieDBDatabase>().collectionsDao() }
 
-    factory { LocalMoviesSource(get(), get()) }
-    factory { RemoteMoviesSource(get(), get(), get()) }
-    factory { LocalActorsSource(get()) }
-    factory { RemoteActorsSource(get()) }
-    factory { LocalCollectionsSource(get(), get()) }
-    factory { RemoteCollectionsSource(get(), get()) }
+    single { LocalMoviesSource(get(), get()) }
+    single { RemoteMoviesSource(get(), get(), get()) }
+    single { LocalActorsSource(get()) }
+    single { RemoteActorsSource(get()) }
+    single { LocalCollectionsSource(get(), get()) }
+    single { RemoteCollectionsSource(get(), get()) }
 
-    factory { MoviesRepository(get(), get()) }
-    factory { ActorsRepository(get(), get()) }
-    factory { CollectionsRepository(get(), get()) }
+    single { MoviesRepository(get(), get()) }
+    single { ActorsRepository(get(), get()) }
+    single { CollectionsRepository(get(), get()) }
 }
 
 val uiModule = module {
