@@ -23,10 +23,7 @@ MovieDB is a gorgeous client application for [TMDb](https://www.themoviedb.org) 
 * Works offline by caching data into a database.
 
 ## Screenshots
-![screenshot_20190203-114608](https://user-images.githubusercontent.com/24315306/52173451-106d4c00-27ab-11e9-895e-6b8a429c12c9.png)
-![screenshot_20190203-114836](https://user-images.githubusercontent.com/24315306/52173452-12cfa600-27ab-11e9-92de-6358d7532402.png)
-![screenshot_20190203-114625](https://user-images.githubusercontent.com/24315306/52173453-14996980-27ab-11e9-966b-c71e293bc250.png)
-![screenshot_20190203-115643](https://user-images.githubusercontent.com/24315306/52173454-182cf080-27ab-11e9-916c-c05e4a438980.png)
+<img src="https://user-images.githubusercontent.com/24315306/52173451-106d4c00-27ab-11e9-895e-6b8a429c12c9.png" width="45%"></img> <img src="https://user-images.githubusercontent.com/24315306/52173453-14996980-27ab-11e9-966b-c71e293bc250.png" width="45%"></img> <img src="https://user-images.githubusercontent.com/24315306/52173454-182cf080-27ab-11e9-916c-c05e4a438980.png" width="45%"></img> <img src="https://user-images.githubusercontent.com/24315306/52173452-12cfa600-27ab-11e9-92de-6358d7532402.png" width="45%"></img> 
 
 
 ## Planned Features
