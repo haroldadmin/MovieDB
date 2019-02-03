@@ -32,12 +32,10 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.sea
 import com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details.ActorDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AuthenticationViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.MoviesListAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.ProgressBarManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.CreditsAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.MovieDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.MoviesAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.HomeViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
@@ -56,7 +54,6 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.*
-
 
 val applicationModule = module {
     single<SharedPreferences> {
@@ -178,12 +175,6 @@ val uiModule = module {
     factory("fragment-glide-request-manager") { (fragment: Fragment) -> Glide.with(fragment) }
     factory("view-glide-request-manager") { (view: View) -> Glide.with(view) }
     factory { (glide: RequestManager) -> CreditsAdapter(glide) }
-    factory { (glide: RequestManager, clickListener: (movieId: Int) -> Unit) ->
-        MoviesAdapter(glide, clickListener)
-    }
-    factory { (glide: RequestManager, clickListener: (movieId: Int, transitionName: String, sharedView: View) -> Unit) ->
-        MoviesListAdapter(glide, clickListener)
-    }
 }
 
 
