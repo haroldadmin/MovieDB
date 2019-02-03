@@ -69,3 +69,10 @@ fastlane/readme.md
 .DS_Store
 .idea
 app/release/
+
+# VSCode
+.project
+.settings
+app/.classpath
+app/.project
+app/.settings
