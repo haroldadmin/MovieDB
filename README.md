@@ -1,4 +1,8 @@
-# MovieDB
+<h1>MovieDB</h1>
+<img src="https://user-images.githubusercontent.com/24315306/52174146-ca69b580-27b5-11e9-96e3-376b49933c0f.png" width="25%"></img>
+
+
+----------------------------------------------------------------
 
 MovieDB is a gorgeous client application for [TMDb](https://www.themoviedb.org) on Android, built using Kotlin.
 
