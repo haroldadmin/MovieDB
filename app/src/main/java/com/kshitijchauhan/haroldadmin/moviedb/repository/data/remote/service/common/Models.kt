@@ -21,3 +21,8 @@ data class GeneralMovieResponse(
     @field:Json(name="vote_count") val voteCount: Int,
     @field:Json(name="video") val video: Boolean,
     @field:Json(name="vote_average") var voteAverage: Double): Parcelable
+
+@Parcelize
+data class ErrorResponse(
+    @field:Json(name="status_code") val statusCode: String,
+    @field:Json(name="status_message") val statusMessage: String): Parcelable

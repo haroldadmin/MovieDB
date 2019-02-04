@@ -29,6 +29,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.dis
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.MovieService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.people.PersonService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.search.SearchService
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.KotlinRxJava2CallAdapterFactory
 import com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details.ActorDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AuthenticationViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
@@ -109,9 +110,12 @@ val retrofitModule = module {
 
     single { RxJava2CallAdapterFactory.create() }
 
+    single { KotlinRxJava2CallAdapterFactory.create() }
+
     single {
         Retrofit.Builder()
             .client(get())
+            .addCallAdapterFactory(get<KotlinRxJava2CallAdapterFactory>())
             .addCallAdapterFactory(get<RxJava2CallAdapterFactory>())
             .addConverterFactory(get<MoshiConverterFactory>())
             .baseUrl(Config.BASE_URL)
