@@ -16,6 +16,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.kshitijchauhan.haroldadmin.moviedb.R
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
@@ -25,6 +26,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.format
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
@@ -121,7 +123,7 @@ class MovieDetailsFragment : BaseFragment() {
         updateToolbarTitle()
         rvMovieDetails.apply {
             val columns = resources.getDimension(R.dimen.cast_member_picture_size).getNumberOfColumns(view.context)
-            layoutManager = GridLayoutManager(context, columns).apply { recycleChildrenOnDetach = true }
+            layoutManager = GridLayoutManager(context, columns)
             itemAnimator = AlphaInAnimator()
             setController(detailsEpoxyController)
         }
@@ -129,21 +131,20 @@ class MovieDetailsFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        detailsEpoxyController.setData(null, null, null, null)
+        detailsEpoxyController.setData(Resource.Loading(), Resource.Loading(), Resource.Loading(), listOf(Resource.Loading()))
         initTasks()
 
         movieDetailsViewModel.movie.observe(viewLifecycleOwner, Observer { movie ->
             log("Received movie update: $movie")
             updateView(movie)
-            mainViewModel.updateToolbarTitle(movie.title)
             mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner)
             detailsEpoxyController.setData(movie,
                 movieDetailsViewModel.accountState.value,
                 movieDetailsViewModel.trailerKey.value,
-                movieDetailsViewModel.cast.value)
+                movieDetailsViewModel.actors.value)
         })
 
-        movieDetailsViewModel.cast.observe(viewLifecycleOwner, Observer { castList ->
+        movieDetailsViewModel.actors.observe(viewLifecycleOwner, Observer { castList ->
             log("Received cast update: $castList")
             mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_CAST, viewLifecycleOwner)
             detailsEpoxyController.setData(movieDetailsViewModel.movie.value,
@@ -158,7 +159,7 @@ class MovieDetailsFragment : BaseFragment() {
                 movieDetailsViewModel.movie.value,
                 accountState,
                 movieDetailsViewModel.trailerKey.value,
-                movieDetailsViewModel.cast.value)
+                movieDetailsViewModel.actors.value)
             mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_ACCOUNT_STATES, viewLifecycleOwner)
         })
 
@@ -168,7 +169,7 @@ class MovieDetailsFragment : BaseFragment() {
                 movieDetailsViewModel.movie.value,
                 movieDetailsViewModel.accountState.value,
                 url,
-                movieDetailsViewModel.cast.value)
+                movieDetailsViewModel.actors.value)
             mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_VIDEOS, viewLifecycleOwner)
         })
 
@@ -187,49 +188,55 @@ class MovieDetailsFragment : BaseFragment() {
         }
     }
 
-    private fun updateView(movie: Movie) {
-        mainViewModel.updateToolbarTitle(movie.title)
-        glideRequestManager
-            .load(movie.posterPath)
-            .apply {
-                RequestOptions()
-                    .placeholder(R.drawable.ic_round_local_movies_24px)
-                    .error(R.drawable.ic_round_local_movies_24px)
-                    .fallback(R.drawable.ic_round_local_movies_24px)
+    private fun updateView(movieResource: Resource<Movie>) {
+        when (movieResource) {
+            is Resource.Success -> {
+                val movie = movieResource.data
+                mainViewModel.updateToolbarTitle(movie.title)
+                glideRequestManager
+                    .load(movie.posterPath)
+                    .apply {
+                        RequestOptions()
+                            .placeholder(R.drawable.ic_round_local_movies_24px)
+                            .error(R.drawable.ic_round_local_movies_24px)
+                            .fallback(R.drawable.ic_round_local_movies_24px)
+                    }
+                    .listener(object : RequestListener<Drawable> {
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            startPostponedEnterTransition()
+                            return false
+                        }
+
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            startPostponedEnterTransition()
+                            return false
+                        }
+                    })
+                    .into(ivPoster)
+
+                glideRequestManager
+                    .asBitmap()
+                    .transition(BitmapTransitionOptions.withCrossFade())
+                    .load(movie.backdropPath)
+                    .into(ivBackdrop)
+
+                tvTitle.text = movie.title
+                chipMovieYear.text = movie.releaseDate.format("yyyy")
+                chipMovieGenre.text = movie.genres?.first() ?: "..."
+                chipMovieRating.text = movie.voteAverage.format("%.2f")
             }
-            .listener(object : RequestListener<Drawable> {
-                override fun onLoadFailed(
-                    e: GlideException?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    startPostponedEnterTransition()
-                    return false
-                }
-
-                override fun onResourceReady(
-                    resource: Drawable?,
-                    model: Any?,
-                    target: Target<Drawable>?,
-                    dataSource: DataSource?,
-                    isFirstResource: Boolean
-                ): Boolean {
-                    startPostponedEnterTransition()
-                    return false
-                }
-            })
-            .into(ivPoster)
-
-        glideRequestManager
-            .asBitmap()
-            .transition(BitmapTransitionOptions.withCrossFade())
-            .load(movie.backdropPath)
-            .into(ivBackdrop)
-
-        tvTitle.text = movie.title
-        chipMovieYear.text = movie.releaseDate.format("yyyy")
-        chipMovieGenre.text = movie.genres?.first() ?: "..."
-        chipMovieRating.text = movie.voteAverage.format("%.2f")
+            else -> Unit
+        }.safe
     }
 }

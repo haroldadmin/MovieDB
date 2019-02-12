@@ -1,32 +1,41 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details
 
 import com.airbnb.epoxy.TypedEpoxyController
-import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.header
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.infoText
 import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.mainText
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 
-class ActorDetailsEpoxyController(private val glide: RequestManager): TypedEpoxyController<Actor>() {
+class ActorDetailsEpoxyController: TypedEpoxyController<Resource<Actor>>() {
 
-    override fun buildModels(actor: Actor?) {
+    override fun buildModels(resource: Resource<Actor>) {
+
         header {
             id("biography")
             title("Biography")
         }
 
-        actor?.let {
-            if (it.biography.isNullOrBlank()) {
-                infoText {
-                    id(it.id)
-                    text("We can't find this information about this actor")
-                }
-            } else {
+        when (resource) {
+            is Resource.Success -> {
                 mainText {
-                    id(it.id)
-                    text(it.biography)
+                    id(resource.data.id)
+                    text(resource.data.biography ?: "We can't find this information about this actor")
                 }
             }
-        }
+            is Resource.Error -> {
+                infoText {
+                    id("error-info")
+                    text(resource.errorMessage)
+                }
+            }
+            is Resource.Loading -> {
+                infoText {
+                    id("loading-info")
+                    text("Loading...")
+                }
+            }
+        }.safe
     }
 }

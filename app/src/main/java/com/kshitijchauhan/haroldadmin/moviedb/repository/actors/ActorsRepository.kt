@@ -1,85 +1,69 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.actors
 
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
+import com.kshitijchauhan.haroldadmin.moviedb.repository.NetworkBoundResource
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import io.reactivex.Flowable
 import io.reactivex.Single
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.rxkotlin.zipWith
 
 class ActorsRepository(
     private val localActorsSource: LocalActorsSource,
     private val remoteActorsSource: RemoteActorsSource
 ) {
 
-    fun getActorFlowable(id: Int): Flowable<Actor> {
-        return localActorsSource.isActorInDatabase(id)
-            .flatMapPublisher<Actor> { count ->
-                if (count > 0) {
-                    log("Actor already exists in database")
-                    localActorsSource.getActorFlowable(id)
-                } else {
-                    log("Retrieving actor from api")
-                    remoteActorsSource.getActor(id)
-                        .observeOn(Schedulers.single())
-                        .doOnSuccess { actor ->
-                            log("Saving actor to database")
-                            localActorsSource.saveActorToDatabase(actor)
-                        }
-                        .flatMapPublisher {
-                            localActorsSource.getActorFlowable(id)
-                        }
+    fun getActorResource(id: Int): NetworkBoundResource<Actor> {
+        return object : NetworkBoundResource<Actor>() {
+            override fun fetchFromNetwork(): Flowable<Resource<Actor>> {
+                return remoteActorsSource.getActor(id).toFlowable()
+            }
+
+            override fun fetchFromDatabase(): Flowable<Resource<Actor>> {
+                return localActorsSource
+                    .getActorFlowable(id)
+                    .map { actor ->
+                        Resource.Success(actor)
+                    }
+            }
+
+            override fun shouldRefresh(): Single<Boolean> {
+                val isInDb = localActorsSource
+                    .isActorInDatabase(id)
+                    .map { count -> count > 0 }
+
+                val isModelComplete = localActorsSource.getActor(id)
+                    .map { actor -> actor.isModelComplete }
+
+                return isInDb.zipWith(isModelComplete) {
+                    dbStatus, modelStatus -> !(dbStatus && modelStatus)
                 }
             }
+
+            override fun saveToDatabase(actor: Actor) {
+                localActorsSource.saveActorToDatabase(actor)
+            }
+        }
     }
 
-    fun getAllActorsFlowable(ids: List<Int>): Flowable<List<Actor>> {
-        return Flowable.fromIterable(ids)
-            .flatMap { id ->
-                log("Retrieving actor for id: $id")
-                this.getActorFlowable(id)
+    fun forceRefreshActorResource(id: Int): NetworkBoundResource<Actor> {
+        return object : NetworkBoundResource<Actor>() {
+            override fun fetchFromNetwork(): Flowable<Resource<Actor>> {
+                return remoteActorsSource.getActor(id).toFlowable()
             }
-            .toList()
-            .doOnSuccess {
-                log("List of actors: $it")
-            }
-            .toFlowable()
-    }
 
-    fun getActor(id: Int): Single<Actor> {
-        return localActorsSource.isActorInDatabase(id)
-            .flatMap { count ->
-                if (count > 0) {
-                    log("Retrieving actor from the database")
-                    localActorsSource.getActor(id)
-                } else {
-                    log("Retrieving actor from the network")
-                    remoteActorsSource.getActor(id)
-                        .observeOn(Schedulers.single())
-                        .doOnSuccess { actor ->
-                            log("Saving actor to database")
-                            localActorsSource.saveActorToDatabase(actor)
-                        }
-                        .flatMap {
-                            localActorsSource.getActor(id)
-                        }
-                }
+            override fun fetchFromDatabase(): Flowable<Resource<Actor>> {
+                return localActorsSource.getActorFlowable(id)
+                    .map { actor ->
+                        Resource.Success(actor)
+                    }
             }
-    }
 
-    fun getAllActors(ids: List<Int>): Single<List<Actor>> {
-        return Flowable.fromIterable(ids)
-            .flatMapSingle { id ->
-                this.getActor(id)
+            override fun shouldRefresh(): Single<Boolean> {
+                return Single.just(true)
             }
-            .toList()
-    }
 
-    fun forceRefreshActor(id: Int): Single<Actor> {
-        log("Force refreshing actor")
-        return remoteActorsSource.getActor(id)
-            .observeOn(Schedulers.single())
-            .doOnSuccess {
-                log("Saving refreshed actor model to database")
-                localActorsSource.saveActorToDatabase(it)
+            override fun saveToDatabase(actor: Actor) {
+                localActorsSource.saveActorToDatabase(actor)
             }
+        }
     }
 }

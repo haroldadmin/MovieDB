@@ -16,10 +16,12 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.actor_details_fragment.*
 import kotlinx.android.synthetic.main.actor_details_fragment.view.*
@@ -40,7 +42,7 @@ class ActorDetailsFragment : BaseFragment() {
         parametersOf(this)
     }
 
-    private val actorDetailsEpoxyController by lazy { ActorDetailsEpoxyController(glideRequestManager) }
+    private val actorDetailsEpoxyController by lazy { ActorDetailsEpoxyController() }
 
     override val associatedUIState: UIState = UIState.ActorDetailsScreenState(
         this.arguments?.getInt(Constants.KEY_ACTOR_ID, -1) ?: -1
@@ -86,7 +88,7 @@ class ActorDetailsFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        actorDetailsEpoxyController.setData(null)
+        actorDetailsEpoxyController.setData(Resource.Loading())
         actorDetailsViewModel.getActorDetails()
         actorDetailsViewModel.apply {
             message.observe(viewLifecycleOwner, Observer { message ->
@@ -100,7 +102,20 @@ class ActorDetailsFragment : BaseFragment() {
         }
     }
 
-    private fun updateView(actor: Actor) {
+    private fun updateView(resource: Resource<Actor>) {
+        when (resource) {
+            is Resource.Success -> {
+                handleResourceSuccess(resource.data)
+            }
+            is Resource.Error -> {
+                handleResourceError()
+            }
+            is Resource.Loading -> {
+            }
+        }.safe
+    }
+
+    private fun handleResourceSuccess(actor: Actor) {
         mainViewModel.updateToolbarTitle(actor.name)
         glideRequestManager
             .load(actor.profilePictureUrl)
@@ -110,7 +125,7 @@ class ActorDetailsFragment : BaseFragment() {
                     .error(R.drawable.ic_round_account_circle_24px)
                     .placeholder(R.drawable.ic_round_account_circle_24px)
             }
-            .listener(object: RequestListener<Drawable> {
+            .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(
                     e: GlideException?,
                     model: Any?,
@@ -137,4 +152,11 @@ class ActorDetailsFragment : BaseFragment() {
         tvActorName.text = actor.name
     }
 
+    private fun handleResourceError() {
+        startPostponedEnterTransition()
+        mainViewModel.updateToolbarTitle("Unknown")
+        glideRequestManager.load(R.drawable.ic_round_account_circle_24px)
+            .into(ivActorPhoto)
+        tvActorName.text = "Unknown"
+    }
 }

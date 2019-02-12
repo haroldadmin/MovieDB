@@ -3,19 +3,14 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.MovieDBApplication
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
-import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.ActorsRepository
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.local.db.MovieDBDatabase
-import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.AccountState
-import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
-import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MovieTrailer
-import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MoviesRepository
-import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.*
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
-import io.reactivex.Flowable
+import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import java.io.IOException
@@ -24,27 +19,26 @@ import java.util.concurrent.TimeoutException
 class MovieDetailsViewModel(
     private val isAuthenticated: Boolean,
     private val movieId: Int,
-    private val moviesRepository: MoviesRepository,
-    private val actorsRepository: ActorsRepository
+    private val moviesRepository: MoviesRepository
 ) : ViewModel() {
 
     private val compositeDisposable = CompositeDisposable()
-    private val _movie = MutableLiveData<Movie>()
-    private val _cast = MutableLiveData<List<Actor>>()
-    private val _accountStates = MutableLiveData<AccountState>()
-    private val _trailerKey = MutableLiveData<String>()
+    private val _movie = MutableLiveData<Resource<Movie>>()
+    private val _actors = MutableLiveData<List<Resource<Actor>>>()
+    private val _accountStates = MutableLiveData<Resource<AccountState>>()
+    private val _trailerKey = MutableLiveData<Resource<MovieTrailer>>()
     private val _message = SingleLiveEvent<String>()
 
-    val movie: LiveData<Movie>
+    val movie: LiveData<Resource<Movie>>
         get() = _movie
 
-    val cast: LiveData<List<Actor>>
-        get() = _cast
+    val actors: LiveData<List<Resource<Actor>>>
+        get() = _actors
 
-    val accountState: LiveData<AccountState>
+    val accountState: LiveData<Resource<AccountState>>
         get() = _accountStates
 
-    val trailerKey: LiveData<String>
+    val trailerKey: LiveData<Resource<MovieTrailer>>
         get() = _trailerKey
 
     val message: LiveData<String>
@@ -59,6 +53,7 @@ class MovieDetailsViewModel(
      */
     fun getAllMovieInfo() {
         this.getMovieDetails()
+            .doOnNext { movieResource -> _movie.postValue(movieResource) }
             .publish()
             .apply {
                 switchMap { getMovieAccountStates() }
@@ -68,13 +63,20 @@ class MovieDetailsViewModel(
                     .disposeWith(compositeDisposable)
                 switchMap { getMovieTrailer() }
                     .subscribe(
-                        { trailer -> _trailerKey.postValue(trailer.youtubeVideoKey) },
+                        { trailer -> _trailerKey.postValue(trailer) },
                         { error -> handleError(error, "get-movie-trailer") }
                     )
                     .disposeWith(compositeDisposable)
                 switchMap { getMovieCast() }
+                    .switchMapSingle { castResource ->
+                        if (castResource is Resource.Success) {
+                            getMovieActors(castResource.data.castMembersIds)
+                        } else {
+                            getMovieActors(emptyList())
+                        }
+                    }
                     .subscribe(
-                        { actorsList -> _cast.postValue(actorsList) },
+                        { actorsList -> _actors.postValue(actorsList) },
                         { error -> handleError(error, "get-movie-cast") }
                     )
                     .disposeWith(compositeDisposable)
@@ -83,26 +85,20 @@ class MovieDetailsViewModel(
             .disposeWith(compositeDisposable)
     }
 
-    private fun getMovieDetails(): Flowable<Movie> {
+    private fun getMovieDetails(): Observable<Resource<Movie>> {
         return moviesRepository.getMovieDetailsFlowable(movieId)
+            .init(compositeDisposable)
             .subscribeOn(Schedulers.io())
-            .doOnNext { movie ->
-                _movie.postValue(movie)
-                if (!movie.isModelComplete) {
-                    log("Movie model is incomplete, force refreshing")
-                    forceRefreshMovieDetails()
-                }
-            }
     }
 
-    private fun getMovieAccountStates(): Flowable<AccountState> {
+    private fun getMovieAccountStates(): Observable<Resource<AccountState>> {
         return if (isAuthenticated) {
-            moviesRepository.getAccountStatesForMovieFlowable(movieId)
+            moviesRepository.getAccountStatesForMovieResource(movieId)
+                .init(compositeDisposable)
+                .subscribeOn(Schedulers.io())
         } else {
-            Flowable.just(AccountState(null, null, movieId))
-                .doOnNext { _accountStates.postValue(it) }
+            Observable.just(Resource.Success(AccountState(null, null, movieId)))
         }
-            .subscribeOn(Schedulers.io())
     }
 
     fun toggleMovieFavouriteStatus(accountId: Int) {
@@ -139,36 +135,91 @@ class MovieDetailsViewModel(
         }
     }
 
-    private fun getMovieCast(): Flowable<List<Actor>> {
+    private fun getMovieCast(): Observable<Resource<Cast>> {
         return moviesRepository.getMovieCast(movieId)
+            .init(compositeDisposable)
             .subscribeOn(Schedulers.io())
-            .toFlowable()
-            .map { cast -> cast.castMembersIds.take(8) }
-            .flatMapSingle { ids ->
-                actorsRepository.getAllActors(ids)
-            }
     }
 
-    private fun getMovieTrailer(): Flowable<MovieTrailer> {
+    private fun getMovieActors(ids: List<Int>, count: Int = 8): Single<List<Resource<Actor>>> {
+        return moviesRepository.getActorsInMovie(ids.take(count))
+            .subscribeOn(Schedulers.io())
+//            .subscribeBy(
+//                onNext = { actors -> _actors.postValue(actors) },
+//                onError = { error -> handleError(error, "get-movie-actors") }
+//            )
+//            .disposeWith(compositeDisposable)
+    }
+
+//            .subscribeOn(Schedulers.io())
+//            .flatMapPublisher { cast ->
+//                actorsRepository.getAllActorsResource(cast, compositeDisposable).toFlowable(BackpressureStrategy.BUFFER)
+//            }
+//            .subscribeBy (
+//                onNext = { actorResource ->
+//                    log("Cast list resource: $actorResource")
+//                    _actors.postValue(actorResource)
+//                },
+//                onError = { error -> handleError(error, "get-actor-details") }
+//            )
+//            .disposeWith(compositeDisposable)
+//
+//        moviesRepository.getMovieActors(movieId)
+//            .subscribeOn(Schedulers.io())
+//            .flatMapPublisher { cast ->
+//                Flowable.fromIterable(cast.castMembersIds)
+//            }
+//            .flatMapSingle { id ->
+//                actorsRepository.getActorResource(id)
+//            }
+//        return moviesRepository.getMovieActors(movieId)
+//            .subscribeOn(Schedulers.io())
+//            .toFlowable()
+//            .map { cast -> cast.castMembersIds.take(8) }
+//            .flatMapSingle { ids ->
+//                actorsRepository.getAllActorsResource(ids)
+//            }
+//            .map { list ->
+//                list.filter { it.data != null }
+//                    .map { resource -> resource.data!! }
+//            }
+
+    private fun getMovieTrailer(): Observable<Resource<MovieTrailer>> {
         return moviesRepository.getMovieTrailer(movieId)
+            .init(compositeDisposable)
             .subscribeOn(Schedulers.io())
-            .toFlowable()
+//            .subscribeBy(
+//                onNext = { trailerResource -> _trailerKey.postValue(trailerResource) },
+//                onError = { error -> handleError(error, "get-movie-trailer") }
+//            )
+//            .disposeWith(compositeDisposable)
+//        return moviesRepository.getMovieTrailer(movieId)
+//            .subscribeOn(Schedulers.io())
+//            .toFlowable()
     }
 
-    private fun forceRefreshMovieDetails() {
-        moviesRepository.forceRefreshMovieDetails(movieId)
+    private fun forceRefreshMovieDetails(): Observable<Resource<Movie>> {
+        return moviesRepository.forceRefreshMovieDetails(movieId)
+            .init(compositeDisposable)
             .subscribeOn(Schedulers.io())
-            .subscribe(
-                // onSuccess
-                { movie ->
-                    log("Successfully retrieved complete movie model")
-                },
-                // onError
-                { error ->
-                    handleError(error, "force-refresh-movie-details")
-                }
-            )
-            .disposeWith(compositeDisposable)
+//            .subscribeBy(
+//                onNext = { movieResource -> _movie.postValue(movieResource) },
+//                onError = { error -> handleError(error, "force-refresh-movie") }
+//            )
+//            .disposeWith(compositeDisposable)
+//        moviesRepository.forceRefreshMovieDetails(movieId)
+//            .subscribeOn(Schedulers.io())
+//            .subscribe(
+//                // onSuccess
+//                { movie ->
+//                    log("Successfully retrieved complete movie model")
+//                },
+//                // onError
+//                { error ->
+//                    handleError(error, "force-refresh-movie-details")
+//                }
+//            )
+//            .disposeWith(compositeDisposable)
     }
 
     override fun onCleared() {

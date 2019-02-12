@@ -1,8 +1,12 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.movies
 
+import com.kshitijchauhan.haroldadmin.moviedb.repository.NetworkBoundResource
+import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.Flowable
 import io.reactivex.Single
+import io.reactivex.rxkotlin.zipWith
 import io.reactivex.schedulers.Schedulers
 
 class MoviesRepository(
@@ -10,154 +14,106 @@ class MoviesRepository(
     private val remoteMoviesSource: RemoteMoviesSource
 ) {
 
-    fun getMovieDetailsFlowable(id: Int): Flowable<Movie> {
-        return localMoviesSource.isMovieInDatabase(id)
-            .flatMapPublisher<Movie> { count: Int ->
-                if (count > 0) {
-                    log("Movie already exists in database")
-                    localMoviesSource.getMovieFlowable(id)
-                } else {
-                    log("Fetching movie from the network")
-                    remoteMoviesSource.getMovieDetails(id)
-                        .observeOn(Schedulers.single())
-                        .doOnSuccess { movie ->
-                            log("Saving movie to the database")
-                            localMoviesSource.saveMovieToDatabase(movie)
-                        }
-                        .flatMapPublisher {
-                            localMoviesSource.getMovieFlowable(id)
-                        }
-                }
+    fun getMovieDetailsFlowable(id: Int): NetworkBoundResource<Movie> {
+
+        return object : NetworkBoundResource<Movie>() {
+            override fun fetchFromNetwork(): Flowable<Resource<Movie>> {
+                return remoteMoviesSource.getMovieDetails(id).toFlowable()
             }
+
+            override fun fetchFromDatabase(): Flowable<Resource<Movie>> {
+                return localMoviesSource.getMovieFlowable(id).map { movie -> Resource.Success(movie) }
+            }
+
+            override fun shouldRefresh(): Single<Boolean> {
+                val isInDb = localMoviesSource.isMovieInDatabase(id).map { count -> count == 0 }
+                val isModelComplete = localMoviesSource.getMovie(id).map { movie -> movie.isModelComplete }
+
+                return isInDb
+                    .zipWith(isModelComplete) {
+                        dbStatus, modelStatus -> !(dbStatus && modelStatus)
+                    }
+            }
+
+            override fun saveToDatabase(movie: Movie) {
+                localMoviesSource.saveMovieToDatabase(movie)
+            }
+        }
     }
 
-    fun getMovieDetails(id: Int): Single<Movie> {
-        return localMoviesSource.isMovieInDatabase(id)
-            .flatMap { count ->
-                if (count > 0) {
-                    log("Movie already exists in database")
-                    localMoviesSource.getMovie(id)
-                } else {
-                    log("Fetching movie from the network")
-                    remoteMoviesSource.getMovieDetails(id)
-                        .observeOn(Schedulers.single())
-                        .doOnSuccess { movie ->
-                            log("Saving movie to database")
-                            localMoviesSource.saveMovieToDatabase(movie)
-                        }
-                        .flatMap {
-                            localMoviesSource.getMovie(id)
-                        }
-                }
+    fun getAccountStatesForMovieResource(movieId: Int): NetworkBoundResource<AccountState> {
+
+        return object : NetworkBoundResource<AccountState>() {
+            override fun fetchFromNetwork(): Flowable<Resource<AccountState>> {
+                return remoteMoviesSource.getMovieAccountStates(movieId).toFlowable()
             }
+
+            override fun fetchFromDatabase(): Flowable<Resource<AccountState>> {
+                return localMoviesSource.getAccountStateForMovieFlowable(movieId)
+                    .map { accountState -> Resource.Success(accountState) }
+            }
+
+            override fun shouldRefresh(): Single<Boolean> {
+                return localMoviesSource.isAccountStateInDatabase(movieId).map { count -> count == 0 }
+            }
+
+            override fun saveToDatabase(accountState: AccountState) {
+                localMoviesSource.saveAccountStateToDatabase(accountState)
+            }
+        }
     }
 
-    fun getAccountStatesForMovieFlowable(movieId: Int): Flowable<AccountState> {
-        return localMoviesSource.isAccountStateInDatabase(movieId)
-            .flatMapPublisher<AccountState> { count ->
-                if (count > 0) {
-                    log("Account states are already in database")
-                    localMoviesSource.getAccountStateForMovieFlowable(movieId)
-                } else {
-                    log("Fetching account states from the network")
-                    remoteMoviesSource.getMovieAccountStates(movieId)
-                        .observeOn(Schedulers.single())
-                        .doOnSuccess { accountState ->
-                            log("Saving account state to database")
-                            localMoviesSource.saveAccountStateToDatabase(accountState)
-                        }
-                        .flatMapPublisher {
-                            localMoviesSource.getAccountStateForMovieFlowable(movieId)
-                        }
-                }
+    fun getMovieCast(movieId: Int): NetworkBoundResource<Cast> {
+
+        return object : NetworkBoundResource<Cast>() {
+            override fun fetchFromNetwork(): Flowable<Resource<Cast>> {
+                return remoteMoviesSource.getMovieCast(movieId).toFlowable()
             }
+
+            override fun fetchFromDatabase(): Flowable<Resource<Cast>> {
+                return localMoviesSource
+                    .getCastForMovieFlowable(movieId)
+                    .map { cast ->
+                        Resource.Success(cast)
+                    }
+            }
+
+            override fun shouldRefresh(): Single<Boolean> {
+                return localMoviesSource
+                    .isCastInDatabase(movieId)
+                    .map { count -> count == 0 }
+            }
+
+            override fun saveToDatabase(cast: Cast) {
+                localMoviesSource.saveCastToDatabase(cast)
+            }
+        }
     }
 
-    fun getAccountStatesForMovie(movieId: Int): Single<AccountState> {
-        return localMoviesSource.isAccountStateInDatabase(movieId)
-            .flatMap { count ->
-                if (count > 0) {
-                    log("Account states are already in database")
-                    localMoviesSource.getAccountStatesForMovie(movieId)
-                } else {
-                    log("Fetching account states from the network")
-                    remoteMoviesSource.getMovieAccountStates(movieId)
-                        .observeOn(Schedulers.single())
-                        .doOnSuccess { accountState ->
-                            log("Saving account state to database")
-                            localMoviesSource.saveAccountStateToDatabase(accountState)
-                        }
-                        .flatMap {
-                            localMoviesSource.getAccountStatesForMovie(movieId)
-                        }
-                }
-            }
-    }
+    fun getMovieTrailer(movieId: Int): NetworkBoundResource<MovieTrailer> {
 
-    fun getMovieCastFlowable(movieId: Int): Flowable<Cast> {
-        return localMoviesSource.isCastInDatabase(movieId)
-            .flatMapPublisher { count ->
-                if (count > 0) {
-                    log("Cast already exists in database")
-                    localMoviesSource.getCastForMovieFlowable(movieId)
-                } else {
-                    log("Fetching cast from network")
-                    remoteMoviesSource.getMovieCast(movieId)
-                        .observeOn(Schedulers.single())
-                        .doOnSuccess { cast ->
-                            log("Saving cast to database")
-                            localMoviesSource.saveCastToDatabase(cast)
-                        }
-                        .flatMapPublisher {
-                            localMoviesSource.getCastForMovieFlowable(movieId)
-                        }
-                }
+        return object : NetworkBoundResource<MovieTrailer>() {
+            override fun fetchFromNetwork(): Flowable<Resource<MovieTrailer>> {
+                return remoteMoviesSource.getMovieTrailer(movieId)
             }
-    }
 
-    fun getMovieCast(movieId: Int): Single<Cast> {
-        return localMoviesSource.isCastInDatabase(movieId)
-            .flatMap { count ->
-                if (count > 0) {
-                    log("Cast already exists in database")
-                    localMoviesSource.getCastForMovie(movieId)
-                } else {
-                    log("Fetching cast from network")
-                    remoteMoviesSource.getMovieCast(movieId)
-                        .observeOn(Schedulers.single())
-                        .doOnSuccess { cast ->
-                            log("Saving cast to database")
-                            localMoviesSource.saveCastToDatabase(cast)
-                        }
-                        .flatMap {
-                            localMoviesSource.getCastForMovie(movieId)
-                        }
-                }
+            override fun fetchFromDatabase(): Flowable<Resource<MovieTrailer>> {
+                return localMoviesSource.getMovieTrailerFlowable(movieId)
+                    .map { trailer -> Resource.Success(trailer) }
             }
-    }
 
-    fun getMovieTrailer(movieId: Int): Single<MovieTrailer> {
-        return localMoviesSource.isMovieTrailerInDatabase(movieId)
-            .flatMap { count ->
-                if (count > 0) {
-                    log("Trailer already exists in database")
-                    localMoviesSource.getMovieTrailer(movieId)
-                } else {
-                    log("Fetching trailer from network")
-                    remoteMoviesSource.getMovieTrailer(movieId)
-                        .observeOn(Schedulers.single())
-                        .doOnSuccess { trailer ->
-                            log("Saving trailer to database")
-                            localMoviesSource.saveMovieTrailerToDatabase(trailer)
-                        }
-                        .flatMap {
-                            localMoviesSource.getMovieTrailer(movieId)
-                        }
-                }
+            override fun shouldRefresh(): Single<Boolean> {
+                return localMoviesSource.isMovieTrailerInDatabase(movieId).map { count -> count == 0 }
             }
+
+            override fun saveToDatabase(movieTrailer: MovieTrailer) {
+                localMoviesSource.saveMovieTrailerToDatabase(movieTrailer)
+            }
+        }
     }
 
     fun toggleMovieFavouriteStatus(movieId: Int, accountId: Int): Single<AccountState> {
+
         return localMoviesSource.getAccountStatesForMovie(movieId)
             .flatMap { accountState ->
                 val newStatus = !accountState.isFavourited!!
@@ -174,6 +130,7 @@ class MoviesRepository(
     }
 
     fun toggleMovieWatchlistStatus(movieId: Int, accountId: Int): Single<AccountState> {
+
         return localMoviesSource.getAccountStatesForMovie(movieId)
             .flatMap { accountState ->
                 val newStatus = !accountState.isWatchlisted!!
@@ -189,18 +146,32 @@ class MoviesRepository(
             }
     }
 
-    fun forceRefreshMovieDetails(movieId: Int): Single<Movie> {
-        log("Force refreshing movie")
-        return remoteMoviesSource.getMovieDetails(movieId)
-            .observeOn(Schedulers.single())
-            .doOnSuccess { movie ->
-                log("Saving refreshed movie model to database")
-                localMoviesSource.updateMovieInDatabase(movie)
+    fun forceRefreshMovieDetails(id: Int): NetworkBoundResource<Movie> {
+        return object : NetworkBoundResource<Movie>() {
+            override fun fetchFromNetwork(): Flowable<Resource<Movie>> {
+                return remoteMoviesSource.getMovieDetails(id).toFlowable()
             }
+
+            override fun fetchFromDatabase(): Flowable<Resource<Movie>> {
+                return localMoviesSource.getMovieFlowable(id).map { movie -> Resource.Success(movie) }
+            }
+
+            override fun shouldRefresh(): Single<Boolean> {
+                return Single.just(true)
+            }
+
+            override fun saveToDatabase(movie: Movie) {
+                localMoviesSource.saveMovieToDatabase(movie)
+            }
+        }
     }
 
     fun getSearchResultsForQuery(query: String): Single<List<Movie>> {
         return remoteMoviesSource.getSearchResultsForQuery(query)
     }
 
+    fun getActorsInMovie(ids: List<Int>): Single<List<Resource<Actor>>> {
+        return localMoviesSource.getActorsForMovie(ids)
+            .map { actors -> actors.map { Resource.Success(it) } }
+    }
 }

@@ -171,7 +171,7 @@ val uiModule = module {
     viewModel { InTheatresViewModel(get()) }
     viewModel { AuthenticationViewModel(get(), get(), get()) }
     viewModel { (isAuthenticated: Boolean, movieId: Int) ->
-        MovieDetailsViewModel(isAuthenticated, movieId, get(), get())
+        MovieDetailsViewModel(isAuthenticated, movieId, get())
     }
     viewModel { MainViewModel(get(), get(), get()) }
     viewModel { (actorId: Int) -> ActorDetailsViewModel(actorId, get()) }

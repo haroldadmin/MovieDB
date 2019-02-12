@@ -1,6 +1,5 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.actors
 
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.Flowable
 
 class LocalActorsSource(private val actorsDao: ActorsDao) {

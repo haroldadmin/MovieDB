@@ -71,5 +71,7 @@ class LocalMoviesSource(private val moviesDao: MovieDao,
 
     fun updateMovieTrailerInDatabase(movieTrailer: MovieTrailer) = moviesDao.updateMovieTrailer(movieTrailer)
 
+    fun getActorsForMovie(actorIds: List<Int>) = moviesDao.getActorsForMovie(actorIds)
+
 }
 

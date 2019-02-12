@@ -1,6 +1,7 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.movies
 
 import androidx.room.*
+import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
 import io.reactivex.Flowable
 import io.reactivex.Single
 
@@ -174,5 +175,8 @@ interface MovieDao {
 
     @Delete
     fun deleteAllMovieTrailers(movieTrailers: List<MovieTrailer>)
+
+    @Query("SELECT * from actors WHERE id IN (:ids)")
+    fun getActorsForMovie(ids: List<Int>): Single<List<Actor>>
 
 }

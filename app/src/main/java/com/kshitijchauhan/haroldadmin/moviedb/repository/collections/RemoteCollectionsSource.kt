@@ -1,7 +1,9 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.collections
 
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.account.AccountService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.discover.DiscoveryService
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.NetworkResponse
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.toMovie
 import io.reactivex.Flowable
 import io.reactivex.Single
@@ -160,6 +162,28 @@ class RemoteCollectionsSource(
     }
 
     private fun getInTheatresCollectionFlowable(): Flowable<Collection> {
+
+//        return discoveryService.getMoviesInTheatre(region = "IN")
+//            .flatMapPublisher { response ->
+//                Flowable.just(
+//                    when (response) {
+//                        is NetworkResponse.Success -> {
+//                            Resource.success(
+//                                Collection(CollectionType.InTheatres.name, response.body.results.map { it.id })
+//                                    .apply {
+//                                        movies = response.body.results.map { it.toMovie() }
+//                                    })
+//                        }
+//                        is NetworkResponse.ServerError -> {
+//                            Resource.error(response.body?.statusMessage ?: "Server error")
+//                        }
+//                        is NetworkResponse.NetworkError -> {
+//                            Resource.error(response.error.localizedMessage ?: "Network error")
+//                        }
+//                    }
+//                )
+//            }
+
         return discoveryService.getMoviesInTheatre(region = "IN")
             .flatMapPublisher { topRatedResponse ->
                 Flowable.just(

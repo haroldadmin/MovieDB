@@ -5,16 +5,24 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.Transformations
 import com.kshitijchauhan.haroldadmin.moviedb.BuildConfig
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.Config
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.common.GeneralMovieResponse
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.CastMember
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.MovieResponse
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.MovieStatesResponse
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.MovieVideo
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.people.PersonResponse
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.AccountState
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MovieTrailer
+import io.reactivex.Flowable
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import java.text.SimpleDateFormat
@@ -139,6 +147,14 @@ fun MovieVideo.toMovieTrailer(movieId: Int): MovieTrailer {
     return MovieTrailer(
         movieId,
         this.key
+    )
+}
+
+fun MovieStatesResponse.toAccountState(movieId: Int): AccountState {
+    return AccountState(
+        isWatchlisted = this.isWatchlisted ?: false,
+        isFavourited = this.isFavourited ?: false,
+        movieId = movieId
     )
 }
 
