@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionType
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
@@ -85,7 +86,7 @@ class LibraryFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        libraryEpoxyController.setData(null, null, mainViewModel.isAuthenticated)
+        libraryEpoxyController.setData(Resource.Loading(), Resource.Loading(), mainViewModel.isAuthenticated)
 
         libraryViewModel.message.observe(viewLifecycleOwner, Observer { message ->
             mainViewModel.showSnackbar(message)

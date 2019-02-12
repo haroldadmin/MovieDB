@@ -31,14 +31,14 @@ class LocalCollectionsSource(
         }
     }
 
-    fun getMoviesForCollection(collection: Collection): Single<List<Movie>> {
-        log("Querying DB for collection movies: ${collection.contents}")
-        return collectionsDao.getMoviesForCollection(collection.contents)
+    fun getMoviesForCollection(ids: List<Int>): Single<List<Movie>> {
+        log("Querying DB for collection movies: $ids")
+        return collectionsDao.getMoviesForCollection(ids)
     }
 
-    fun getMoviesForCollectionFlowable(collection: Collection): Flowable<List<Movie>> {
-        log("Querying DB for collection movies: ${collection.contents}")
-        return collectionsDao.getMoviesForCollectionFlowable(collection.contents)
+    fun getMoviesForCollectionFlowable(ids: List<Int>): Flowable<List<Movie>> {
+        log("Querying DB for collection movies: $ids")
+        return collectionsDao.getMoviesForCollectionFlowable(ids)
     }
 
     fun saveMoviesInCollection(collection: Collection) {

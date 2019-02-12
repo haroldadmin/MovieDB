@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.RequestManager
-import com.jakewharton.rxbinding2.widget.RxSearchView
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
@@ -69,9 +68,9 @@ class InTheatresFragment : BaseFragment() {
         inTheatresEpoxyController.setData(null)
         inTheatresViewModel.apply {
             mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_IN_THEATRES_MOVIES, viewLifecycleOwner))
-            getPopularMovies()
+            getMoviesInTheatres()
 
-            moviesUpdate.observe(viewLifecycleOwner, Observer { newList ->
+            inTheatreMovies.observe(viewLifecycleOwner, Observer { newList ->
                 inTheatresEpoxyController.setData(newList)
                 mainViewModel.completeLoadingTask(TASK_LOAD_IN_THEATRES_MOVIES, viewLifecycleOwner)
             })

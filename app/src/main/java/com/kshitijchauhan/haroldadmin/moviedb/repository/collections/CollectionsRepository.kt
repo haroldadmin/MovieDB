@@ -1,5 +1,8 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.collections
 
+import com.kshitijchauhan.haroldadmin.moviedb.repository.NetworkBoundResource
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.LocalMoviesSource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.Flowable
@@ -7,108 +10,78 @@ import io.reactivex.Single
 
 class CollectionsRepository(
     private val localCollectionsSource: LocalCollectionsSource,
-    private val remoteCollectionsSource: RemoteCollectionsSource
+    private val remoteCollectionsSource: RemoteCollectionsSource,
+    private val localMoviesResource: LocalMoviesSource
 ) {
 
     /**
      * This method should be used with care because the upstream observables it is working on may not emit onComplete,
      * and the downstream might suffer because of it
      */
-    fun getCollectionFlowable(accountId: Int = 0, type: CollectionType): Flowable<Collection> {
-        return localCollectionsSource.isCollectionInDatabase(type)
-            .flatMapPublisher { count ->
-                if (count > 0) {
-                    log("Collection already exists in database")
-                    localCollectionsSource.getCollectionFlowable(type)
-                } else {
-                    log("Getting collection from network")
-                    remoteCollectionsSource.getCollectionFlowable(accountId, type)
-                        .doOnNext { collection ->
-                            log("Writing collection to database")
-                            localCollectionsSource.saveCollection(collection)
-                        }
-                        .switchMap {
-                            localCollectionsSource.getCollectionFlowable(type)
-                        }
-                }
+    fun getCollectionFlowable(accountId: Int = 0, type: CollectionType): NetworkBoundResource<List<Movie>> {
+
+
+        return object : NetworkBoundResource<List<Movie>>() {
+            override fun fetchFromNetwork(): Flowable<Resource<List<Movie>>> {
+                return remoteCollectionsSource.getCollection(accountId, type)
+                    .flatMap { response ->
+                        Single.just(
+                            when (response) {
+                                is Resource.Success -> Resource.Success(response.data.movies ?: emptyList())
+                                is Resource.Error -> Resource.Error(response.errorMessage)
+                                is Resource.Loading -> Resource.Loading<List<Movie>>()
+                            }
+                        )
+                    }
+                    .toFlowable()
             }
+
+            override fun fetchFromDatabase(): Flowable<Resource<List<Movie>>> {
+                return localCollectionsSource.getCollectionFlowable(type)
+                    .switchMap { collection ->
+                        localCollectionsSource.getMoviesForCollectionFlowable(collection.contents)
+                    }
+                    .map { moviesInCollection ->
+                        Resource.Success(moviesInCollection)
+                    }
+            }
+
+            override fun shouldRefresh(): Single<Boolean> {
+                return localCollectionsSource.isCollectionInDatabase(type)
+                    .map { count -> count == 0 }
+            }
+
+            override fun saveToDatabase(movies: List<Movie>) {
+                return localMoviesResource.saveMoviesToDatabase(movies)
+            }
+        }
     }
 
-    fun getCollection(accountId: Int = 0, type: CollectionType): Single<Collection> {
-        return localCollectionsSource.isCollectionInDatabase(type)
-            .flatMap { count ->
-                if (count > 0) {
-                    log("Collection already exists in database")
-                    localCollectionsSource.getCollection(type)
-                } else {
-                    log("Getting collection from network")
-                    remoteCollectionsSource.getCollection(accountId, type)
-                        .doOnSuccess { collection ->
-                            log("Writing collection to database")
-                            localCollectionsSource.saveCollection(collection)
-                        }
-                        .flatMap {
-                            localCollectionsSource.getCollection(type)
-                        }
-                }
-            }
-    }
-
-    fun getMoviesInCollection(accountId: Int = 0, type: CollectionType): Single<List<Movie>> {
-        return localCollectionsSource.isCollectionInDatabase(type)
-            .flatMap<List<Movie>> { count ->
-                if (count > 0) {
-                    log("Collection already exists in database")
-                    localCollectionsSource.getCollection(type)
-                        .flatMap { collection ->
-                            localCollectionsSource.getMoviesForCollection(collection)
-                        }
-                        .doOnSuccess { list ->
-                            log("Returning list of ${list.size} movies ")
-                        }
-                } else {
-                    log("Getting collection from network")
-                    remoteCollectionsSource.getCollection(accountId, type)
-                        .doOnSuccess { collection ->
-                            log("Writing collection to the database")
-                            localCollectionsSource.saveCollection(collection)
-                        }
-                        .flatMap { collection ->
-                            localCollectionsSource.getMoviesForCollection(collection)
-                        }
-                }
-            }
-    }
-
-    fun getMoviesInCollectionFlowable(accountId: Int = 0, type: CollectionType): Flowable<List<Movie>> {
-        return localCollectionsSource.isCollectionInDatabase(type)
-            .flatMapPublisher { count ->
-                if (count > 0) {
-                    log("Collection already exists in database")
-                    localCollectionsSource.getCollectionFlowable(type)
-                        .flatMap { collection ->
-                            localCollectionsSource.getMoviesForCollectionFlowable(collection)
-                        }
-                } else {
-                    log("Fetching collection from the network")
-                    remoteCollectionsSource.getCollectionFlowable(accountId, type)
-                        .doOnNext { collection ->
-                            log("Writing collection to the database")
-                            localCollectionsSource.saveCollection(collection)
-                        }
-                        .flatMap { collection ->
-                            localCollectionsSource.getMoviesForCollectionFlowable(collection)
-                        }
-                }
-            }
-    }
-
-    fun forceRefreshCollection(accountId: Int = 0, type: CollectionType): Single<Collection> {
+    fun forceRefreshCollection(accountId: Int = 0, type: CollectionType): NetworkBoundResource<Collection> {
         log("Force refreshing collection")
-        return remoteCollectionsSource.getCollection(accountId, type)
-            .doOnSuccess { collection ->
-                log("Writing collection to the database")
+        return object : NetworkBoundResource<Collection>() {
+            override fun fetchFromNetwork(): Flowable<Resource<Collection>> {
+                return remoteCollectionsSource.getCollection(accountId, type).toFlowable()
+            }
+
+            override fun fetchFromDatabase(): Flowable<Resource<Collection>> {
+                return localCollectionsSource
+                    .getCollectionFlowable(type)
+                    .map { collection -> Resource.Success(collection) }
+            }
+
+            override fun shouldRefresh(): Single<Boolean> {
+                return Single.just(true)
+            }
+
+            override fun saveToDatabase(collection: Collection) {
                 localCollectionsSource.saveCollection(collection)
             }
+        }
+//        return remoteCollectionsSource.getCollection(accountId, type)
+//            .doOnSuccess { collection ->
+//                log("Writing collection to the database")
+//                localCollectionsSource.saveCollection(collection)
+//            }
     }
 }

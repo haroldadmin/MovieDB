@@ -144,82 +144,18 @@ class MovieDetailsViewModel(
     private fun getMovieActors(ids: List<Int>, count: Int = 8): Single<List<Resource<Actor>>> {
         return moviesRepository.getActorsInMovie(ids.take(count))
             .subscribeOn(Schedulers.io())
-//            .subscribeBy(
-//                onNext = { actors -> _actors.postValue(actors) },
-//                onError = { error -> handleError(error, "get-movie-actors") }
-//            )
-//            .disposeWith(compositeDisposable)
     }
-
-//            .subscribeOn(Schedulers.io())
-//            .flatMapPublisher { cast ->
-//                actorsRepository.getAllActorsResource(cast, compositeDisposable).toFlowable(BackpressureStrategy.BUFFER)
-//            }
-//            .subscribeBy (
-//                onNext = { actorResource ->
-//                    log("Cast list resource: $actorResource")
-//                    _actors.postValue(actorResource)
-//                },
-//                onError = { error -> handleError(error, "get-actor-details") }
-//            )
-//            .disposeWith(compositeDisposable)
-//
-//        moviesRepository.getMovieActors(movieId)
-//            .subscribeOn(Schedulers.io())
-//            .flatMapPublisher { cast ->
-//                Flowable.fromIterable(cast.castMembersIds)
-//            }
-//            .flatMapSingle { id ->
-//                actorsRepository.getActorResource(id)
-//            }
-//        return moviesRepository.getMovieActors(movieId)
-//            .subscribeOn(Schedulers.io())
-//            .toFlowable()
-//            .map { cast -> cast.castMembersIds.take(8) }
-//            .flatMapSingle { ids ->
-//                actorsRepository.getAllActorsResource(ids)
-//            }
-//            .map { list ->
-//                list.filter { it.data != null }
-//                    .map { resource -> resource.data!! }
-//            }
 
     private fun getMovieTrailer(): Observable<Resource<MovieTrailer>> {
         return moviesRepository.getMovieTrailer(movieId)
             .init(compositeDisposable)
             .subscribeOn(Schedulers.io())
-//            .subscribeBy(
-//                onNext = { trailerResource -> _trailerKey.postValue(trailerResource) },
-//                onError = { error -> handleError(error, "get-movie-trailer") }
-//            )
-//            .disposeWith(compositeDisposable)
-//        return moviesRepository.getMovieTrailer(movieId)
-//            .subscribeOn(Schedulers.io())
-//            .toFlowable()
     }
 
     private fun forceRefreshMovieDetails(): Observable<Resource<Movie>> {
         return moviesRepository.forceRefreshMovieDetails(movieId)
             .init(compositeDisposable)
             .subscribeOn(Schedulers.io())
-//            .subscribeBy(
-//                onNext = { movieResource -> _movie.postValue(movieResource) },
-//                onError = { error -> handleError(error, "force-refresh-movie") }
-//            )
-//            .disposeWith(compositeDisposable)
-//        moviesRepository.forceRefreshMovieDetails(movieId)
-//            .subscribeOn(Schedulers.io())
-//            .subscribe(
-//                // onSuccess
-//                { movie ->
-//                    log("Successfully retrieved complete movie model")
-//                },
-//                // onError
-//                { error ->
-//                    handleError(error, "force-refresh-movie-details")
-//                }
-//            )
-//            .disposeWith(compositeDisposable)
     }
 
     override fun onCleared() {

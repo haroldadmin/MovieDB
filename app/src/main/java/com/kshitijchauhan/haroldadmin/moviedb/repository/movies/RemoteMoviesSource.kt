@@ -139,15 +139,25 @@ class RemoteMoviesSource(
         }
     }
 
-    fun getSearchResultsForQuery(query: String): Single<List<Movie>> {
+    fun getSearchResultsForQuery(query: String): Single<Resource<List<Movie>>> {
         return searchService
             .searchForMovie(query)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
-            .flatMapPublisher { searchResponse ->
-                Flowable.fromIterable(searchResponse.results)
+            .flatMap { searchResponse ->
+                Single.just(
+                    when (searchResponse) {
+                        is NetworkResponse.Success -> {
+                            Resource.Success(searchResponse.body.results.map { it.toMovie() })
+                        }
+                        is NetworkResponse.ServerError -> {
+                            Resource.Error<List<Movie>>(searchResponse.body?.statusMessage ?: "Server Error")
+                        }
+                        is NetworkResponse.NetworkError -> {
+                            Resource.Error(searchResponse.error.localizedMessage ?: "Network Error")
+                        }
+                    }
+                )
             }
-            .map { generalMovieResponse -> generalMovieResponse.toMovie() }
-            .toList()
     }
 }

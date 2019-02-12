@@ -156,4 +156,6 @@ class LoggedOutFragment : BaseFragment() {
             }
         })
     }
+
+    // TODO Destroy the webview to prevent memory leaks and crashes in onPageFinished
 }

@@ -166,7 +166,7 @@ class MoviesRepository(
         }
     }
 
-    fun getSearchResultsForQuery(query: String): Single<List<Movie>> {
+    fun getSearchResultsForQuery(query: String): Single<Resource<List<Movie>>> {
         return remoteMoviesSource.getSearchResultsForQuery(query)
     }
 

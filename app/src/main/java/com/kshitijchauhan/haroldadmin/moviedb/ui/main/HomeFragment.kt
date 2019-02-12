@@ -13,6 +13,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionType
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BackPressListener
@@ -20,9 +21,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.mikepenz.itemanimators.AlphaInAnimator
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.view_searchbox.view.*
 import org.koin.android.ext.android.inject
@@ -71,11 +70,16 @@ class HomeFragment : BaseFragment(), BackPressListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        homeEpoxyController.setData(null, null, null)
+        homeEpoxyController.setData(Resource.Loading(), Resource.Loading(), null)
         homeViewModel.apply {
 
             if (popularMovies.value == null) {
-                mainViewModel.addLoadingTask(LoadingTask(TAG_GET_POPULAR_MOVIES, this@HomeFragment.viewLifecycleOwner))
+                mainViewModel.addLoadingTask(
+                    LoadingTask(
+                        TAG_GET_POPULAR_MOVIES,
+                        this@HomeFragment.viewLifecycleOwner
+                    )
+                )
                 getPopularMovies()
             }
 

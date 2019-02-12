@@ -1,24 +1,22 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
-import com.airbnb.epoxy.AutoModel
-import com.airbnb.epoxy.Typed2EpoxyController
 import com.airbnb.epoxy.Typed3EpoxyController
 import com.bumptech.glide.RequestManager
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.*
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 
 class HomeEpoxyController(
     private val callbacks: EpoxyCallbacks,
     private val glide: RequestManager
-) : Typed3EpoxyController<List<Movie>, List<Movie>, List<Movie>>() {
+) : Typed3EpoxyController<Resource<List<Movie>>, Resource<List<Movie>>, Resource<List<Movie>>>() {
 
-    @AutoModel
-    lateinit var emptyPopularListModel: InfoTextModel_
-
-    @AutoModel
-    lateinit var emptyTopRatedListModel: InfoTextModel_
-
-    override fun buildModels(popularMovies: List<Movie>?, topRatedMovies: List<Movie>?, searchResults: List<Movie>?) {
+    override fun buildModels(
+        popularMovies: Resource<List<Movie>>?,
+        topRatedMovies: Resource<List<Movie>>?,
+        searchResults: Resource<List<Movie>>?
+    ) {
         if (searchResults == null) {
             buildHomeModel(popularMovies, topRatedMovies)
         } else {
@@ -26,70 +24,97 @@ class HomeEpoxyController(
         }
     }
 
-    private fun buildSearchModel(searchResults: List<Movie>?) {
+    private fun buildSearchModel(searchResults: Resource<List<Movie>>?) {
         header {
             id("search-results")
             title("Search Results")
             spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
         }
 
-        when {
-            searchResults == null -> infoText {
-                id("search-away")
-                id("search-info")
-                text("Start typing. Search results will appear here.")
-                spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
-            }
-            searchResults.isEmpty() -> infoText {
-                id("no-results-found")
-                text("No movies found for this query")
-                spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
-            }
-            else -> searchResults.forEach { searchResult ->
-                movieSearchResult {
-                    with(searchResult) {
-                        id(id)
-                        movieId(id)
-                        movieTitle(title)
-                        glide(glide)
-                        posterUrl(posterPath)
-                        transitionName("poster-$id")
-                        clickListener { model, _, clickedView, _ ->
-                            callbacks.onMovieItemClicked(model.movieId!!, model.transitionName, clickedView)
+        searchResults?.let {
+            when (searchResults) {
+                is Resource.Success -> {
+                    when {
+                        searchResults.data.isEmpty() -> {
+                            infoText {
+                                id("no-results-found")
+                                text("No movies found for this query")
+                                spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
+                            }
+                        }
+                        else -> searchResults.data.forEach { searchResult ->
+                            movieSearchResult {
+                                with(searchResult) {
+                                    id(id)
+                                    movieId(id)
+                                    movieTitle(title)
+                                    glide(glide)
+                                    posterUrl(posterPath)
+                                    transitionName("poster-$id")
+                                    clickListener { model, _, clickedView, _ ->
+                                        callbacks.onMovieItemClicked(model.movieId!!, model.transitionName, clickedView)
+                                    }
+                                }
+                            }
                         }
                     }
                 }
-            }
+                is Resource.Error -> {
+                    infoText {
+                        id("error-search-results")
+                        text("Error getting search results")
+                        spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
+                    }
+                }
+                is Resource.Loading -> {
+                    infoText {
+                        id("loading-search-results")
+                        text("Loading search results")
+                        spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
+                    }
+                }
+            }.safe
         }
     }
 
-    private fun buildHomeModel(popularMovies: List<Movie>?, topRatedMovies: List<Movie>?) {
+    private fun buildHomeModel(popularMovies: Resource<List<Movie>>?, topRatedMovies: Resource<List<Movie>>?) {
         header {
             id("popular")
             title("Popular")
             spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
         }
 
-        if (popularMovies.isNullOrEmpty()) {
-            emptyPopularListModel
-                .text("No movies are popular right now. The world has changed, people don't like movies.")
-                .spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
-                .also { add(it) }
-
-        } else {
-            popularMovies.forEach { popularMovie ->
-                movie {
-                    id(popularMovie.id)
-                    movieId(popularMovie.id)
-                    glide(glide)
-                    posterUrl(popularMovie.posterPath)
-                    transitionName("poster-${popularMovie.id}")
-                    clickListener { model, _, clickedView, _ ->
-                        callbacks.onMovieItemClicked(model.movieId!!, model.transitionName(), clickedView)
+        when (popularMovies) {
+            is Resource.Success -> {
+                popularMovies.data.forEach { popularMovie ->
+                    movie {
+                        id(popularMovie.id)
+                        movieId(popularMovie.id)
+                        glide(glide)
+                        posterUrl(popularMovie.posterPath)
+                        transitionName("poster-${popularMovie.id}")
+                        clickListener { model, _, clickedView, _ ->
+                            callbacks.onMovieItemClicked(model.movieId!!, model.transitionName(), clickedView)
+                        }
                     }
                 }
             }
-        }
+            is Resource.Error -> {
+                infoText {
+                    id("error-popular-movies")
+                    text("Error getting Popular movies")
+                    spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
+                }
+            }
+            is Resource.Loading -> {
+                infoText {
+                    id("loading-popular-results")
+                    text("Loading popular movies")
+                    spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
+                }
+            }
+            null -> Unit
+        }.safe
 
         header {
             id("top-rated")
@@ -97,24 +122,36 @@ class HomeEpoxyController(
             spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
         }
 
-        if (topRatedMovies.isNullOrEmpty()) {
-            emptyTopRatedListModel
-                .text("No movies have good ratings right now.")
-                .spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
-                .also { add(it) }
-        } else {
-            topRatedMovies.forEach { topRatedMovie ->
-                movie {
-                    id(topRatedMovie.id)
-                    movieId(topRatedMovie.id)
-                    glide(glide)
-                    posterUrl(topRatedMovie.posterPath)
-                    transitionName("poster-${topRatedMovie.id}")
-                    clickListener { model, _, clickedView, _ ->
-                        callbacks.onMovieItemClicked(model.movieId!!, model.transitionName(), clickedView)
+        when (topRatedMovies) {
+            is Resource.Success -> {
+                topRatedMovies.data.forEach { topRatedMovie ->
+                    movie {
+                        id(topRatedMovie.id)
+                        movieId(topRatedMovie.id)
+                        glide(glide)
+                        posterUrl(topRatedMovie.posterPath)
+                        transitionName("poster-${topRatedMovie.id}")
+                        clickListener { model, _, clickedView, _ ->
+                            callbacks.onMovieItemClicked(model.movieId!!, model.transitionName(), clickedView)
+                        }
                     }
                 }
             }
-        }
+            is Resource.Error -> {
+                infoText {
+                    id("error-top-rated-movies")
+                    text("Error getting Top Rated movies")
+                    spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
+                }
+            }
+            is Resource.Loading -> {
+                infoText {
+                    id("loading-popular-results")
+                    text("Loading Top Rated movies")
+                    spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
+                }
+            }
+            null -> Unit
+        }.safe
     }
 }

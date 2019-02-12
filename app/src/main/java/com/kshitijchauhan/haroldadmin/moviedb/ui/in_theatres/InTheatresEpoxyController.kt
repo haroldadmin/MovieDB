@@ -2,18 +2,20 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres
 
 import com.airbnb.epoxy.TypedEpoxyController
 import com.bumptech.glide.RequestManager
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.header
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.infoText
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.movie
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 
 class InTheatresEpoxyController(
     private val callbacks: EpoxyCallbacks,
     private val glide: RequestManager
-): TypedEpoxyController<List<Movie>>() {
+): TypedEpoxyController<Resource<List<Movie>>>() {
 
-    override fun buildModels(movies: List<Movie>?) {
+    override fun buildModels(movies: Resource<List<Movie>>?) {
 
         header {
             id("in-theatres-header")
@@ -21,27 +23,44 @@ class InTheatresEpoxyController(
             spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
         }
 
-        if(movies.isNullOrEmpty()) {
-            infoText {
-                id("in-theatres-info")
-                text("We can't find any movies in theatres near you")
-                spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
-            }
-        } else {
-            movies.forEach { inTheatreMovie ->
-                movie {
-                    id(inTheatreMovie.id)
-                    movieId(inTheatreMovie.id)
-                    glide(glide)
-                    posterUrl(inTheatreMovie.posterPath)
-                    transitionName("poster-${inTheatreMovie.id}")
-                    clickListener { model, _, clickedView, _ ->
-                        callbacks.onMovieItemClicked(model.movieId!!, model.transitionName, clickedView)
+        when (movies) {
+            is Resource.Success -> {
+                when {
+                    movies.data.isEmpty() -> infoText {
+                        id("in-theatres-info")
+                        text("We can't find any movies in theatres near you")
+                        spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
+                    }
+                    else -> movies.data.forEach { inTheatreMovie ->
+                        movie {
+                            id(inTheatreMovie.id)
+                            movieId(inTheatreMovie.id)
+                            glide(glide)
+                            posterUrl(inTheatreMovie.posterPath)
+                            transitionName("poster-${inTheatreMovie.id}")
+                            clickListener { model, _, clickedView, _ ->
+                                callbacks.onMovieItemClicked(model.movieId!!, model.transitionName, clickedView)
+                            }
+                        }
                     }
                 }
             }
-        }
-
+            is Resource.Error -> {
+                infoText {
+                    id("error-in-theatres-movies")
+                    text("Error getting Movies in Theatres")
+                    spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
+                }
+            }
+            is Resource.Loading -> {
+                infoText {
+                    id("loading-in-theatre-movies")
+                    text("Loading Movies in Theatres")
+                    spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
+                }
+            }
+            null -> Unit
+        }.safe
     }
 
 }

@@ -5,7 +5,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.acc
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.discover.DiscoveryService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.NetworkResponse
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.toMovie
-import io.reactivex.Flowable
 import io.reactivex.Single
 
 class RemoteCollectionsSource(
@@ -13,17 +12,7 @@ class RemoteCollectionsSource(
     private val accountService: AccountService
 ) {
 
-    fun getCollectionFlowable(accountId: Int, type: CollectionType): Flowable<Collection> {
-        return when (type) {
-            CollectionType.Favourite -> getFavouritesCollectionFlowable(accountId)
-            CollectionType.Watchlist -> getWatchlistedCollectionFlowable(accountId)
-            CollectionType.Popular -> getPopularCollectionFlowable()
-            CollectionType.TopRated -> getTopRatedCollectionFlowable()
-            CollectionType.InTheatres -> getInTheatresCollectionFlowable()
-        }
-    }
-
-    fun getCollection(accountId: Int, type: CollectionType): Single<Collection> {
+    fun getCollection(accountId: Int, type: CollectionType): Single<Resource<Collection>> {
         return when (type) {
             CollectionType.Favourite -> getFavouritesCollection(accountId)
             CollectionType.Watchlist -> getWatchlistedCollection(accountId)
@@ -33,184 +22,127 @@ class RemoteCollectionsSource(
         }
     }
 
-    private fun getFavouritesCollectionFlowable(accountId: Int): Flowable<Collection> {
+    private fun getFavouritesCollection(accountId: Int): Single<Resource<Collection>> {
         return accountService.getFavouriteMovies(accountId)
-            .flatMapPublisher { favouriteMoviesResponse ->
-                Flowable.just(
-                    Collection(
-                        CollectionType.Favourite.name,
-                        favouriteMoviesResponse.results.map { generalMovieResponse -> generalMovieResponse.id })
-                        .apply {
-                            movies = favouriteMoviesResponse.results.map { generalMovieResponse ->
-                                generalMovieResponse.toMovie()
+            .flatMap { response ->
+                Single.just(when (response) {
+                    is NetworkResponse.Success -> {
+                        Resource.Success(
+                            Collection(
+                                CollectionType.Favourite.name,
+                                response.body.results.map { it.id }
+                            ).apply {
+                                this.movies = response.body.results.map { it.toMovie() }
                             }
-                        }
-                )
+                        )
+                    }
+                    is NetworkResponse.ServerError -> {
+                        Resource.Error<Collection>(response.body?.statusMessage ?: "Server Error")
+                    }
+                    is NetworkResponse.NetworkError -> {
+                        Resource.Error(response.error.localizedMessage ?: "Network Error")
+                    }
+                })
             }
     }
 
-    private fun getFavouritesCollection(accountId: Int): Single<Collection> {
-        return accountService.getFavouriteMovies(accountId)
-            .flatMap { favouriteMoviesResponse ->
-                Single.just(
-                    Collection(
-                        CollectionType.Favourite.name,
-                        favouriteMoviesResponse.results.map { generalMovieResponse -> generalMovieResponse.id })
-                        .apply {
-                            movies = favouriteMoviesResponse.results.map { generalMovieResponse ->
-                                generalMovieResponse.toMovie()
-                            }
-                        }
-                )
-            }
-    }
-
-    private fun getWatchlistedCollectionFlowable(accountId: Int): Flowable<Collection> {
+    private fun getWatchlistedCollection(accountId: Int): Single<Resource<Collection>> {
         return accountService.getMoviesWatchList(accountId)
-            .flatMapPublisher { watchlistResponse ->
-                Flowable.just(
-                    Collection(
-                        CollectionType.Watchlist.name,
-                        watchlistResponse.results.map { generalMovieResponse -> generalMovieResponse.id })
-                        .apply {
-                            movies = watchlistResponse.results.map { generalMovieResponse ->
-                                generalMovieResponse.toMovie()
-                            }
-                        }
-                )
-            }
-    }
-
-    private fun getWatchlistedCollection(accountId: Int): Single<Collection> {
-        return accountService.getMoviesWatchList(accountId)
-            .flatMap { watchlistResponse ->
+            .flatMap { response ->
                 Single.just(
-                    Collection(
-                        CollectionType.Watchlist.name,
-                        watchlistResponse.results.map { generalMovieResponse -> generalMovieResponse.id })
-                        .apply {
-                            movies = watchlistResponse.results.map { generalMovieResponse ->
-                                generalMovieResponse.toMovie()
-                            }
+                    when (response) {
+                        is NetworkResponse.Success -> {
+                            Resource.Success(
+                                Collection(
+                                    CollectionType.Watchlist.name,
+                                    response.body.results.map { it.id }
+                                ).apply {
+                                    this.movies = response.body.results.map { it.toMovie() }
+                                }
+                            )
                         }
+                        is NetworkResponse.ServerError -> {
+                            Resource.Error<Collection>(response.body?.statusMessage ?: "Server Error")
+                        }
+                        is NetworkResponse.NetworkError -> {
+                            Resource.Error(response.error.localizedMessage ?: "Network Error")
+                        }
+                    }
                 )
             }
     }
 
-    private fun getPopularCollectionFlowable(): Flowable<Collection> {
+    private fun getPopularCollection(): Single<Resource<Collection>> {
         return discoveryService.getPopularMovies()
-            .flatMapPublisher { popularMoviesResponse ->
-                Flowable.just(
-                    Collection(
-                        CollectionType.Popular.name,
-                        popularMoviesResponse.results.map { generalMovieResponse -> generalMovieResponse.id })
-                        .apply {
-                            movies = popularMoviesResponse.results.map { generalMovieResponse ->
-                                generalMovieResponse.toMovie()
+            .flatMap { response ->
+                Single.just(when (response) {
+                    is NetworkResponse.Success -> {
+                        Resource.Success(
+                            Collection(
+                                CollectionType.Popular.name,
+                                response.body.results.map { it.id }
+                            ).apply {
+                                this.movies = response.body.results.map { it.toMovie() }
                             }
-                        }
+                        )
+                    }
+                    is NetworkResponse.ServerError -> {
+                        Resource.Error<Collection>(response.body?.statusMessage ?: "Server Error")
+                    }
+                    is NetworkResponse.NetworkError -> {
+                        Resource.Error(response.error.localizedMessage ?: "Network Error")
+                    }
+                }
                 )
             }
     }
 
-    private fun getPopularCollection(): Single<Collection> {
-        return discoveryService.getPopularMovies()
-            .flatMap { popularMoviesResponse ->
-                Single.just(
-                    Collection(
-                        CollectionType.Popular.name,
-                        popularMoviesResponse.results.map { generalMovieResponse -> generalMovieResponse.id })
-                        .apply {
-                            movies = popularMoviesResponse.results.map { generalMovieResponse ->
-                                generalMovieResponse.toMovie()
-                            }
-                        }
-                )
-            }
-    }
-
-    private fun getTopRatedCollectionFlowable(): Flowable<Collection> {
+    private fun getTopRatedCollection(): Single<Resource<Collection>> {
         return discoveryService.getTopRatedMovies()
-            .flatMapPublisher { topRatedResponse ->
-                Flowable.just(
-                    Collection(
-                        CollectionType.TopRated.name,
-                        topRatedResponse.results.map { generalMovieResponse -> generalMovieResponse.id })
-                        .apply {
-                            movies = topRatedResponse.results.map { generalMovieResponse ->
-                                generalMovieResponse.toMovie()
-                            }
-                        }
+            .flatMap { response ->
+                Single.just(when (response) {
+                    is NetworkResponse.Success -> {
+                        Resource.Success(
+                            Collection(
+                                CollectionType.TopRated.name,
+                                response.body.results.map { it.id } )
+                                .apply {
+                                    movies = response.body.results.map { it.toMovie()}
+                                }
+                        )
+                    }
+                    is NetworkResponse.ServerError -> {
+                        Resource.Error<Collection>(response.body?.statusMessage ?: "Server Error")
+                    }
+                    is NetworkResponse.NetworkError -> {
+                        Resource.Error(response.error.localizedMessage ?: "Server Error")
+                    }
+                }
                 )
             }
     }
 
-    private fun getTopRatedCollection(): Single<Collection> {
-        return discoveryService.getTopRatedMovies()
+    private fun getInTheatresCollection(): Single<Resource<Collection>> {
+        return discoveryService.getMoviesInTheatre()
             .flatMap { topRatedResponse ->
-                Single.just(
-                    Collection(
-                        CollectionType.TopRated.name,
-                        topRatedResponse.results.map { generalMovieResponse -> generalMovieResponse.id })
-                        .apply {
-                            movies = topRatedResponse.results.map { generalMovieResponse ->
-                                generalMovieResponse.toMovie()
-                            }
-                        }
-                )
-            }
-    }
-
-    private fun getInTheatresCollectionFlowable(): Flowable<Collection> {
-
-//        return discoveryService.getMoviesInTheatre(region = "IN")
-//            .flatMapPublisher { response ->
-//                Flowable.just(
-//                    when (response) {
-//                        is NetworkResponse.Success -> {
-//                            Resource.success(
-//                                Collection(CollectionType.InTheatres.name, response.body.results.map { it.id })
-//                                    .apply {
-//                                        movies = response.body.results.map { it.toMovie() }
-//                                    })
-//                        }
-//                        is NetworkResponse.ServerError -> {
-//                            Resource.error(response.body?.statusMessage ?: "Server error")
-//                        }
-//                        is NetworkResponse.NetworkError -> {
-//                            Resource.error(response.error.localizedMessage ?: "Network error")
-//                        }
-//                    }
-//                )
-//            }
-
-        return discoveryService.getMoviesInTheatre(region = "IN")
-            .flatMapPublisher { topRatedResponse ->
-                Flowable.just(
-                    Collection(
-                        CollectionType.InTheatres.name,
-                        topRatedResponse.results.map { generalMovieResponse -> generalMovieResponse.id })
-                        .apply {
-                            movies = topRatedResponse.results.map { generalMovieResponse ->
-                                generalMovieResponse.toMovie()
-                            }
-                        }
-                )
-            }
-    }
-
-    private fun getInTheatresCollection(): Single<Collection> {
-        return discoveryService.getMoviesInTheatre(region = "IN")
-            .flatMap { topRatedResponse ->
-                Single.just(
-                    Collection(
-                        CollectionType.InTheatres.name,
-                        topRatedResponse.results.map { generalMovieResponse -> generalMovieResponse.id })
-                        .apply {
-                            movies = topRatedResponse.results.map { generalMovieResponse ->
-                                generalMovieResponse.toMovie()
-                            }
-                        }
+                Single.just(when (topRatedResponse) {
+                    is NetworkResponse.Success -> {
+                        Resource.Success(
+                            Collection(
+                                CollectionType.InTheatres.name,
+                                topRatedResponse.body.results.map { it.id })
+                                .apply {
+                                    movies = topRatedResponse.body.results.map { it.toMovie() }
+                                }
+                        )
+                    }
+                    is NetworkResponse.ServerError -> {
+                        Resource.Error<Collection>(topRatedResponse.body?.statusMessage ?: "Server Error")
+                    }
+                    is NetworkResponse.NetworkError -> {
+                        Resource.Error(topRatedResponse.error.localizedMessage ?: "Network Error")
+                    }
+                }
                 )
             }
     }

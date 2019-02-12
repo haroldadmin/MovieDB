@@ -16,9 +16,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.Collections
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.LocalCollectionsSource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.RemoteCollectionsSource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.local.db.MovieDBDatabase
-import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.LocalMoviesSource
-import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MoviesRepository
-import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.RemoteMoviesSource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.ApiKeyInterceptor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.Config
@@ -30,16 +27,19 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.mov
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.people.PersonService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.search.SearchService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.KotlinRxJava2CallAdapterFactory
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.LocalMoviesSource
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MoviesRepository
+import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.RemoteMoviesSource
 import com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details.ActorDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AuthenticationViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.ProgressBarManager
-import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.CreditsAdapter
-import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.MovieDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.HomeViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
+import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.CreditsAdapter
+import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.MovieDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SafeRfc3339DateJsonAdapter
 import com.squareup.moshi.Moshi
@@ -158,7 +158,7 @@ val repositoryModule = module {
 
     single { MoviesRepository(get(), get()) }
     single { ActorsRepository(get(), get()) }
-    single { CollectionsRepository(get(), get()) }
+    single { CollectionsRepository(get(), get(), get()) }
 }
 
 val uiModule = module {

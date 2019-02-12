@@ -1,5 +1,7 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.discover
 
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.common.ErrorResponse
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.NetworkResponse
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -16,16 +18,18 @@ private val pastDate = run {
 interface DiscoveryService {
 
     @GET("discover/movie")
-    fun getMoviesInTheatre(@Query("sort_by") sortBy: String = SortParameters.PopularityDsc,
-                           @Query("page") page: Int = 1,
-                           @Query("region") region: String,
-                           @Query("primary_release_date.lte") releaseDateGte: String = currentDate,
-                           @Query("primary_release_date.gte") releaseDateLte: String = pastDate): Single<DiscoverMoviesResponse>
+    fun getMoviesInTheatre(
+        @Query("sort_by") sortBy: String = SortParameters.PopularityDsc,
+        @Query("page") page: Int = 1,
+        @Query("region") region: String = Locale.getDefault().country,
+        @Query("primary_release_date.lte") releaseDateGte: String = currentDate,
+        @Query("primary_release_date.gte") releaseDateLte: String = pastDate
+    ): Single<NetworkResponse<DiscoverMoviesResponse, ErrorResponse>>
 
     @GET("movie/popular")
-    fun getPopularMovies(): Single<DiscoverMoviesResponse>
+    fun getPopularMovies(): Single<NetworkResponse<DiscoverMoviesResponse, ErrorResponse>>
 
     @GET("movie/top_rated")
-    fun getTopRatedMovies(): Single<DiscoverMoviesResponse>
+    fun getTopRatedMovies(): Single<NetworkResponse<DiscoverMoviesResponse, ErrorResponse>>
 
 }
