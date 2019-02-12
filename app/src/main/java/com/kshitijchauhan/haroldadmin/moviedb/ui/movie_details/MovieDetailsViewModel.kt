@@ -54,6 +54,7 @@ class MovieDetailsViewModel(
     fun getAllMovieInfo() {
         this.getMovieDetails()
             .doOnNext { movieResource -> _movie.postValue(movieResource) }
+            .skip(1) // We skip the first value because it is Resource.Loading
             .publish()
             .apply {
                 switchMap { getMovieAccountStates() }

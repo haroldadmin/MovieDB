@@ -27,7 +27,10 @@ class MoviesRepository(
 
             override fun shouldRefresh(): Single<Boolean> {
                 val isInDb = localMoviesSource.isMovieInDatabase(id).map { count -> count == 0 }
-                val isModelComplete = localMoviesSource.getMovie(id).map { movie -> movie.isModelComplete }
+                val isModelComplete = localMoviesSource
+                    .getMovie(id)
+                    .map { movie -> movie.isModelComplete }
+                    .onErrorReturn { false }
 
                 return isInDb
                     .zipWith(isModelComplete) {

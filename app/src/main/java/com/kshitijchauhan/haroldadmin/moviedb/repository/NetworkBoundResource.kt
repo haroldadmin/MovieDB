@@ -11,7 +11,7 @@ import io.reactivex.schedulers.Schedulers
 
 abstract class NetworkBoundResource<T> {
 
-    private val result: BehaviorRelay<Resource<T>> = BehaviorRelay.createDefault(Resource.Loading())
+    private val result: BehaviorRelay<Resource<T>> = BehaviorRelay.create()
 
     abstract fun fetchFromNetwork(): Flowable<Resource<T>>
 
