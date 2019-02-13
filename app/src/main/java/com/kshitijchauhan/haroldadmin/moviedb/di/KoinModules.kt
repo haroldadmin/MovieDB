@@ -101,7 +101,7 @@ val retrofitModule = module {
     }
 
     single {
-        val adapter = SafeRfc3339DateJsonAdapter(Rfc3339DateJsonAdapter())
+        val adapter = SafeRfc3339DateJsonAdapter(Rfc3339DateJsonAdapter()).nullSafe()
         Moshi.Builder()
             .add(Date::class.java, adapter)
             .build()

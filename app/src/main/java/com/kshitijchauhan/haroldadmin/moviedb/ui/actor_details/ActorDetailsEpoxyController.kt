@@ -19,9 +19,16 @@ class ActorDetailsEpoxyController: TypedEpoxyController<Resource<Actor>>() {
 
         when (resource) {
             is Resource.Success -> {
-                mainText {
-                    id(resource.data.id)
-                    text(resource.data.biography ?: "We can't find this information about this actor")
+                if (resource.data.biography.isNullOrBlank()) {
+                    infoText {
+                        id("empty-bio")
+                        text("We can't find this information about this actor")
+                    }
+                } else {
+                    mainText {
+                        id(resource.data.id)
+                        text(resource.data.biography)
+                    }
                 }
             }
             is Resource.Error -> {
