@@ -11,7 +11,7 @@ import retrofit2.http.Path
 interface AccountService {
 
     @GET("account")
-    fun getAccountDetails(): Single<AccountDetailsResponse>
+    fun getAccountDetails(): Single<NetworkResponse<AccountDetailsResponse, ErrorResponse>>
 
     @GET("account/{accountId}/watchlist/movies")
     fun getMoviesWatchList(@Path("accountId") accountId: Int): Single<NetworkResponse<MovieWatchlistResponse, ErrorResponse>>

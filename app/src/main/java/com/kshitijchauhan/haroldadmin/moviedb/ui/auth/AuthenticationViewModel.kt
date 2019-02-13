@@ -4,52 +4,59 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.ApiManager
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.SessionIdInterceptor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.account.AccountDetailsResponse
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.auth.CreateSessionRequest
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.NetworkResponse
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SharedPreferencesDelegate
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
-import io.reactivex.android.schedulers.AndroidSchedulers
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
+import java.io.IOException
+import java.util.concurrent.TimeoutException
 
 class AuthenticationViewModel(sharedPreferences: SharedPreferences,
                               private val sessionIdInterceptor: SessionIdInterceptor,
                               private val apiManager: ApiManager) : ViewModel() {
 
-    private val _requestToken = MutableLiveData<String>()
+    private val _requestToken = MutableLiveData<Resource<String>>()
+    private val _sessionId = MutableLiveData<Resource<String>>()
     private val _authSuccess = SingleLiveEvent<Boolean>()
-    private val _accountDetails = MutableLiveData<AccountDetailsResponse>()
+    private val _accountDetails = MutableLiveData<Resource<AccountDetailsResponse>>()
+    private val _message = SingleLiveEvent<String>()
     private val compositeDisposable = CompositeDisposable()
-    private var sessionId by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_SESSION_ID, "")
-    private var isAuthenticated by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_IS_AUTHENTICATED, false)
-    private var accountId by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_ACCOUNT_ID, -1)
+    private var sessionIdPref by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_SESSION_ID, "")
+    private var isAuthenticatedPref by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_IS_AUTHENTICATED, false)
+    private var accountIdPref by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_ACCOUNT_ID, -1)
 
-    val requestToken: LiveData<String>
+    val requestToken: LiveData<Resource<String>>
         get() = _requestToken
+
+    val sessionId: LiveData<Resource<String>>
+        get() = _sessionId
 
     val authSuccess: LiveData<Boolean>
         get() = _authSuccess
 
-    val accountDetails: LiveData<AccountDetailsResponse>
+    val accountDetails: LiveData<Resource<AccountDetailsResponse>>
         get() = _accountDetails
+
+    val message: LiveData<String>
+        get() = _message
 
     fun getRequestToken() {
         apiManager
             .getRequestToken()
             .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSuccess { response ->
-                if (response.success) {
-                    _requestToken.value = response.requestToken
-                }
-            }
-            .subscribe()
+            .subscribeBy(
+                onSuccess = { token -> _requestToken.postValue(token) },
+                onError = { error -> handleError(error, "get-request-token")}
+            )
             .disposeWith(compositeDisposable)
     }
 
@@ -57,20 +64,21 @@ class AuthenticationViewModel(sharedPreferences: SharedPreferences,
         apiManager
             .createSession(request)
             .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.computation())
-            .toObservable()
-            .doOnNext { response ->
-                sessionId = response.sessionId
-                setNewSessionIdToInterceptor(response.sessionId)
-                isAuthenticated = true
+            .doOnSuccess {
+                this.getAccountDetails()
             }
-            .switchMapSingle {
-                apiManager.getAccountDetails()
-            }
-            .doOnNext {
-                _authSuccess.postValue(true)
-            }
-            .subscribe()
+            .subscribeBy(
+                onSuccess = { sessionIdResource ->
+                    _sessionId.postValue(sessionIdResource)
+                    if (sessionIdResource is Resource.Success) {
+                        sessionIdPref = sessionIdResource.data
+                        isAuthenticatedPref = true
+                        _authSuccess.postValue(true)
+                        setNewSessionIdToInterceptor(sessionIdResource.data)
+                    }
+                },
+                onError = { error -> handleError(error, "create-session")}
+            )
             .disposeWith(compositeDisposable)
     }
 
@@ -78,17 +86,34 @@ class AuthenticationViewModel(sharedPreferences: SharedPreferences,
         apiManager
             .getAccountDetails()
             .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.computation())
-            .doOnSuccess { response ->
-                accountId = response.id
-                _accountDetails.postValue(response)
-            }
-            .subscribe()
+            .subscribeBy(
+                onSuccess = { accountDetails ->
+                    _accountDetails.postValue(accountDetails)
+                    if (accountDetails is Resource.Success) {
+                        accountIdPref = accountDetails.data.id
+                    }
+                },
+                onError = { error -> handleError(error, "get-account-details") }
+            )
             .disposeWith(compositeDisposable)
     }
 
     fun setNewSessionIdToInterceptor(newId: String) {
         sessionIdInterceptor.setSessionId(newId)
+    }
+
+    private fun handleError(error: Throwable, caller: String) {
+        error.localizedMessage?.let {
+            log("ERROR $caller -> $it")
+        } ?: log("ERROR $caller ->")
+            .also {
+                error.printStackTrace()
+            }
+        when (error) {
+            is IOException -> _message.postValue("Please check your internet connection")
+            is TimeoutException -> _message.postValue("Request timed out")
+            else -> _message.postValue("An error occurred")
+        }
     }
 
     override fun onCleared() {

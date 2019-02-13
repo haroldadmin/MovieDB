@@ -15,6 +15,7 @@ import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
 import com.kshitijchauhan.haroldadmin.moviedb.R
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.auth.CreateSessionRequest
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
@@ -22,6 +23,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.visible
 import kotlinx.android.synthetic.main.fragment_logged_out.*
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -55,11 +57,6 @@ class LoggedOutFragment : BaseFragment() {
         return inflater.inflate(R.layout.fragment_logged_out, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        mainViewModel.updateToolbarTitle("Login")
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -69,9 +66,6 @@ class LoggedOutFragment : BaseFragment() {
             webViewClient = object : WebViewClient() {
 
                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                    url?.let {
-                        log("Loading this url in webview: $it")
-                    }
                     mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_WEBPAGE, viewLifecycleOwner))
                     super.onPageStarted(view, url, favicon)
                 }
@@ -81,8 +75,7 @@ class LoggedOutFragment : BaseFragment() {
                     mainViewModel.completeLoadingTask(TASK_LOAD_WEBPAGE, viewLifecycleOwner)
                     if (url?.contains("allow") == true) {
                         handleAuthorizationSuccessful(
-                            authenticationViewModel.requestToken.value
-                                ?: throw IllegalStateException("Can not create session ID because request token is empty")
+                            authenticationViewModel.requestToken.value!!
                         )
                     }
                 }
@@ -115,9 +108,18 @@ class LoggedOutFragment : BaseFragment() {
             infoGroup.gone()
             webGroup.visible()
 
-            authenticationViewModel.requestToken.observe(viewLifecycleOwner, Observer { token ->
-                if (token.isNotBlank())
-                    authorizeToken(token)
+            authenticationViewModel.requestToken.observe(viewLifecycleOwner, Observer { tokenResource ->
+                when (tokenResource) {
+                    is Resource.Success -> {
+                        authorizeToken(tokenResource.data)
+                    }
+                    is Resource.Error -> {
+                        // TODO handle this
+                    }
+                    is Resource.Loading -> {
+                        // TODO handle this
+                    }
+                }.safe
             })
         }
     }
@@ -126,34 +128,54 @@ class LoggedOutFragment : BaseFragment() {
         authWebView.loadUrl("https://www.themoviedb.org/authenticate/$token")
     }
 
-    private fun handleAuthorizationSuccessful(token: String) {
-        authenticationViewModel.createSession(CreateSessionRequest(token))
+    private fun handleAuthorizationSuccessful(token: Resource<String>) {
+        when (token) {
+            is Resource.Success -> {
+                authenticationViewModel.createSession(CreateSessionRequest(token.data))
 
-        val transition = TransitionSet()
-        transition.apply {
-            ordering = TransitionSet.ORDERING_SEQUENTIAL
-            addTransition(
-                Fade()
-                    .addTarget(authWebView)
-                    .setDuration(200)
-            )
-            addTransition(
-                Fade()
-                    .addTarget(pbLoading)
-                    .addTarget(tvPleaseWait)
-                    .setDuration(200)
-            )
-        }
+                val transition = TransitionSet()
+                transition.apply {
+                    ordering = TransitionSet.ORDERING_SEQUENTIAL
+                    addTransition(
+                        Fade()
+                            .addTarget(authWebView)
+                            .setDuration(200)
+                    )
+                    addTransition(
+                        Fade()
+                            .addTarget(pbLoading)
+                            .addTarget(tvPleaseWait)
+                            .setDuration(200)
+                    )
+                }
 
-        TransitionManager.beginDelayedTransition(container, transition)
-        webGroup.gone()
-        loadingGroup.visible()
-
-        authenticationViewModel.authSuccess.observe(viewLifecycleOwner, Observer {
-            mainViewModel.apply {
-                showSnackbar("Login Successful!")
-                signalClearBackstack()
+                TransitionManager.beginDelayedTransition(container, transition)
+                webGroup.gone()
+                loadingGroup.visible()
             }
+            else -> {
+                // TODO Handle this
+            }
+        }.safe
+
+        authenticationViewModel.accountDetails.observe(viewLifecycleOwner, Observer { accountDetailsResource ->
+            when (accountDetailsResource) {
+                is Resource.Success -> {
+                    mainViewModel.apply {
+                        showSnackbar("Login Successful!")
+                        signalClearBackstack()
+                    }
+                    Unit
+                }
+                is Resource.Error -> {
+                    // TODO Handle this
+                    Unit
+                }
+                is Resource.Loading -> {
+                    // TODO Handle this
+                    Unit
+                }
+            }.safe
         })
     }
 

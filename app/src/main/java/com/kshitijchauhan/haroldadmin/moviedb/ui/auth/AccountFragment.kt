@@ -10,12 +10,14 @@ import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.account.AccountDetailsResponse
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 import kotlinx.android.synthetic.main.fragment_account.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -89,19 +91,29 @@ class AccountFragment : BaseFragment() {
         }
     }
 
-    private fun updateView(accountInfo: AccountDetailsResponse) {
-        with(accountInfo) {
-            glideRequestManager
-                .load("https://www.gravatar.com/avatar/${avatar.gravatar.hash}")
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .apply(
-                    RequestOptions()
-                        .centerCrop()
-                        .placeholder(R.drawable.ic_round_account_circle_24px)
-                )
-                .into(ivAvatar)
-            tvName.text = name
-            tvUsername.text = username
-        }
+    private fun updateView(accountInfo: Resource<AccountDetailsResponse>) {
+        when (accountInfo) {
+            is Resource.Success -> {
+                with(accountInfo.data) {
+                    glideRequestManager
+                        .load("https://www.gravatar.com/avatar/${avatar.gravatar.hash}")
+                        .transition(DrawableTransitionOptions.withCrossFade())
+                        .apply(
+                            RequestOptions()
+                                .centerCrop()
+                                .placeholder(R.drawable.ic_round_account_circle_24px)
+                        )
+                        .into(ivAvatar)
+                    tvName.text = name
+                    tvUsername.text = username
+                }
+            }
+            is Resource.Error -> {
+                // TODO handle this
+            }
+            is Resource.Loading -> {
+                // TODO handle this
+            }
+        }.safe
     }
 }
