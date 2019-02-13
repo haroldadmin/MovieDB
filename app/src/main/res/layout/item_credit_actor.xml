@@ -4,7 +4,8 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="4dp">
     <ImageView
         android:id="@+id/ivCreditActorPhoto"
         android:layout_width="88dp"
@@ -16,7 +17,10 @@
         android:id="@+id/tvCreditActorName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         tools:text="Robert Downey Jr"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
         android:textAlignment="center"/>
 </LinearLayout>
