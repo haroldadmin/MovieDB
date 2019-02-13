@@ -1,6 +1,7 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie
 
 import android.os.Parcelable
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.common.GeneralMovieResponse
 import com.squareup.moshi.Json
 import kotlinx.android.parcel.Parcelize
 import java.util.*
@@ -65,3 +66,10 @@ data class CastMember(
 data class MovieCreditsResponse(
     @field:Json(name="id") val id: Int,
     @field:Json(name="cast") val cast: List<CastMember>): Parcelable
+
+@Parcelize
+data class SimilarMoviesResponse(
+    @field:Json(name="page") val page: Int,
+    @field:Json(name="results") val results: List<GeneralMovieResponse>,
+    @field:Json(name="total_results") val totalResults: Int,
+    @field:Json(name="total_pages") val totalPages: Int): Parcelable

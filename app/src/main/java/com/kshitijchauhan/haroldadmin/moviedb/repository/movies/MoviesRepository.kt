@@ -2,6 +2,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.repository.movies
 
 import com.kshitijchauhan.haroldadmin.moviedb.repository.NetworkBoundResource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
+import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.Collection
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.Flowable
@@ -176,5 +177,9 @@ class MoviesRepository(
     fun getActorsInMovie(ids: List<Int>): Single<List<Resource<Actor>>> {
         return localMoviesSource.getActorsForMovie(ids)
             .map { actors -> actors.map { Resource.Success(it) } }
+    }
+
+    fun getSimilarMoviesForMovie(movieId: Int): Single<Resource<List<Movie>>> {
+        return remoteMoviesSource.getSimilarMoviesForMovie(movieId)
     }
 }

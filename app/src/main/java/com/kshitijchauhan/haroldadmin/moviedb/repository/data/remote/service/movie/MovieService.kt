@@ -19,4 +19,7 @@ interface MovieService {
 
     @GET("movie/{movieId}/credits")
     fun getCreditsForMovie(@Path("movieId") movieId: Int): Single<NetworkResponse<MovieCreditsResponse, ErrorResponse>>
+
+    @GET("movie/{movieId}/similar")
+    fun getSimilarMoviesForMovie(@Path("movieId") movieId: Int): Single<NetworkResponse<SimilarMoviesResponse, ErrorResponse>>
 }

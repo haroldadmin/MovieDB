@@ -160,4 +160,26 @@ class RemoteMoviesSource(
                 )
             }
     }
+
+    fun getSimilarMoviesForMovie(movieId: Int): Single<Resource<List<Movie>>> {
+        return movieService
+            .getSimilarMoviesForMovie(movieId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
+            .flatMap { similarMoviesResponse ->
+                Single.just(
+                    when (similarMoviesResponse) {
+                        is NetworkResponse.Success -> {
+                            Resource.Success(similarMoviesResponse.body.results.map { it.toMovie() })
+                        }
+                        is NetworkResponse.ServerError -> {
+                            Resource.Error<List<Movie>>(similarMoviesResponse.body?.statusMessage ?: "Server Error")
+                        }
+                        is NetworkResponse.NetworkError -> {
+                            Resource.Error(similarMoviesResponse.error.localizedMessage ?: "Network Error")
+                        }
+                    }
+                )
+            }
+    }
 }
