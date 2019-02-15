@@ -53,7 +53,7 @@ class LibraryFragment : BaseFragment() {
     }
 
     override fun updateToolbarTitle() {
-        mainViewModel.updateToolbarTitle("Library")
+        mainViewModel.updateToolbarTitle(getString(R.string.title_library_screen))
     }
 
     companion object {

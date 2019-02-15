@@ -154,9 +154,9 @@ class ActorDetailsFragment : BaseFragment() {
 
     private fun handleResourceError() {
         startPostponedEnterTransition()
-        mainViewModel.updateToolbarTitle("Unknown")
+        mainViewModel.updateToolbarTitle(getString(R.string.actor_name_error))
         glideRequestManager.load(R.drawable.ic_round_account_circle_24px)
             .into(ivActorPhoto)
-        tvActorName.text = "Unknown"
+        tvActorName.text = getString(R.string.actor_name_error)
     }
 }

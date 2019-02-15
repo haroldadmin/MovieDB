@@ -52,7 +52,7 @@ class MovieDetailsFragment : BaseFragment() {
             if (mainViewModel.isAuthenticated) {
                 movieDetailsViewModel.toggleMovieFavouriteStatus(mainViewModel.accountId)
             } else {
-                mainViewModel.showSnackbar("You need to login to do that")
+                mainViewModel.showSnackbar(getString(R.string.message_need_to_login))
             }
         }
 
@@ -60,7 +60,7 @@ class MovieDetailsFragment : BaseFragment() {
             if (mainViewModel.isAuthenticated) {
                 movieDetailsViewModel.toggleMovieWatchlistStatus(mainViewModel.accountId)
             } else {
-                mainViewModel.showSnackbar("You need to login to do that")
+                mainViewModel.showSnackbar(getString(R.string.message_need_to_login))
             }
         }
 

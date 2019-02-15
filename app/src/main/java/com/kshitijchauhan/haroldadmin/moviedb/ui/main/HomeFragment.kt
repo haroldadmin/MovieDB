@@ -61,7 +61,7 @@ class HomeFragment : BaseFragment(), BackPressListener {
     }
 
     override fun updateToolbarTitle() {
-        mainViewModel.updateToolbarTitle("Home")
+        mainViewModel.updateToolbarTitle(getString(R.string.title_home_screen))
     }
 
     companion object {

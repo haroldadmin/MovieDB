@@ -22,7 +22,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.visible
 import kotlinx.android.synthetic.main.fragment_logged_out.*
@@ -43,7 +42,7 @@ class LoggedOutFragment : BaseFragment() {
     }
 
     override fun updateToolbarTitle() {
-        mainViewModel.updateToolbarTitle("Your Account")
+        mainViewModel.updateToolbarTitle(getString(R.string.title_account_screen))
     }
 
     companion object {
@@ -162,7 +161,7 @@ class LoggedOutFragment : BaseFragment() {
             when (accountDetailsResource) {
                 is Resource.Success -> {
                     mainViewModel.apply {
-                        showSnackbar("Login Successful!")
+                        showSnackbar(getString(R.string.message_login_success))
                         signalClearBackstack()
                     }
                     Unit

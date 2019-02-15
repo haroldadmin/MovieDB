@@ -49,7 +49,7 @@ class InTheatresFragment : BaseFragment() {
     }
 
     override fun updateToolbarTitle() {
-        mainViewModel.updateToolbarTitle("In Theatres")
+        mainViewModel.updateToolbarTitle(getString(R.string.title_in_theatres_screen))
     }
 
     companion object {

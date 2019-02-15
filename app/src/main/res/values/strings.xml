@@ -2,4 +2,12 @@
     <string name="app_name">MovieDB</string>
     <string name="loginTitleTransitionName">loginTitle</string>
     <string name="searchBoxTransName">searchBox</string>
+    <string name="actor_name_error">Unknown</string>
+    <string name="title_account_screen">Your Account</string>
+    <string name="message_logout_success">Logged out successfully!</string>
+    <string name="message_login_success">Login Successful!</string>
+    <string name="title_in_theatres_screen">In Theatres</string>
+    <string name="title_library_screen">Library</string>
+    <string name="title_home_screen">Home</string>
+    <string name="message_need_to_login">You need to login to do that</string>
 </resources>

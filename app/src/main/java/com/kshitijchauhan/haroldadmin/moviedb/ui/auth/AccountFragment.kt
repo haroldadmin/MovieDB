@@ -40,7 +40,7 @@ class AccountFragment : BaseFragment() {
     }
 
     override fun updateToolbarTitle() {
-        mainViewModel.updateToolbarTitle("Your Account")
+        mainViewModel.updateToolbarTitle(getString(R.string.title_account_screen))
     }
 
     companion object {
@@ -58,7 +58,7 @@ class AccountFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        mainViewModel.updateToolbarTitle("Your Account")
+        updateToolbarTitle()
 
         if (authenticationViewModel.accountDetails.value == null) {
             mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_ACCOUNT_DETAILS, viewLifecycleOwner))
@@ -86,7 +86,7 @@ class AccountFragment : BaseFragment() {
         mainViewModel.apply {
             setAuthenticationStatus(false)
             setSessionId("")
-            showSnackbar("Logged out successfully!")
+            showSnackbar(getString(R.string.message_logout_success))
             signalClearBackstack()
         }
     }
