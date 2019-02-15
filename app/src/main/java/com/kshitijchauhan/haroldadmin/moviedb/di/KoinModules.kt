@@ -6,7 +6,6 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.room.Room
 import com.bumptech.glide.Glide
-import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.BuildConfig
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.ActorsRepository
@@ -38,7 +37,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.HomeViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.CreditsAdapter
 import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.MovieDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SafeRfc3339DateJsonAdapter
@@ -178,7 +176,6 @@ val uiModule = module {
 
     factory("fragment-glide-request-manager") { (fragment: Fragment) -> Glide.with(fragment) }
     factory("view-glide-request-manager") { (view: View) -> Glide.with(view) }
-    factory { (glide: RequestManager) -> CreditsAdapter(glide) }
 }
 
 
