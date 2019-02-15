@@ -104,6 +104,9 @@ dependencies {
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:9.0.1'
     implementation 'com.airbnb.android:epoxy:3.1.0'
     kapt 'com.airbnb.android:epoxy-processor:3.1.0'
+
+    // Firebase
+    implementation 'com.google.firebase:firebase-core:16.0.1'
 }
 
 apply plugin: 'kotlin-kapt'
@@ -112,3 +115,5 @@ apply plugin: 'kotlin-kapt'
 kapt {
     correctErrorTypes = true
 }
+
+apply plugin: 'com.google.gms.google-services'
