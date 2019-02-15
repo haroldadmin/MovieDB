@@ -102,6 +102,9 @@ class AccountFragment : BaseFragment() {
                             RequestOptions()
                                 .centerCrop()
                                 .placeholder(R.drawable.ic_round_account_circle_24px)
+                                .fallback(R.drawable.ic_round_account_circle_24px)
+                                .error(R.drawable.ic_round_account_circle_24px)
+                                .circleCrop()
                         )
                         .into(ivAvatar)
                     tvName.text = name

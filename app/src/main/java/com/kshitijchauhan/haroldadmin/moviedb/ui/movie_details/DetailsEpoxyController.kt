@@ -11,6 +11,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MovieTrailer
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.actor
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.header
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.infoText
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.loading
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 
 class DetailsEpoxyController(
@@ -86,9 +87,9 @@ class DetailsEpoxyController(
                     spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                 }
 
-                infoText {
-                    id("overview")
-                    text("Loading description...")
+                loading {
+                    id("load-favourite-movies")
+                    description("Loading Description")
                     spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                 }
             }
@@ -129,9 +130,9 @@ class DetailsEpoxyController(
                     spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                 }
 
-                infoText {
-                    id("trailer-loading")
-                    text("Loading trailer...")
+                loading {
+                    id("load-trailer")
+                    description("Loading trailer")
                     spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                 }
             }
@@ -162,7 +163,13 @@ class DetailsEpoxyController(
                         }
                     }
                     is Resource.Error -> Unit
-                    is Resource.Loading -> Unit
+                    is Resource.Loading -> {
+                        loading {
+                            id("load-cast")
+                            description("Loading cast")
+                            spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
+                        }
+                    }
                 }.safe
 
             } ?: infoText {

@@ -17,7 +17,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.RemoteColle
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.local.db.MovieDBDatabase
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.ApiKeyInterceptor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.ApiManager
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.Config
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.Config
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.SessionIdInterceptor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.account.AccountService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.auth.AuthenticationService

@@ -20,14 +20,12 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.format
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
-import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
 import org.koin.android.ext.android.inject
@@ -37,13 +35,6 @@ import org.koin.core.parameter.parametersOf
 
 
 class MovieDetailsFragment : BaseFragment() {
-
-    private val TASK_LOAD_MOVIE_DETAILS = "load-movie-details"
-    private val TASK_LOAD_MOVIE_ACCOUNT_STATES = "load-account-states"
-    private val TASK_LOAD_MOVIE_CAST = "load-movie-cast"
-    private val TASK_TOGGLE_FAVOURITE = "mark-as-favourite"
-    private val TASK_TOGGLE_WATCHLIST = "add-to-watchlist"
-    private val TASK_LOAD_MOVIE_VIDEOS = "load-movie-videos"
 
     private val mainViewModel: MainViewModel by sharedViewModel()
 
@@ -124,7 +115,6 @@ class MovieDetailsFragment : BaseFragment() {
         rvMovieDetails.apply {
             val columns = resources.getDimension(R.dimen.cast_member_picture_size).getNumberOfColumns(view.context)
             layoutManager = GridLayoutManager(context, columns)
-            itemAnimator = AlphaInAnimator()
             setController(detailsEpoxyController)
         }
     }
@@ -132,12 +122,12 @@ class MovieDetailsFragment : BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         detailsEpoxyController.setData(Resource.Loading(), Resource.Loading(), Resource.Loading(), listOf(Resource.Loading()))
-        initTasks()
+
+        movieDetailsViewModel.getAllMovieInfo()
 
         movieDetailsViewModel.movie.observe(viewLifecycleOwner, Observer { movie ->
             log("Received movie update: $movie")
             updateView(movie)
-            mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner)
             detailsEpoxyController.setData(movie,
                 movieDetailsViewModel.accountState.value,
                 movieDetailsViewModel.trailerKey.value,
@@ -146,7 +136,6 @@ class MovieDetailsFragment : BaseFragment() {
 
         movieDetailsViewModel.actors.observe(viewLifecycleOwner, Observer { castList ->
             log("Received cast update: $castList")
-            mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_CAST, viewLifecycleOwner)
             detailsEpoxyController.setData(movieDetailsViewModel.movie.value,
                 movieDetailsViewModel.accountState.value,
                 movieDetailsViewModel.trailerKey.value,
@@ -160,7 +149,6 @@ class MovieDetailsFragment : BaseFragment() {
                 accountState,
                 movieDetailsViewModel.trailerKey.value,
                 movieDetailsViewModel.actors.value)
-            mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_ACCOUNT_STATES, viewLifecycleOwner)
         })
 
         movieDetailsViewModel.trailerKey.observe(viewLifecycleOwner, Observer { url ->
@@ -170,22 +158,11 @@ class MovieDetailsFragment : BaseFragment() {
                 movieDetailsViewModel.accountState.value,
                 url,
                 movieDetailsViewModel.actors.value)
-            mainViewModel.completeLoadingTask(TASK_LOAD_MOVIE_VIDEOS, viewLifecycleOwner)
         })
 
         movieDetailsViewModel.message.observe(viewLifecycleOwner, Observer { message ->
             mainViewModel.showSnackbar(message)
         })
-    }
-
-    private fun initTasks() {
-        movieDetailsViewModel.getAllMovieInfo()
-        mainViewModel.apply {
-            addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_DETAILS, viewLifecycleOwner))
-            addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_ACCOUNT_STATES, viewLifecycleOwner))
-            addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_CAST, viewLifecycleOwner))
-            addLoadingTask(LoadingTask(TASK_LOAD_MOVIE_VIDEOS, viewLifecycleOwner))
-        }
     }
 
     private fun updateView(movieResource: Resource<Movie>) {

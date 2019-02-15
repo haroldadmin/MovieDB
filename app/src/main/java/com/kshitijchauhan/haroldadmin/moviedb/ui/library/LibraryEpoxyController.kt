@@ -69,9 +69,9 @@ class LibraryEpoxyController(
                     }
                 }
                 is Resource.Loading -> {
-                    infoText {
-                        id("loading-favourite-movies")
-                        text("Loading Favourite movies")
+                    loading {
+                        id("load-favourite-movies")
+                        description("Loading Favourite movies")
                         spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                     }
                 }
@@ -117,9 +117,9 @@ class LibraryEpoxyController(
                     }
                 }
                 is Resource.Loading -> {
-                    infoText {
-                        id("loading-watchlist-movies")
-                        text("Loading Watchlisted movies")
+                    loading {
+                        id("load-favourite-movies")
+                        description("Loading Watchlisted movies")
                         spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                     }
                 }

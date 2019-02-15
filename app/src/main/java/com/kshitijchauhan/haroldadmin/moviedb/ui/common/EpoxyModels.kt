@@ -1,12 +1,15 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.common
 
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.ViewCompat
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
+import com.airbnb.epoxy.ModelView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
@@ -200,5 +203,27 @@ abstract class MovieSearchResultModel : EpoxyModelWithHolder<MovieSearchResultMo
     inner class MovieSearchResultHolder : KotlinEpoxyHolder(), KoinComponent {
         val poster by bind<ImageView>(R.id.ivPosterSearchResult)
         val title by bind<TextView>(R.id.tvTitleSearchResult)
+    }
+}
+
+@EpoxyModelClass(layout = R.layout.view_loading)
+abstract class LoadingModel: EpoxyModelWithHolder<LoadingModel.LoadingHolder>() {
+
+    @EpoxyAttribute
+    lateinit var description: String
+
+    override fun bind(holder: LoadingHolder) {
+        super.bind(holder)
+        holder.description.text = description
+    }
+
+    override fun unbind(holder: LoadingHolder) {
+        super.unbind(holder)
+        holder.description.text = ""
+    }
+
+    inner class LoadingHolder: KotlinEpoxyHolder() {
+        val progressBar by bind<ProgressBar>(R.id.pbContentLoading)
+        val description by bind<TextView>(R.id.tvLoadingDescription)
     }
 }

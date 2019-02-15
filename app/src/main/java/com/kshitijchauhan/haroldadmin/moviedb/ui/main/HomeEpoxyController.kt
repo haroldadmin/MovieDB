@@ -67,9 +67,9 @@ class HomeEpoxyController(
                     }
                 }
                 is Resource.Loading -> {
-                    infoText {
-                        id("loading-search-results")
-                        text("Loading search results")
+                    loading {
+                        id("load-search-results")
+                        description("Loading Search results")
                         spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                     }
                 }
@@ -107,9 +107,9 @@ class HomeEpoxyController(
                 }
             }
             is Resource.Loading -> {
-                infoText {
-                    id("loading-popular-results")
-                    text("Loading popular movies")
+                loading {
+                    id("load-popular-movies")
+                    description("Loading Popular movies")
                     spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                 }
             }
@@ -145,9 +145,9 @@ class HomeEpoxyController(
                 }
             }
             is Resource.Loading -> {
-                infoText {
-                    id("loading-popular-results")
-                    text("Loading Top Rated movies")
+                loading {
+                    id("load-top-rated-movies")
+                    description("Loading Top Rated movies")
                     spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                 }
             }

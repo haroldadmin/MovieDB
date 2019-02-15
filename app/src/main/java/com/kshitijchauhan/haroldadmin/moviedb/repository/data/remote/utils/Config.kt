@@ -1,4 +1,4 @@
-package com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote
+package com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils
 
 object Config {
 

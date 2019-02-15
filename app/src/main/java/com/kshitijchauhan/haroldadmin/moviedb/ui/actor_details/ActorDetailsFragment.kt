@@ -22,7 +22,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
-import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.actor_details_fragment.*
 import kotlinx.android.synthetic.main.actor_details_fragment.view.*
 import org.koin.android.ext.android.inject
@@ -81,7 +80,6 @@ class ActorDetailsFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         rvActorDetails.apply {
             layoutManager = LinearLayoutManager(context)
-            itemAnimator = AlphaInAnimator()
             setController(actorDetailsEpoxyController)
         }
     }
@@ -124,6 +122,7 @@ class ActorDetailsFragment : BaseFragment() {
                     .fallback(R.drawable.ic_round_account_circle_24px)
                     .error(R.drawable.ic_round_account_circle_24px)
                     .placeholder(R.drawable.ic_round_account_circle_24px)
+                    .circleCrop()
             }
             .listener(object : RequestListener<Drawable> {
                 override fun onLoadFailed(

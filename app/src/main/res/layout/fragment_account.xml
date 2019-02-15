@@ -7,7 +7,7 @@
     android:background="@color/colorSurfaceDark"
     tools:context=".ui.auth.AccountFragment">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
         android:id="@+id/ivAvatar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

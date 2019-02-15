@@ -23,6 +23,10 @@ class ProgressBarManager : DefaultLifecycleObserver {
     private val progressBarLiveData = MutableLiveData<ProgressBarNotification>()
     private val tasksRegistry = mutableMapOf<LifecycleOwner, MutableList<LoadingTask>>()
 
+    init {
+        progressBarLiveData.postValue(ProgressBarNotification(visible = false))
+    }
+
     /**
      * This function adds the newly submitted task to the task registry. If the tasks registry map already has an entry
      * for this task's lifecycle owner, then it is added to its task list. Otherwise, a new list if created for its

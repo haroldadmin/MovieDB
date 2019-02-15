@@ -5,6 +5,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.header
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.infoText
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.loading
 import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.mainText
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 
@@ -38,9 +39,9 @@ class ActorDetailsEpoxyController: TypedEpoxyController<Resource<Actor>>() {
                 }
             }
             is Resource.Loading -> {
-                infoText {
-                    id("loading-info")
-                    text("Loading...")
+                loading {
+                    id("bio-loading")
+                    description("Loading biography")
                 }
             }
         }.safe

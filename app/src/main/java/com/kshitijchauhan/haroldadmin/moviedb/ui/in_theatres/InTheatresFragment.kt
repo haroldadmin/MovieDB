@@ -11,11 +11,9 @@ import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
-import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_in_theatres.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -24,8 +22,6 @@ import org.koin.core.parameter.parametersOf
 import kotlin.math.roundToInt
 
 class InTheatresFragment : BaseFragment() {
-
-    private val TASK_LOAD_IN_THEATRES_MOVIES = "load-in-theatres-movies"
 
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val inTheatresViewModel: InTheatresViewModel by viewModel()
@@ -67,12 +63,10 @@ class InTheatresFragment : BaseFragment() {
         super.onActivityCreated(savedInstanceState)
         inTheatresEpoxyController.setData(null)
         inTheatresViewModel.apply {
-            mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_IN_THEATRES_MOVIES, viewLifecycleOwner))
             getMoviesInTheatres()
 
             inTheatreMovies.observe(viewLifecycleOwner, Observer { newList ->
                 inTheatresEpoxyController.setData(newList)
-                mainViewModel.completeLoadingTask(TASK_LOAD_IN_THEATRES_MOVIES, viewLifecycleOwner)
             })
 
             message.observe(viewLifecycleOwner, Observer { message ->
@@ -90,7 +84,6 @@ class InTheatresFragment : BaseFragment() {
             val columns = resources.getDimension(R.dimen.movie_grid_poster_width).getNumberOfColumns(context!!)
             val space = resources.getDimension(R.dimen.movie_grid_item_space)
             layoutManager = GridLayoutManager(context, columns)
-            itemAnimator = AlphaInAnimator()
             addItemDecoration(EqualSpaceGridItemDecoration(space.roundToInt()))
             setController(inTheatresEpoxyController)
         }

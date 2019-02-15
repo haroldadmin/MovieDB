@@ -4,10 +4,7 @@ import com.airbnb.epoxy.TypedEpoxyController
 import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.header
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.infoText
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.movie
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.*
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 
 class InTheatresEpoxyController(
@@ -53,9 +50,9 @@ class InTheatresEpoxyController(
                 }
             }
             is Resource.Loading -> {
-                infoText {
-                    id("loading-in-theatre-movies")
-                    text("Loading Movies in Theatres")
+                loading {
+                    id("load-in-theatre-movies")
+                    description("Loading In-Theatre movies")
                     spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                 }
             }

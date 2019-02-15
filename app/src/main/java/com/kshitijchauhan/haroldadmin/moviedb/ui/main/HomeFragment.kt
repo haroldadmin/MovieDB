@@ -18,10 +18,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BackPressListener
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
-import com.mikepenz.itemanimators.AlphaInAnimator
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.view_searchbox.view.*
 import org.koin.android.ext.android.inject
@@ -32,10 +30,6 @@ import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
 class HomeFragment : BaseFragment(), BackPressListener {
-
-    private val TAG_GET_POPULAR_MOVIES = "get-popular-movies"
-    private val TAG_GET_TOP_RATED_MOVIES = "get-top-rated-movies"
-    private val TASK_GET_SEARCH_RESULTS = "get-search-results"
 
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val homeViewModel: HomeViewModel by viewModel()
@@ -61,7 +55,7 @@ class HomeFragment : BaseFragment(), BackPressListener {
     }
 
     override fun updateToolbarTitle() {
-        mainViewModel.updateToolbarTitle(getString(R.string.title_home_screen))
+        mainViewModel.updateToolbarTitle(getString(R.string.app_name))
     }
 
     companion object {
@@ -74,37 +68,22 @@ class HomeFragment : BaseFragment(), BackPressListener {
         homeViewModel.apply {
 
             if (popularMovies.value == null) {
-                mainViewModel.addLoadingTask(
-                    LoadingTask(
-                        TAG_GET_POPULAR_MOVIES,
-                        this@HomeFragment.viewLifecycleOwner
-                    )
-                )
                 getPopularMovies()
             }
 
             if (topRatedMovies.value == null) {
-                mainViewModel.addLoadingTask(
-                    LoadingTask(
-                        TAG_GET_TOP_RATED_MOVIES,
-                        this@HomeFragment.viewLifecycleOwner
-                    )
-                )
                 getTopRatedMovies()
             }
 
             popularMovies.observe(viewLifecycleOwner, Observer {
-                mainViewModel.completeLoadingTask(TAG_GET_POPULAR_MOVIES, viewLifecycleOwner)
                 updateEpoxyController()
             })
 
             topRatedMovies.observe(viewLifecycleOwner, Observer {
-                mainViewModel.completeLoadingTask(TAG_GET_TOP_RATED_MOVIES, viewLifecycleOwner)
                 updateEpoxyController()
             })
 
             searchResults.observe(viewLifecycleOwner, Observer {
-                mainViewModel.completeLoadingTask(TASK_GET_SEARCH_RESULTS, viewLifecycleOwner)
                 updateEpoxyController()
             })
 
@@ -116,7 +95,7 @@ class HomeFragment : BaseFragment(), BackPressListener {
             forceRefreshCollection(CollectionType.TopRated)
         }
 
-        mainViewModel.updateToolbarTitle(getString(R.string.app_name))
+        updateToolbarTitle()
         mainViewModel.setBackPressListener(this)
     }
 
@@ -135,7 +114,6 @@ class HomeFragment : BaseFragment(), BackPressListener {
             val columns = resources.getDimension(R.dimen.movie_grid_poster_width).getNumberOfColumns(context!!)
             val space = resources.getDimension(R.dimen.movie_grid_item_space)
             layoutManager = GridLayoutManager(context, columns)
-            itemAnimator = AlphaInAnimator()
             addItemDecoration(EqualSpaceGridItemDecoration(space.roundToInt()))
             setController(homeEpoxyController)
         }
@@ -154,8 +132,6 @@ class HomeFragment : BaseFragment(), BackPressListener {
             .takeUntil(onDestroyView)
             .doOnNext { query ->
                 homeViewModel.getSearchResultsForQuery(query)
-                if (query.length > 2)
-                    mainViewModel.addLoadingTask(LoadingTask(TASK_GET_SEARCH_RESULTS, viewLifecycleOwner))
             }
             .subscribe()
     }
