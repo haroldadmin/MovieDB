@@ -15,7 +15,7 @@ kapt {
 
 android {
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '1.6'
     }
     compileSdkVersion 28
     defaultConfig {
@@ -48,8 +48,6 @@ android {
 
     }
     compileOptions {
-        sourceCompatibility = '1.8'
-        targetCompatibility = '1.8'
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -64,7 +62,6 @@ dependencies {
     def room_version = "2.1.0-alpha04"
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-
     // Android
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha02'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
@@ -72,12 +69,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation 'com.google.android.material:material:1.0.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     implementation 'androidx.core:core-ktx:1.0.1'
-
     // Networking
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
@@ -85,35 +80,28 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.1'
     implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
     implementation 'com.squareup.moshi:moshi-adapters:1.8.0'
-
     // DI
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-androidx-scope:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
-
     // Rx
     implementation 'io.reactivex.rxjava2:rxjava:2.2.6'
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
     implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.0'
-
     // Image Loading
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     kapt 'com.github.bumptech.glide:compiler:4.8.0'
-
     // Tests
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.23.4'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-
     // UI
-    implementation 'me.zhanghai.android.materialprogressbar:library:1.6.1'
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:9.0.1'
-    implementation 'com.airbnb.android:epoxy:3.1.0'
-    kapt 'com.airbnb.android:epoxy-processor:3.1.0'
-
+    implementation 'com.airbnb.android:epoxy:3.2.0'
+    kapt 'com.airbnb.android:epoxy-processor:3.2.0'
     // Firebase
     implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
