@@ -39,10 +39,6 @@ class MainActivity : AppCompatActivity() {
             homeRootView.snackbar(message)
         })
 
-        mainViewModel.progressBarNotification.observe(this, Observer { notification ->
-            if (notification.visible) mainProgressBar.visible() else mainProgressBar.gone()
-        })
-
         mainViewModel.clearBackStack.observe(this, Observer {
             supportFragmentManager.clearBackStack()
         })

@@ -32,7 +32,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.RemoteMoviesSour
 import com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details.ActorDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AuthenticationViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.ProgressBarManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.HomeViewModel
@@ -162,7 +161,6 @@ val repositoryModule = module {
 val uiModule = module {
 
     single { BottomNavManager() }
-    single { ProgressBarManager() }
 
     viewModel { HomeViewModel(get(), get()) }
     viewModel { LibraryViewModel(get()) }
@@ -171,7 +169,7 @@ val uiModule = module {
     viewModel { (isAuthenticated: Boolean, movieId: Int) ->
         MovieDetailsViewModel(isAuthenticated, movieId, get())
     }
-    viewModel { MainViewModel(get(), get(), get()) }
+    viewModel { MainViewModel(get(), get()) }
     viewModel { (actorId: Int) -> ActorDetailsViewModel(actorId, get()) }
 
     factory("fragment-glide-request-manager") { (fragment: Fragment) -> Glide.with(fragment) }

@@ -1,7 +1,6 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
 import android.content.SharedPreferences
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,9 +8,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BackPressListener
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.ProgressBarManager
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.ProgressBarNotification
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SharedPreferencesDelegate
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
@@ -19,7 +15,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 
 class MainViewModel(
     private val bottomNavManager: BottomNavManager,
-    private val progressBarManager: ProgressBarManager,
     sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
@@ -47,9 +42,6 @@ class MainViewModel(
     val snackbar: LiveData<String>
         get() = _snackbar
 
-    val progressBarNotification: LiveData<ProgressBarNotification>
-        get() = progressBarManager.getProgressBarLiveData()
-
     val clearBackStack: LiveData<Unit>
         get() = _clearBackStack
 
@@ -74,18 +66,6 @@ class MainViewModel(
 
     fun setSessionId(sessionId: String) {
         _sessionId = sessionId
-    }
-
-    fun addLoadingTask(task: LoadingTask) {
-        progressBarManager.addTask(task)
-    }
-
-    fun completeLoadingTask(tag: String, lifecycleOwner: LifecycleOwner) {
-        progressBarManager.completeTaskByTag(tag, lifecycleOwner)
-    }
-
-    fun findLoadingTask(tag: String, lifecycleOwner: LifecycleOwner): LoadingTask? {
-        return progressBarManager.findTaskByTag(tag, lifecycleOwner)
     }
 
     fun peekState() = _state.value

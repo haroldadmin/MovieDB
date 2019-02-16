@@ -19,7 +19,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.auth.CreateSessionRequest
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.gone
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
@@ -29,8 +28,6 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoggedOutFragment : BaseFragment() {
-
-    private val TASK_LOAD_WEBPAGE = "task-load-webpage"
 
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val authenticationViewModel: AuthenticationViewModel by viewModel()
@@ -65,13 +62,11 @@ class LoggedOutFragment : BaseFragment() {
             webViewClient = object : WebViewClient() {
 
                 override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                    mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_WEBPAGE, viewLifecycleOwner))
                     super.onPageStarted(view, url, favicon)
                 }
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
-                    mainViewModel.completeLoadingTask(TASK_LOAD_WEBPAGE, viewLifecycleOwner)
                     if (url?.contains("allow") == true) {
                         handleAuthorizationSuccessful(
                             authenticationViewModel.requestToken.value!!

@@ -14,7 +14,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.account.AccountDetailsResponse
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.model.LoadingTask
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
@@ -25,8 +24,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 class AccountFragment : BaseFragment() {
-
-    private val TASK_LOAD_ACCOUNT_DETAILS = "load-account-details"
 
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val authenticationViewModel: AuthenticationViewModel by viewModel()
@@ -61,12 +58,10 @@ class AccountFragment : BaseFragment() {
         updateToolbarTitle()
 
         if (authenticationViewModel.accountDetails.value == null) {
-            mainViewModel.addLoadingTask(LoadingTask(TASK_LOAD_ACCOUNT_DETAILS, viewLifecycleOwner))
             authenticationViewModel.getAccountDetails()
         }
 
         authenticationViewModel.accountDetails.observe(viewLifecycleOwner, Observer { accountInfo ->
-            mainViewModel.completeLoadingTask(TASK_LOAD_ACCOUNT_DETAILS, viewLifecycleOwner)
             updateView(accountInfo)
         })
     }
