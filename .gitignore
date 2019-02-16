@@ -52,7 +52,8 @@ captures/
 .externalNativeBuild
 
 # Google Services (e.g. APIs or Firebase)
-google-services.json
+# Only exclude google-services.json file in app module, because the other variant is used for CI builds
+app/google-services.json
 
 # Freeline
 freeline.py

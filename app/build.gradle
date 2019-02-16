@@ -22,7 +22,7 @@ android {
         applicationId "com.kshitijchauhan.haroldadmin.moviedb"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 2
+        versionCode 3
         versionName "0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -47,6 +47,25 @@ android {
         }
 
     }
+
+    def build_param = "${build}"
+
+    if (build_param != "dev") {
+        //exclude production build
+        android.variantFilter { variant ->
+            if (variant.buildType.name == 'dev') {
+                variant.setIgnore(true)
+            }
+        }
+    } else {
+        //exclude all except production build
+        android.variantFilter { variant ->
+            if (variant.buildType.name != 'dev') {
+                variant.setIgnore(true)
+            }
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
