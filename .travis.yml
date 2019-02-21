@@ -23,4 +23,4 @@ before_install:
 script:
   # Build parameter 'dev' ensures that the google-services.json
   # file in app/src/dev is used
-  - ./gradlew clean build -Pbuild=dev
+  - ./gradlew clean build -Pbuild=dev --stacktrace
