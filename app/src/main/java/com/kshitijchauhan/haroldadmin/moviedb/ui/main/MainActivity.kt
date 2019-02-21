@@ -1,6 +1,10 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -16,6 +20,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BackPressListener
 import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.MovieDetailsFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryFragment
+import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -191,6 +196,35 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         if (backPressListener == null || backPressListener?.onBackPressed() == true) {
             super.onBackPressed()
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_activity_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            R.id.menuPrivacyPolicy -> {
+                Intent().apply {
+                    action = Intent.ACTION_VIEW
+                    data = Uri.parse(Constants.PRIVACY_POLICY_URL)
+                }.also {
+                    startActivity(it)
+                }
+                true
+            }
+            R.id.menuTandC -> {
+                Intent().apply {
+                    action = Intent.ACTION_VIEW
+                    data = Uri.parse(Constants.TERMS_AND_CONDITIONS_URL)
+                }.also {
+                    startActivity(it)
+                }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 }

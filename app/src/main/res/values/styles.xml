@@ -7,6 +7,8 @@
         <item name="android:textColorPrimary">@color/textOnPrimaryHighEmphasis</item>
         <item name="android:textColorSecondary">@color/textOnSecondaryHighEmphasis</item>
         <item name="fontFamily">@font/open_sans</item>
+        <item name="android:actionOverflowButtonStyle">@style/Widget.AppCompat.ActionButton.Overflow.MainToolbarIcon
+        </item>
     </style>
 
     <style name="Widget.MaterialComponents.Button.TextButton.MainSectionButton">
@@ -54,10 +56,12 @@
     <style name="Base.Widget.MaterialComponents.TextInputLayout.SearchBox.Light">
         <item name="android:textColorPrimary">@color/textOnSecondaryHighEmphasis</item>
         <item name="android:textColorHint">@color/textOnSecondaryMediumEmphasis</item>
-        <item name="hintTextAppearance">@style/TextAppearance.MaterialComponents.Subtitle1.TextFieldHintTextStyle.Light</item>
+        <item name="hintTextAppearance">
+            @style/TextAppearance.MaterialComponents.Subtitle1.TextFieldHintTextStyle.Light
+        </item>
         <item name="errorTextAppearance">@style/TextAppearance.MaterialComponents.Caption.TextFieldErrorTextStyle</item>
     </style>
-    
+
     <style name="TextAppearance.MaterialComponents.Caption.TextFieldErrorTextStyle">
         <item name="android:textColor">@color/colorError</item>
     </style>
@@ -80,6 +84,10 @@
     <style name="Widget.MaterialComponents.Toolbar.MainToolbar">
         <item name="titleTextAppearance">@style/TextAppearance.MaterialComponents.Headline5</item>
         <item name="titleTextColor">@color/colorSecondary</item>
+    </style>
+
+    <style name="Widget.AppCompat.ActionButton.Overflow.MainToolbarIcon">
+        <item name="android:tint">@color/colorSecondary</item>
     </style>
 
     <style name="TextAppearance.MaterialComponents.Headline3.ExpandedToolbarTitle">

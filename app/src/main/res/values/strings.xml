@@ -10,4 +10,6 @@
     <string name="title_library_screen">Library</string>
     <string name="title_home_screen">Home</string>
     <string name="message_need_to_login">You need to login to do that</string>
+    <string name="menu_privacy_policy">Privacy Policy</string>
+    <string name="menu_terms_and_conditions">Terms and Conditions</string>
 </resources>
