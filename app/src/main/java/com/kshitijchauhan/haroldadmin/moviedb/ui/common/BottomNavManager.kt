@@ -14,7 +14,7 @@ class BottomNavManager {
             is UIState.HomeScreenState -> {
                 bottomNavigationView.menu.findItem(R.id.menuHome).setChecked(true)
             }
-            UIState.LibraryScreenState -> {
+            is UIState.LibraryScreenState -> {
                 bottomNavigationView.menu.findItem(R.id.menuLibrary).setChecked(true)
             }
             UIState.InTheatresScreenState -> {

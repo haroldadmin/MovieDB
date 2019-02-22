@@ -16,7 +16,11 @@ sealed class UIState {
         val searchResultsResource: Resource<List<Movie>>?
     ): UIState(), MVRxLiteState
 
-    object LibraryScreenState: UIState()
+    data class LibraryScreenState(
+        val favouriteMoviesResource: Resource<List<Movie>>,
+        val watchlistedMoviesResource: Resource<List<Movie>>,
+        val isAuthenticated: Boolean
+    ): UIState(), MVRxLiteState
 
     object InTheatresScreenState: UIState()
 

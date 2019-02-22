@@ -82,7 +82,11 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.menuLibrary -> {
-                    mainViewModel.updateStateTo(UIState.LibraryScreenState)
+                    mainViewModel.updateStateTo(UIState.LibraryScreenState(
+                        Resource.Loading(),
+                        Resource.Loading(),
+                        mainViewModel.isAuthenticated
+                    ))
                     true
                 }
                 R.id.menuAccount -> {
@@ -172,7 +176,7 @@ class MainActivity : AppCompatActivity() {
                     sharedElement = state.sharedView
                 )
             }
-            UIState.LibraryScreenState -> {
+            is UIState.LibraryScreenState -> {
                 replaceFragment(
                     LibraryFragment.newInstance(),
                     R.id.fragment_container,

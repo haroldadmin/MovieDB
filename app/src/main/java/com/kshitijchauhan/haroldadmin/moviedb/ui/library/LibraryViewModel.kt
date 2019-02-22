@@ -7,9 +7,11 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionT
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionsRepository
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
+import com.kshitijchauhan.haroldadmin.mvrxlite.base.MVRxLiteViewModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
@@ -17,32 +19,31 @@ import java.io.IOException
 import java.util.concurrent.TimeoutException
 
 class LibraryViewModel(
-    private val collectionsRepository: CollectionsRepository
-) : ViewModel() {
+    private val collectionsRepository: CollectionsRepository,
+    accountId: Int,
+    initialState: UIState.LibraryScreenState
+) : MVRxLiteViewModel<UIState.LibraryScreenState>(initialState) {
 
     private val compositeDisposable = CompositeDisposable()
-    private val _favouriteMovies = MutableLiveData<Resource<List<Movie>>>()
-    private val _watchlistedMovies = MutableLiveData<Resource<List<Movie>>>()
     private val _message = SingleLiveEvent<String>()
-
-    val watchListMovies: LiveData<Resource<List<Movie>>>
-        get() = _watchlistedMovies
-
-    val favouriteMovies: LiveData<Resource<List<Movie>>>
-        get() = _favouriteMovies
 
     val message: LiveData<String>
         get() = _message
 
+    init {
+        if (accountId != -1) {
+            getFavouriteMovies(accountId)
+            getWatchlistedMovies(accountId)
+        }
+    }
 
     fun getFavouriteMovies(accountId: Int) {
-
         collectionsRepository.getCollectionFlowable(accountId, CollectionType.Favourite)
             .init(compositeDisposable)
             .subscribeOn(Schedulers.io())
             .subscribeBy(
-                onNext = { favouriteMoviesResource ->
-                    _favouriteMovies.postValue(favouriteMoviesResource)
+                onNext = { favouriteMovies ->
+                    setState { copy(favouriteMoviesResource = favouriteMovies) }
                 },
                 onError = { error -> handleError(error, "get-favourite-movies") }
             )
@@ -54,8 +55,8 @@ class LibraryViewModel(
             .init(compositeDisposable)
             .subscribeOn(Schedulers.io())
             .subscribeBy(
-                onNext = { watchlistMoviesResource ->
-                    _watchlistedMovies.postValue(watchlistMoviesResource)
+                onNext = { watchlistMovies ->
+                    setState { copy(watchlistedMoviesResource = watchlistMovies) }
                 },
                 onError = { error -> handleError(error, "get-watchlist-movies") }
             )

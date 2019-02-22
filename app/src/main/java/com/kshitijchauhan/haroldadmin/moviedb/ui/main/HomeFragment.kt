@@ -61,11 +61,13 @@ class HomeFragment :
 
     private val onDestroyView: PublishRelay<Any> = PublishRelay.create()
 
-    override val associatedUIState: UIState = UIState.HomeScreenState(
-        popularMoviesResource = Resource.Loading(),
-        topRatedMoviesResource = Resource.Loading(),
-        searchResultsResource = null
-    )
+    override val associatedUIState: UIState by lazy {
+        UIState.HomeScreenState(
+            popularMoviesResource = Resource.Loading(),
+            topRatedMoviesResource = Resource.Loading(),
+            searchResultsResource = null
+        )
+    }
 
     private val homeViewModel: HomeViewModel by viewModel {
         parametersOf(associatedUIState)

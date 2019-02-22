@@ -17,6 +17,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
+import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
+import com.kshitijchauhan.haroldadmin.mvrxlite.base.MVRxLiteView
 import kotlinx.android.synthetic.main.fragment_library.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -24,22 +26,23 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import kotlin.math.roundToInt
 
-class LibraryFragment : BaseFragment() {
+class LibraryFragment : BaseFragment(), MVRxLiteView<UIState.LibraryScreenState> {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
-    private val libraryViewModel: LibraryViewModel by viewModel()
 
     private val callbacks = object : EpoxyCallbacks {
         override fun onMovieItemClicked(id: Int, transitionName: String, sharedView: View?) {
-            mainViewModel.updateStateTo(UIState.DetailsScreenState(
-                movieId = id,
-                transitionName = transitionName,
-                sharedView = sharedView,
-                movieResource = Resource.Loading(),
-                accountStatesResource = Resource.Loading(),
-                trailerResource = Resource.Loading(),
-                castResource = listOf(Resource.Loading())
-            ))
+            mainViewModel.updateStateTo(
+                UIState.DetailsScreenState(
+                    movieId = id,
+                    transitionName = transitionName,
+                    sharedView = sharedView,
+                    movieResource = Resource.Loading(),
+                    accountStatesResource = Resource.Loading(),
+                    trailerResource = Resource.Loading(),
+                    castResource = listOf(Resource.Loading())
+                )
+            )
         }
     }
 
@@ -47,9 +50,21 @@ class LibraryFragment : BaseFragment() {
         parametersOf(this)
     }
 
-    private val libraryEpoxyController by lazy { LibraryEpoxyController(callbacks, glideRequestManager) }
+    private val libraryEpoxyController: LibraryEpoxyController by inject {
+        parametersOf(callbacks, glideRequestManager)
+    }
 
-    override val associatedUIState: UIState = UIState.LibraryScreenState
+    override val associatedUIState: UIState by lazy {
+        UIState.LibraryScreenState(
+            Resource.Loading(),
+            Resource.Loading(),
+            mainViewModel.isAuthenticated
+        )
+    }
+
+    private val libraryViewModel: LibraryViewModel by viewModel {
+        parametersOf(mainViewModel.accountId, associatedUIState)
+    }
 
     override fun notifyBottomNavManager() {
         mainViewModel.updateBottomNavManagerState(this.associatedUIState)
@@ -88,7 +103,6 @@ class LibraryFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        libraryEpoxyController.setData(Resource.Loading(), Resource.Loading(), mainViewModel.isAuthenticated)
 
         libraryViewModel.message.observe(viewLifecycleOwner, Observer { message ->
             mainViewModel.showSnackbar(message)
@@ -97,25 +111,22 @@ class LibraryFragment : BaseFragment() {
         if (mainViewModel.isAuthenticated) {
             libraryViewModel.apply {
 
-                if (favouriteMovies.value == null) {
-                    getFavouriteMovies(mainViewModel.accountId)
-                }
-
-                if (watchListMovies.value == null) {
-                    getWatchlistedMovies(mainViewModel.accountId)
-                }
-
-                favouriteMovies.observe(viewLifecycleOwner, Observer { newList ->
-                    libraryEpoxyController.setData(newList, watchListMovies.value, true)
+                state.observe(viewLifecycleOwner, Observer { state ->
+                    log("Received state update: $state")
+                    renderState(state)
                 })
 
-                watchListMovies.observe(viewLifecycleOwner, Observer { newList ->
-                    libraryEpoxyController.setData(favouriteMovies.value, newList, true)
+                message.observe(viewLifecycleOwner, Observer { message ->
+                    mainViewModel.showSnackbar(message)
                 })
 
                 forceRefreshCollection(mainViewModel.accountId, CollectionType.Favourite)
                 forceRefreshCollection(mainViewModel.accountId, CollectionType.Watchlist)
             }
         }
+    }
+
+    override fun renderState(state: UIState.LibraryScreenState) {
+        libraryEpoxyController.setData(state)
     }
 }

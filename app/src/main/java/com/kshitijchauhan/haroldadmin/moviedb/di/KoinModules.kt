@@ -36,6 +36,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AuthenticationViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
 import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresViewModel
+import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryEpoxyController
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.HomeEpoxyController
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.HomeViewModel
@@ -171,7 +172,10 @@ val uiModule = module {
         HomeViewModel(get(), get(), initialState)
     }
 
-    viewModel { LibraryViewModel(get()) }
+    viewModel { (accountId: Int, initialState: UIState.LibraryScreenState) ->
+        LibraryViewModel(get(), accountId, initialState)
+    }
+
     viewModel { InTheatresViewModel(get()) }
     viewModel { AuthenticationViewModel(get(), get(), get()) }
     viewModel { (isAuthenticated: Boolean, movieId: Int, initialState: UIState.DetailsScreenState) ->
@@ -194,6 +198,10 @@ val uiModule = module {
 
     factory { (callbacks: EpoxyCallbacks, glide: RequestManager) ->
         HomeEpoxyController(callbacks, glide)
+    }
+
+    factory { (callbacks: EpoxyCallbacks, glide: RequestManager) ->
+        LibraryEpoxyController(callbacks, glide)
     }
 }
 

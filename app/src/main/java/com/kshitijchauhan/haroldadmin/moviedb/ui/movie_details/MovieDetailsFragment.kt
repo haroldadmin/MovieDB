@@ -69,7 +69,7 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
 
     // We will treat this as initial state for now
     // TODO Remove this and move to a navigator based system
-    override val associatedUIState: UIState =
+    override val associatedUIState: UIState by lazy {
         UIState.DetailsScreenState(
             movieId = this.arguments?.getInt(Constants.KEY_MOVIE_ID) ?: -1,
             accountStatesResource = Resource.Loading(),
@@ -77,6 +77,7 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
             trailerResource = Resource.Loading(),
             castResource = listOf(Resource.Loading())
         )
+    }
 
     private val movieDetailsViewModel: MovieDetailsViewModel by viewModel {
         val isAuthenticated = mainViewModel.isAuthenticated
