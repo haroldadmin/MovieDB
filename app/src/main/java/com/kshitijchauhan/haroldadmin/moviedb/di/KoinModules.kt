@@ -6,6 +6,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.room.Room
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.BuildConfig
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.ActorsRepository
@@ -29,6 +30,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.Kotli
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.LocalMoviesSource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MoviesRepository
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.RemoteMoviesSource
+import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details.ActorDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AuthenticationViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
@@ -36,6 +38,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.HomeViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
+import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.DetailsEpoxyController
 import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.MovieDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SafeRfc3339DateJsonAdapter
@@ -166,14 +169,18 @@ val uiModule = module {
     viewModel { LibraryViewModel(get()) }
     viewModel { InTheatresViewModel(get()) }
     viewModel { AuthenticationViewModel(get(), get(), get()) }
-    viewModel { (isAuthenticated: Boolean, movieId: Int) ->
-        MovieDetailsViewModel(isAuthenticated, movieId, get())
+    viewModel { (isAuthenticated: Boolean, movieId: Int, initialState: UIState.DetailsScreenState) ->
+        MovieDetailsViewModel(isAuthenticated, movieId, get(), initialState)
     }
     viewModel { MainViewModel(get(), get()) }
     viewModel { (actorId: Int) -> ActorDetailsViewModel(actorId, get()) }
 
     factory("fragment-glide-request-manager") { (fragment: Fragment) -> Glide.with(fragment) }
     factory("view-glide-request-manager") { (view: View) -> Glide.with(view) }
+
+    factory { (callbacks: DetailsEpoxyController.MovieDetailsCallbacks, glide: RequestManager) ->
+        DetailsEpoxyController(callbacks, glide)
+    }
 }
 
 

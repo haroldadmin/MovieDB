@@ -31,7 +31,15 @@ class LibraryFragment : BaseFragment() {
 
     private val callbacks = object : EpoxyCallbacks {
         override fun onMovieItemClicked(id: Int, transitionName: String, sharedView: View?) {
-            mainViewModel.updateStateTo(UIState.DetailsScreenState(id, transitionName, sharedView))
+            mainViewModel.updateStateTo(UIState.DetailsScreenState(
+                movieId = id,
+                transitionName = transitionName,
+                sharedView = sharedView,
+                movieResource = Resource.Loading(),
+                accountStatesResource = Resource.Loading(),
+                trailerResource = Resource.Loading(),
+                castResource = listOf(Resource.Loading())
+            ))
         }
     }
 

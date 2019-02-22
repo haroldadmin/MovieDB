@@ -34,6 +34,7 @@ android {
             } else {
                 buildConfigField('String', 'API_KEY', "\"mock-key\"")
             }
+            manifestPlaceholders = [enableCrashReporting:"false"]
         }
         release {
             minifyEnabled true
@@ -44,6 +45,7 @@ android {
             } else {
                 buildConfigField('String', 'API_KEY', "\"mock-key\"")
             }
+            manifestPlaceholders = [enableCrashReporting:"true"]
         }
 
     }
@@ -124,6 +126,8 @@ dependencies {
     // Firebase
     implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
+
+    implementation project(path: ':mvrxlite')
 }
 
 apply plugin: 'com.google.gms.google-services'

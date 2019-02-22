@@ -1,13 +1,14 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details
 
 import android.view.View
-import com.airbnb.epoxy.Typed4EpoxyController
+import com.airbnb.epoxy.TypedEpoxyController
 import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.AccountState
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MovieTrailer
+import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.actor
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.header
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.infoText
@@ -15,9 +16,9 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.loading
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 
 class DetailsEpoxyController(
-    private val callbacks: MovieDetailsCallbacks,
+    private val callbacks: DetailsEpoxyController.MovieDetailsCallbacks,
     private val glide: RequestManager
-) : Typed4EpoxyController<Resource<Movie>?, Resource<AccountState>?, Resource<MovieTrailer>?, List<Resource<Actor>>>() {
+): TypedEpoxyController<UIState.DetailsScreenState>() {
 
     interface MovieDetailsCallbacks {
         fun toggleMovieFavouriteStatus()
@@ -25,36 +26,19 @@ class DetailsEpoxyController(
         fun onActorItemClicked(id: Int, transitionName: String, sharedView: View?)
     }
 
-    override fun buildModels(
-        movieResource: Resource<Movie>?,
-        accountStateResource: Resource<AccountState>?,
-        trailerResource: Resource<MovieTrailer>?,
-        actors: List<Resource<Actor>>?
-    ) {
+    override fun buildModels(state: UIState.DetailsScreenState) {
+        with(state) {
+            buildAccountStatesResource(accountStatesResource)
+            buildMovieResource(movieResource)
+            buildTrailerResource(trailerResource)
+            buildCastResource(castResource)
+        }
+    }
 
-        when (accountStateResource) {
+    private fun buildMovieResource(resource: Resource<Movie>) {
+        when (resource) {
             is Resource.Success -> {
-                val accountState = accountStateResource.data
-                infoBar {
-                    id("info")
-                    accountStates(accountState)
-                    watchListClickListener { _, _, _, _ ->
-                        callbacks.toggleMovieWatchlistStatus()
-                    }
-                    favouritesClickListener { _, _, _, _ ->
-                        callbacks.toggleMovieFavouriteStatus()
-                    }
-                    spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
-                }
-            }
-            is Resource.Error -> Unit
-            is Resource.Loading -> Unit
-            else -> Unit
-        }.safe
-
-        when (movieResource) {
-            is Resource.Success -> {
-                val movie = movieResource.data
+                val movie = resource.data
                 header {
                     id("description")
                     title("Description")
@@ -93,10 +77,32 @@ class DetailsEpoxyController(
                     spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                 }
             }
-            else -> Unit
         }.safe
+    }
 
-        when (trailerResource) {
+    private fun buildAccountStatesResource(resource: Resource<AccountState>) {
+        when (resource) {
+            is Resource.Success -> {
+                val accountState = resource.data
+                infoBar {
+                    id("info")
+                    accountStates(accountState)
+                    watchListClickListener { _, _, _, _ ->
+                        callbacks.toggleMovieWatchlistStatus()
+                    }
+                    favouritesClickListener { _, _, _, _ ->
+                        callbacks.toggleMovieFavouriteStatus()
+                    }
+                    spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
+                }
+            }
+            is Resource.Error -> Unit
+            is Resource.Loading -> Unit
+        }.safe
+    }
+
+    private fun buildTrailerResource(resource: Resource<MovieTrailer>) {
+        when (resource) {
             is Resource.Success -> {
                 header {
                     id("trailer")
@@ -105,8 +111,8 @@ class DetailsEpoxyController(
                 }
 
                 trailer {
-                    id(trailerResource.data.movieId)
-                    trailerKey(trailerResource.data.youtubeVideoKey)
+                    id(resource.data.movieId)
+                    trailerKey(resource.data.youtubeVideoKey)
                     spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                 }
             }
@@ -136,10 +142,10 @@ class DetailsEpoxyController(
                     spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                 }
             }
-            else -> Unit
         }.safe
+    }
 
-
+    private fun buildCastResource(actors: List<Resource<Actor>>) {
         actors.let {
             header {
                 id("cast")

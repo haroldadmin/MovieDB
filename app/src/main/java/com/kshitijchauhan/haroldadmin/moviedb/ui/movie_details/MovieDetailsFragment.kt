@@ -17,15 +17,14 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
-import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.format
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
+import com.kshitijchauhan.haroldadmin.mvrxlite.base.MVRxLiteView
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import kotlinx.android.synthetic.main.fragment_movie_details.view.*
 import org.koin.android.ext.android.inject
@@ -34,11 +33,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
 
-class MovieDetailsFragment : BaseFragment() {
+class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenState> {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
 
-    private val callbacks = object: DetailsEpoxyController.MovieDetailsCallbacks {
+    private val callbacks = object : DetailsEpoxyController.MovieDetailsCallbacks {
         override fun toggleMovieFavouriteStatus() {
             if (mainViewModel.isAuthenticated) {
                 movieDetailsViewModel.toggleMovieFavouriteStatus(mainViewModel.accountId)
@@ -64,22 +63,34 @@ class MovieDetailsFragment : BaseFragment() {
         parametersOf(this)
     }
 
-    private val detailsEpoxyController by lazy { DetailsEpoxyController(callbacks, glideRequestManager) }
+    private val detailsEpoxyController: DetailsEpoxyController by inject {
+        parametersOf(callbacks, glideRequestManager)
+    }
+
+    // We will treat this as initial state for now
+    // TODO Remove this and move to a navigator based system
+    override val associatedUIState: UIState =
+        UIState.DetailsScreenState(
+            movieId = this.arguments?.getInt(Constants.KEY_MOVIE_ID) ?: -1,
+            accountStatesResource = Resource.Loading(),
+            movieResource = Resource.Loading(),
+            trailerResource = Resource.Loading(),
+            castResource = listOf(Resource.Loading())
+        )
 
     private val movieDetailsViewModel: MovieDetailsViewModel by viewModel {
         val isAuthenticated = mainViewModel.isAuthenticated
         val movieId = arguments?.getInt(Constants.KEY_MOVIE_ID, -1)
-        parametersOf(isAuthenticated, movieId)
+        parametersOf(isAuthenticated, movieId, associatedUIState)
     }
 
-    override val associatedUIState: UIState =
-        UIState.DetailsScreenState(this.arguments?.getInt(Constants.KEY_MOVIE_ID) ?: -1)
-
     override fun notifyBottomNavManager() {
+        // TODO make this a part of render state
         mainViewModel.updateBottomNavManagerState(this.associatedUIState)
     }
 
     override fun updateToolbarTitle() {
+        // TODO make this a part of render state
         // The title will be updated when the movie details are retrieved
     }
 
@@ -121,52 +132,21 @@ class MovieDetailsFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        detailsEpoxyController.setData(Resource.Loading(), Resource.Loading(), Resource.Loading(), listOf(Resource.Loading()))
 
-        movieDetailsViewModel.getAllMovieInfo()
-
-        movieDetailsViewModel.movie.observe(viewLifecycleOwner, Observer { movie ->
-            log("Received movie update: $movie")
-            updateView(movie)
-            detailsEpoxyController.setData(movie,
-                movieDetailsViewModel.accountState.value,
-                movieDetailsViewModel.trailerKey.value,
-                movieDetailsViewModel.actors.value)
-        })
-
-        movieDetailsViewModel.actors.observe(viewLifecycleOwner, Observer { castList ->
-            log("Received cast update: $castList")
-            detailsEpoxyController.setData(movieDetailsViewModel.movie.value,
-                movieDetailsViewModel.accountState.value,
-                movieDetailsViewModel.trailerKey.value,
-                castList)
-        })
-
-        movieDetailsViewModel.accountState.observe(viewLifecycleOwner, Observer { accountState ->
-            log("Received account state update: $accountState")
-            detailsEpoxyController.setData(
-                movieDetailsViewModel.movie.value,
-                accountState,
-                movieDetailsViewModel.trailerKey.value,
-                movieDetailsViewModel.actors.value)
-        })
-
-        movieDetailsViewModel.trailerKey.observe(viewLifecycleOwner, Observer { url ->
-            log("Received trailer url: $url")
-            detailsEpoxyController.setData(
-                movieDetailsViewModel.movie.value,
-                movieDetailsViewModel.accountState.value,
-                url,
-                movieDetailsViewModel.actors.value)
-        })
-
-        movieDetailsViewModel.message.observe(viewLifecycleOwner, Observer { message ->
-            mainViewModel.showSnackbar(message)
-        })
+        with(movieDetailsViewModel) {
+            getAllMovieInfo()
+            message.observe(viewLifecycleOwner, Observer { message ->
+                mainViewModel.showSnackbar(message)
+            })
+            state.observe(viewLifecycleOwner, Observer { state ->
+                renderState(state)
+            })
+        }
     }
 
-    private fun updateView(movieResource: Resource<Movie>) {
-        when (movieResource) {
+    override fun renderState(state: UIState.DetailsScreenState) {
+        detailsEpoxyController.setData(state)
+        when (val movieResource = state.movieResource) {
             is Resource.Success -> {
                 val movie = movieResource.data
                 mainViewModel.updateToolbarTitle(movie.title)

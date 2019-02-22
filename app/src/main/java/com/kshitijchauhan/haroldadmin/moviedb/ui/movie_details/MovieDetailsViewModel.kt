@@ -6,9 +6,11 @@ import androidx.lifecycle.ViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.*
+import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
+import com.kshitijchauhan.haroldadmin.mvrxlite.base.MVRxLiteViewModel
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
@@ -19,27 +21,12 @@ import java.util.concurrent.TimeoutException
 class MovieDetailsViewModel(
     private val isAuthenticated: Boolean,
     private val movieId: Int,
-    private val moviesRepository: MoviesRepository
-) : ViewModel() {
+    private val moviesRepository: MoviesRepository,
+    initialState: UIState.DetailsScreenState
+) : MVRxLiteViewModel<UIState.DetailsScreenState>(initialState) {
 
     private val compositeDisposable = CompositeDisposable()
-    private val _movie = MutableLiveData<Resource<Movie>>()
-    private val _actors = MutableLiveData<List<Resource<Actor>>>()
-    private val _accountStates = MutableLiveData<Resource<AccountState>>()
-    private val _trailerKey = MutableLiveData<Resource<MovieTrailer>>()
     private val _message = SingleLiveEvent<String>()
-
-    val movie: LiveData<Resource<Movie>>
-        get() = _movie
-
-    val actors: LiveData<List<Resource<Actor>>>
-        get() = _actors
-
-    val accountState: LiveData<Resource<AccountState>>
-        get() = _accountStates
-
-    val trailerKey: LiveData<Resource<MovieTrailer>>
-        get() = _trailerKey
 
     val message: LiveData<String>
         get() = _message
@@ -53,18 +40,24 @@ class MovieDetailsViewModel(
      */
     fun getAllMovieInfo() {
         this.getMovieDetails()
-            .doOnNext { movieResource -> _movie.postValue(movieResource) }
+            .doOnNext { movie ->
+                setState { copy(movieResource = movie) }
+            }
             .skip(1) // We skip the first value because it is Resource.Loading
             .publish()
             .apply {
                 switchMap { getMovieAccountStates() }
                     .subscribe(
-                        { accountState -> _accountStates.postValue(accountState) },
+                        { accountState ->
+                            setState { copy(accountStatesResource = accountState) }
+                        },
                         { error -> handleError(error, "get-account-states") })
                     .disposeWith(compositeDisposable)
                 switchMap { getMovieTrailer() }
                     .subscribe(
-                        { trailer -> _trailerKey.postValue(trailer) },
+                        { trailer ->
+                            setState { copy(trailerResource = trailer) }
+                        },
                         { error -> handleError(error, "get-movie-trailer") }
                     )
                     .disposeWith(compositeDisposable)
@@ -77,7 +70,9 @@ class MovieDetailsViewModel(
                         }
                     }
                     .subscribe(
-                        { actorsList -> _actors.postValue(actorsList) },
+                        { actorsList ->
+                            setState { copy(castResource = actorsList) }
+                        },
                         { error -> handleError(error, "get-movie-cast") }
                     )
                     .disposeWith(compositeDisposable)

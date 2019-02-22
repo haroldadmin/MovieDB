@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.R
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
@@ -30,7 +31,15 @@ class InTheatresFragment : BaseFragment() {
 
     private val callbacks = object: EpoxyCallbacks {
         override fun onMovieItemClicked(id: Int, transitionName: String, sharedView: View?) {
-            mainViewModel.updateStateTo(UIState.DetailsScreenState(id, transitionName, sharedView))
+            mainViewModel.updateStateTo(UIState.DetailsScreenState(
+                movieId = id,
+                transitionName = transitionName,
+                sharedView = sharedView,
+                movieResource = Resource.Loading(),
+                accountStatesResource = Resource.Loading(),
+                trailerResource = Resource.Loading(),
+                castResource = listOf(Resource.Loading())
+            ))
         }
     }
 
