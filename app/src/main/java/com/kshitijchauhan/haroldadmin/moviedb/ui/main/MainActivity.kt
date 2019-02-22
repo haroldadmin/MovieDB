@@ -98,7 +98,7 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
                 R.id.menuInTheatres -> {
-                    mainViewModel.updateStateTo(UIState.InTheatresScreenState)
+                    mainViewModel.updateStateTo(UIState.InTheatresScreenState(Resource.Loading()))
                     true
                 }
                 else -> throw IllegalStateException("Unknown screen state")

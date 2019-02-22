@@ -15,6 +15,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
+import com.kshitijchauhan.haroldadmin.mvrxlite.base.MVRxLiteView
 import kotlinx.android.synthetic.main.fragment_in_theatres.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -22,24 +23,29 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import kotlin.math.roundToInt
 
-class InTheatresFragment : BaseFragment() {
+class InTheatresFragment : BaseFragment(), MVRxLiteView<UIState.InTheatresScreenState> {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
-    private val inTheatresViewModel: InTheatresViewModel by viewModel()
 
-    override val associatedUIState: UIState = UIState.InTheatresScreenState
+    override val associatedUIState: UIState = UIState.InTheatresScreenState(Resource.Loading())
 
-    private val callbacks = object: EpoxyCallbacks {
+    private val inTheatresViewModel: InTheatresViewModel by viewModel {
+        parametersOf(associatedUIState)
+    }
+
+    private val callbacks = object : EpoxyCallbacks {
         override fun onMovieItemClicked(id: Int, transitionName: String, sharedView: View?) {
-            mainViewModel.updateStateTo(UIState.DetailsScreenState(
-                movieId = id,
-                transitionName = transitionName,
-                sharedView = sharedView,
-                movieResource = Resource.Loading(),
-                accountStatesResource = Resource.Loading(),
-                trailerResource = Resource.Loading(),
-                castResource = listOf(Resource.Loading())
-            ))
+            mainViewModel.updateStateTo(
+                UIState.DetailsScreenState(
+                    movieId = id,
+                    transitionName = transitionName,
+                    sharedView = sharedView,
+                    movieResource = Resource.Loading(),
+                    accountStatesResource = Resource.Loading(),
+                    trailerResource = Resource.Loading(),
+                    castResource = listOf(Resource.Loading())
+                )
+            )
         }
     }
 
@@ -47,7 +53,9 @@ class InTheatresFragment : BaseFragment() {
         parametersOf(this)
     }
 
-    private val inTheatresEpoxyController by lazy { InTheatresEpoxyController(callbacks, glideRequestManager) }
+    private val inTheatresEpoxyController: InTheatresEpoxyController by inject {
+        parametersOf(callbacks, glideRequestManager)
+    }
 
     override fun notifyBottomNavManager() {
         mainViewModel.updateBottomNavManagerState(this.associatedUIState)
@@ -70,12 +78,11 @@ class InTheatresFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        inTheatresEpoxyController.setData(null)
         inTheatresViewModel.apply {
             getMoviesInTheatres()
 
-            inTheatreMovies.observe(viewLifecycleOwner, Observer { newList ->
-                inTheatresEpoxyController.setData(newList)
+            state.observe(viewLifecycleOwner, Observer { state ->
+                renderState(state)
             })
 
             message.observe(viewLifecycleOwner, Observer { message ->
@@ -96,5 +103,9 @@ class InTheatresFragment : BaseFragment() {
             addItemDecoration(EqualSpaceGridItemDecoration(space.roundToInt()))
             setController(inTheatresEpoxyController)
         }
+    }
+
+    override fun renderState(state: UIState.InTheatresScreenState) {
+        inTheatresEpoxyController.setData(state)
     }
 }

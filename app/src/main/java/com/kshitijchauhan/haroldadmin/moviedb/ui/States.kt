@@ -22,7 +22,9 @@ sealed class UIState {
         val isAuthenticated: Boolean
     ): UIState(), MVRxLiteState
 
-    object InTheatresScreenState: UIState()
+    data class InTheatresScreenState(
+        val inTheatresMoviesResource: Resource<List<Movie>>
+    ): UIState(), MVRxLiteState
 
     data class DetailsScreenState(val movieId: Int = -1,
                                   val transitionName: String? = null,

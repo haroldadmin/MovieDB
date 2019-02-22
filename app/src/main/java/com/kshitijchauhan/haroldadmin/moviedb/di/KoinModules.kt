@@ -35,6 +35,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details.ActorDetailsViewM
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AuthenticationViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
+import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresEpoxyController
 import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryEpoxyController
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryViewModel
@@ -176,7 +177,10 @@ val uiModule = module {
         LibraryViewModel(get(), accountId, initialState)
     }
 
-    viewModel { InTheatresViewModel(get()) }
+    viewModel { (initialState: UIState.InTheatresScreenState) ->
+        InTheatresViewModel(get(), initialState)
+    }
+
     viewModel { AuthenticationViewModel(get(), get(), get()) }
     viewModel { (isAuthenticated: Boolean, movieId: Int, initialState: UIState.DetailsScreenState) ->
         MovieDetailsViewModel(isAuthenticated, movieId, get(), initialState)
@@ -202,6 +206,10 @@ val uiModule = module {
 
     factory { (callbacks: EpoxyCallbacks, glide: RequestManager) ->
         LibraryEpoxyController(callbacks, glide)
+    }
+
+    factory { (callbacks: EpoxyCallbacks, glide: RequestManager) ->
+        InTheatresEpoxyController(callbacks, glide)
     }
 }
 
