@@ -1,26 +1,25 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
-import com.airbnb.epoxy.Typed3EpoxyController
+import com.airbnb.epoxy.TypedEpoxyController
 import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
+import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.*
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 
 class HomeEpoxyController(
     private val callbacks: EpoxyCallbacks,
     private val glide: RequestManager
-) : Typed3EpoxyController<Resource<List<Movie>>, Resource<List<Movie>>, Resource<List<Movie>>>() {
+): TypedEpoxyController<UIState.HomeScreenState>() {
 
-    override fun buildModels(
-        popularMovies: Resource<List<Movie>>?,
-        topRatedMovies: Resource<List<Movie>>?,
-        searchResults: Resource<List<Movie>>?
-    ) {
-        if (searchResults == null) {
-            buildHomeModel(popularMovies, topRatedMovies)
-        } else {
-            buildSearchModel(searchResults)
+    override fun buildModels(state: UIState.HomeScreenState) {
+        with(state) {
+            searchResultsResource?.let {
+                buildSearchModel(it)
+            } ?: run {
+                buildHomeModel(popularMoviesResource, topRatedMoviesResource)
+            }
         }
     }
 

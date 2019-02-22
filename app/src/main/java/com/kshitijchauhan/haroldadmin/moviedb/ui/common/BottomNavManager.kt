@@ -11,7 +11,7 @@ class BottomNavManager {
 
     fun setBottomNavActiveState(state: UIState) {
         when (state) {
-            UIState.HomeScreenState -> {
+            is UIState.HomeScreenState -> {
                 bottomNavigationView.menu.findItem(R.id.menuHome).setChecked(true)
             }
             UIState.LibraryScreenState -> {

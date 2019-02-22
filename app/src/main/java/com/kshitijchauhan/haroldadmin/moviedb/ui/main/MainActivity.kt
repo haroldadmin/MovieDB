@@ -12,6 +12,7 @@ import androidx.transition.Fade
 import androidx.transition.TransitionInflater
 import androidx.transition.TransitionSet
 import com.kshitijchauhan.haroldadmin.moviedb.R
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details.ActorDetailsFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AccountFragment
@@ -69,10 +70,15 @@ class MainActivity : AppCompatActivity() {
             title = getString(R.string.app_name)
         }
 
+        // TODO Fix this. Change to a navigator based solution
         mainViewModel.getBottomNavView().setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.menuHome -> {
-                    mainViewModel.updateStateTo(UIState.HomeScreenState)
+                    mainViewModel.updateStateTo(UIState.HomeScreenState(
+                        popularMoviesResource = Resource.Loading(),
+                        topRatedMoviesResource = Resource.Loading(),
+                        searchResultsResource = null
+                    ))
                     true
                 }
                 R.id.menuLibrary -> {

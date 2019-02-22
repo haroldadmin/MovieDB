@@ -10,9 +10,16 @@ import com.kshitijchauhan.haroldadmin.mvrxlite.base.MVRxLiteState
 
 sealed class UIState {
 
-    object HomeScreenState: UIState()
+    data class HomeScreenState(
+        val popularMoviesResource: Resource<List<Movie>>,
+        val topRatedMoviesResource: Resource<List<Movie>>,
+        val searchResultsResource: Resource<List<Movie>>?
+    ): UIState(), MVRxLiteState
+
     object LibraryScreenState: UIState()
+
     object InTheatresScreenState: UIState()
+
     data class DetailsScreenState(val movieId: Int = -1,
                                   val transitionName: String? = null,
                                   val sharedView: View? = null,
@@ -20,6 +27,7 @@ sealed class UIState {
                                   val accountStatesResource: Resource<AccountState>,
                                   val trailerResource: Resource<MovieTrailer>,
                                   val castResource: List<Resource<Actor>>): UIState(), MVRxLiteState
+
     sealed class AccountScreenState: UIState() {
         object AuthenticatedScreenState: AccountScreenState()
         object UnauthenticatedScreenState: AccountScreenState()

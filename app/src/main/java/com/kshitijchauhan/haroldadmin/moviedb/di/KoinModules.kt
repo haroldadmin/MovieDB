@@ -34,8 +34,10 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details.ActorDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AuthenticationViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
 import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryViewModel
+import com.kshitijchauhan.haroldadmin.moviedb.ui.main.HomeEpoxyController
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.HomeViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.DetailsEpoxyController
@@ -165,7 +167,10 @@ val uiModule = module {
 
     single { BottomNavManager() }
 
-    viewModel { HomeViewModel(get(), get()) }
+    viewModel { (initialState: UIState.HomeScreenState) ->
+        HomeViewModel(get(), get(), initialState)
+    }
+
     viewModel { LibraryViewModel(get()) }
     viewModel { InTheatresViewModel(get()) }
     viewModel { AuthenticationViewModel(get(), get(), get()) }
@@ -175,11 +180,20 @@ val uiModule = module {
     viewModel { MainViewModel(get(), get()) }
     viewModel { (actorId: Int) -> ActorDetailsViewModel(actorId, get()) }
 
-    factory("fragment-glide-request-manager") { (fragment: Fragment) -> Glide.with(fragment) }
-    factory("view-glide-request-manager") { (view: View) -> Glide.with(view) }
+    factory("fragment-glide-request-manager") { (fragment: Fragment) ->
+        Glide.with(fragment)
+    }
+
+    factory("view-glide-request-manager") { (view: View) ->
+        Glide.with(view)
+    }
 
     factory { (callbacks: DetailsEpoxyController.MovieDetailsCallbacks, glide: RequestManager) ->
         DetailsEpoxyController(callbacks, glide)
+    }
+
+    factory { (callbacks: EpoxyCallbacks, glide: RequestManager) ->
+        HomeEpoxyController(callbacks, glide)
     }
 }
 

@@ -2,14 +2,13 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionType
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionsRepository
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
-import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MoviesRepository
+import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
+import com.kshitijchauhan.haroldadmin.mvrxlite.base.MVRxLiteViewModel
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
@@ -17,34 +16,32 @@ import io.reactivex.schedulers.Schedulers
 import java.io.IOException
 import java.util.concurrent.TimeoutException
 
-class HomeViewModel(private val collectionsRepository: CollectionsRepository,
-                    private val moviesRepository: MoviesRepository) : ViewModel() {
+class HomeViewModel(
+    private val collectionsRepository: CollectionsRepository,
+    private val moviesRepository: MoviesRepository,
+    initialState: UIState.HomeScreenState
+) : MVRxLiteViewModel<UIState.HomeScreenState>(initialState) {
 
     private val compositeDisposable = CompositeDisposable()
     private var currentQuery: Disposable? = null
-    private val _popularMovies = MutableLiveData<Resource<List<Movie>>>()
-    private val _topRatedMovies = MutableLiveData<Resource<List<Movie>>>()
     private val _message = MutableLiveData<String>()
-    private val _searchResults = MutableLiveData<Resource<List<Movie>>>()
-
-    val popularMovies: LiveData<Resource<List<Movie>>>
-        get() = _popularMovies
-
-    val topRatedMovies: LiveData<Resource<List<Movie>>>
-        get() = _topRatedMovies
 
     val message: LiveData<String>
         get() = _message
 
-    val searchResults: LiveData<Resource<List<Movie>>>
-        get() = _searchResults
+    init {
+        getPopularMovies()
+        getTopRatedMovies()
+    }
 
     fun getPopularMovies() {
         collectionsRepository.getCollectionFlowable(type = CollectionType.Popular)
             .init(compositeDisposable)
             .subscribeOn(Schedulers.io())
             .subscribeBy(
-                onNext = { popularMovies -> _popularMovies.postValue(popularMovies) },
+                onNext = { popularMovies ->
+                    setState { copy(popularMoviesResource = popularMovies) }
+                },
                 onError = { error -> handleError(error, "get-popular-movies") }
             )
             .disposeWith(compositeDisposable)
@@ -55,7 +52,9 @@ class HomeViewModel(private val collectionsRepository: CollectionsRepository,
             .init(compositeDisposable)
             .subscribeOn(Schedulers.io())
             .subscribeBy(
-                onNext = { topRatedMovies -> _topRatedMovies.postValue(topRatedMovies) },
+                onNext = { topRatedMovies ->
+                    setState { copy(topRatedMoviesResource = topRatedMovies) }
+                },
                 onError = { error -> handleError(error, "get-popular-movies") }
             )
             .disposeWith(compositeDisposable)
@@ -71,7 +70,7 @@ class HomeViewModel(private val collectionsRepository: CollectionsRepository,
     fun getSearchResultsForQuery(query: String) {
 
         if (query.length < 3) {
-            _searchResults.postValue(null)
+            setState { copy(searchResultsResource = null) }
         } else {
             // Cancel the last query, we don't want it anymore
             currentQuery?.dispose()
@@ -81,7 +80,7 @@ class HomeViewModel(private val collectionsRepository: CollectionsRepository,
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                     { searchResults ->
-                        _searchResults.postValue(searchResults)
+                        setState { copy(searchResultsResource = searchResults) }
                     },
                     { error ->
                         handleError(error, "get-search-results")
@@ -91,7 +90,7 @@ class HomeViewModel(private val collectionsRepository: CollectionsRepository,
         currentQuery?.disposeWith(compositeDisposable)
     }
 
-    fun clearSearchResults() = _searchResults.postValue(null)
+    fun clearSearchResults() = setState { copy(searchResultsResource = null) }
 
     private fun handleError(error: Throwable, caller: String) {
         error.localizedMessage?.let {

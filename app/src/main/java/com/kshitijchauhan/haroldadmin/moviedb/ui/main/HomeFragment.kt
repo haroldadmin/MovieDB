@@ -20,6 +20,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BackPressListener
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
+import com.kshitijchauhan.haroldadmin.mvrxlite.base.MVRxLiteView
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.view_searchbox.view.*
 import org.koin.android.ext.android.inject
@@ -29,10 +30,12 @@ import org.koin.core.parameter.parametersOf
 import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
-class HomeFragment : BaseFragment(), BackPressListener {
+class HomeFragment :
+    BaseFragment(),
+    BackPressListener,
+    MVRxLiteView<UIState.HomeScreenState> {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
-    private val homeViewModel: HomeViewModel by viewModel()
 
     private val callbacks = object : EpoxyCallbacks {
         override fun onMovieItemClicked(id: Int, transitionName: String, sharedView: View?) {
@@ -52,11 +55,21 @@ class HomeFragment : BaseFragment(), BackPressListener {
         parametersOf(this)
     }
 
-    private val homeEpoxyController by lazy { HomeEpoxyController(callbacks, glideRequestManager) }
+    private val homeEpoxyController: HomeEpoxyController by inject {
+        parametersOf(callbacks, glideRequestManager)
+    }
 
     private val onDestroyView: PublishRelay<Any> = PublishRelay.create()
 
-    override val associatedUIState: UIState = UIState.HomeScreenState
+    override val associatedUIState: UIState = UIState.HomeScreenState(
+        popularMoviesResource = Resource.Loading(),
+        topRatedMoviesResource = Resource.Loading(),
+        searchResultsResource = null
+    )
+
+    private val homeViewModel: HomeViewModel by viewModel {
+        parametersOf(associatedUIState)
+    }
 
     override fun notifyBottomNavManager() {
         mainViewModel.updateBottomNavManagerState(this.associatedUIState)
@@ -72,37 +85,19 @@ class HomeFragment : BaseFragment(), BackPressListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        homeEpoxyController.setData(Resource.Loading(), Resource.Loading(), null)
         homeViewModel.apply {
-
-            if (popularMovies.value == null) {
-                getPopularMovies()
-            }
-
-            if (topRatedMovies.value == null) {
-                getTopRatedMovies()
-            }
-
-            popularMovies.observe(viewLifecycleOwner, Observer {
-                updateEpoxyController()
-            })
-
-            topRatedMovies.observe(viewLifecycleOwner, Observer {
-                updateEpoxyController()
-            })
-
-            searchResults.observe(viewLifecycleOwner, Observer {
-                updateEpoxyController()
-            })
 
             message.observe(viewLifecycleOwner, Observer { message ->
                 mainViewModel.showSnackbar(message)
             })
 
+            state.observe(viewLifecycleOwner, Observer { state ->
+                renderState(state)
+            })
+
             forceRefreshCollection(CollectionType.Popular)
             forceRefreshCollection(CollectionType.TopRated)
         }
-
         updateToolbarTitle()
         mainViewModel.setBackPressListener(this)
     }
@@ -144,25 +139,19 @@ class HomeFragment : BaseFragment(), BackPressListener {
             .subscribe()
     }
 
-    private fun updateEpoxyController() {
-        with(homeViewModel) {
-            homeEpoxyController.setData(
-                popularMovies.value,
-                topRatedMovies.value,
-                searchResults.value
-            )
-        }
-    }
-
     override fun onBackPressed(): Boolean {
         return with(homeViewModel) {
-            searchResults.value?.let {
+            state.value!!.searchResultsResource?.let {
                 clearSearchResults()
                 searchBox.etSearchBox.setText("")
                 this@HomeFragment.view?.requestFocus()
                 false
             } ?: true
         }
+    }
+
+    override fun renderState(state: UIState.HomeScreenState) {
+        homeEpoxyController.setData(state)
     }
 
     override fun onDestroyView() {
