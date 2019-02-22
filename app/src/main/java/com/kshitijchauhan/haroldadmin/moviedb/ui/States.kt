@@ -41,7 +41,8 @@ sealed class UIState {
 
     data class ActorDetailsScreenState(val actorId: Int,
                                        val transitionName: String? = null,
-                                       val sharedView: View? = null): UIState()
+                                       val sharedView: View? = null,
+                                       val actorResource: Resource<Actor>): UIState(), MVRxLiteState
 }
 
 sealed class MovieItemType(val name: String) {

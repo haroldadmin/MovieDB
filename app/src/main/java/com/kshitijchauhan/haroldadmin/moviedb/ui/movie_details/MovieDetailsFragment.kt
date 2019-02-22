@@ -55,7 +55,12 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
         }
 
         override fun onActorItemClicked(id: Int, transitionName: String, sharedView: View?) {
-            mainViewModel.updateStateTo(UIState.ActorDetailsScreenState(id, transitionName, sharedView))
+            mainViewModel.updateStateTo(UIState.ActorDetailsScreenState(
+                id,
+                transitionName,
+                sharedView,
+                Resource.Loading()
+            ))
         }
     }
 

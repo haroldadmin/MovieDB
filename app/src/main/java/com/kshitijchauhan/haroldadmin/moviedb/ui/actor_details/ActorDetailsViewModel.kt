@@ -7,35 +7,42 @@ import androidx.lifecycle.ViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.ActorsRepository
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
+import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
+import com.kshitijchauhan.haroldadmin.mvrxlite.base.MVRxLiteViewModel
 import io.reactivex.disposables.CompositeDisposable
 
 class ActorDetailsViewModel(
     private val actorId: Int,
-    private val actorsRepository: ActorsRepository
-) : ViewModel() {
+    private val actorsRepository: ActorsRepository,
+    initialState: UIState.ActorDetailsScreenState
+) : MVRxLiteViewModel<UIState.ActorDetailsScreenState>(initialState) {
 
     private val compositeDisposable = CompositeDisposable()
-    private val _actor = MediatorLiveData<Resource<Actor>>()
     private val _message = MutableLiveData<String>()
-
-    val actor: LiveData<Resource<Actor>>
-        get() = _actor
 
     val message: LiveData<String>
         get() = _message
 
+    init {
+        getActorDetails()
+    }
+
     fun getActorDetails() {
         actorsRepository.getActorResource(actorId)
             .init(compositeDisposable)
-            .subscribe { actor -> _actor.postValue(actor) }
+            .subscribe { actor ->
+                setState { copy(actorResource = actor) }
+            }
             .disposeWith(compositeDisposable)
     }
 
     fun forceRefreshActorDetails() {
         actorsRepository.forceRefreshActorResource(actorId)
             .init(compositeDisposable)
-            .subscribe { actor -> _actor.postValue(actor) }
+            .subscribe { actor ->
+                setState { copy(actorResource = actor) }
+            }
             .disposeWith(compositeDisposable)
     }
 

@@ -31,6 +31,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.LocalMoviesSourc
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MoviesRepository
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.RemoteMoviesSource
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
+import com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details.ActorDetailsEpoxyController
 import com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details.ActorDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AuthenticationViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
@@ -186,7 +187,10 @@ val uiModule = module {
         MovieDetailsViewModel(isAuthenticated, movieId, get(), initialState)
     }
     viewModel { MainViewModel(get(), get()) }
-    viewModel { (actorId: Int) -> ActorDetailsViewModel(actorId, get()) }
+
+    viewModel { (actorId: Int, initialState: UIState.ActorDetailsScreenState) ->
+        ActorDetailsViewModel(actorId, get(), initialState)
+    }
 
     factory("fragment-glide-request-manager") { (fragment: Fragment) ->
         Glide.with(fragment)
@@ -211,6 +215,8 @@ val uiModule = module {
     factory { (callbacks: EpoxyCallbacks, glide: RequestManager) ->
         InTheatresEpoxyController(callbacks, glide)
     }
+
+    factory { ActorDetailsEpoxyController() }
 }
 
 

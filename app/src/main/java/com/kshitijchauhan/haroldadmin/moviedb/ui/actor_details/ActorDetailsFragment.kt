@@ -22,6 +22,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
+import com.kshitijchauhan.haroldadmin.mvrxlite.base.MVRxLiteView
 import kotlinx.android.synthetic.main.actor_details_fragment.*
 import kotlinx.android.synthetic.main.actor_details_fragment.view.*
 import org.koin.android.ext.android.inject
@@ -29,11 +30,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 
-class ActorDetailsFragment : BaseFragment() {
-
-    private val actorDetailsViewModel: ActorDetailsViewModel by viewModel {
-        parametersOf(arguments?.getInt(Constants.KEY_ACTOR_ID) ?: -1)
-    }
+class ActorDetailsFragment : BaseFragment(), MVRxLiteView<UIState.ActorDetailsScreenState> {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
 
@@ -41,11 +38,18 @@ class ActorDetailsFragment : BaseFragment() {
         parametersOf(this)
     }
 
-    private val actorDetailsEpoxyController by lazy { ActorDetailsEpoxyController() }
+    private val actorDetailsEpoxyController: ActorDetailsEpoxyController by inject()
 
-    override val associatedUIState: UIState = UIState.ActorDetailsScreenState(
-        this.arguments?.getInt(Constants.KEY_ACTOR_ID, -1) ?: -1
-    )
+    override val associatedUIState: UIState by lazy {
+        UIState.ActorDetailsScreenState(
+            this.arguments?.getInt(Constants.KEY_ACTOR_ID, -1) ?: -1,
+            actorResource = Resource.Loading()
+        )
+    }
+
+    private val actorDetailsViewModel: ActorDetailsViewModel by viewModel {
+        parametersOf(arguments?.getInt(Constants.KEY_ACTOR_ID) ?: -1, associatedUIState)
+    }
 
     override fun notifyBottomNavManager() {
         mainViewModel.updateBottomNavManagerState(this.associatedUIState)
@@ -86,30 +90,27 @@ class ActorDetailsFragment : BaseFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        actorDetailsEpoxyController.setData(Resource.Loading())
-        actorDetailsViewModel.getActorDetails()
         actorDetailsViewModel.apply {
             message.observe(viewLifecycleOwner, Observer { message ->
                 mainViewModel.showSnackbar(message)
             })
 
-            actor.observe(viewLifecycleOwner, Observer { actor ->
-                updateView(actor)
-                actorDetailsEpoxyController.setData(actor)
+            state.observe(viewLifecycleOwner, Observer { state ->
+                renderState(state)
             })
         }
     }
 
-    private fun updateView(resource: Resource<Actor>) {
-        when (resource) {
+    override fun renderState(state: UIState.ActorDetailsScreenState) {
+        actorDetailsEpoxyController.setData(state)
+        when (val resource = state.actorResource) {
             is Resource.Success -> {
                 handleResourceSuccess(resource.data)
             }
             is Resource.Error -> {
                 handleResourceError()
             }
-            is Resource.Loading -> {
-            }
+            else -> Unit
         }.safe
     }
 
