@@ -8,23 +8,23 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MovieTrailer
 import com.kshitijchauhan.haroldadmin.mvrxlite.base.MVRxLiteState
 
-sealed class UIState {
+sealed class UIState: MVRxLiteState {
 
     data class HomeScreenState(
         val popularMoviesResource: Resource<List<Movie>>,
         val topRatedMoviesResource: Resource<List<Movie>>,
         val searchResultsResource: Resource<List<Movie>>?
-    ): UIState(), MVRxLiteState
+    ): UIState()
 
     data class LibraryScreenState(
         val favouriteMoviesResource: Resource<List<Movie>>,
         val watchlistedMoviesResource: Resource<List<Movie>>,
         val isAuthenticated: Boolean
-    ): UIState(), MVRxLiteState
+    ): UIState()
 
     data class InTheatresScreenState(
         val inTheatresMoviesResource: Resource<List<Movie>>
-    ): UIState(), MVRxLiteState
+    ): UIState()
 
     data class DetailsScreenState(val movieId: Int = -1,
                                   val transitionName: String? = null,
@@ -32,7 +32,7 @@ sealed class UIState {
                                   val movieResource: Resource<Movie>,
                                   val accountStatesResource: Resource<AccountState>,
                                   val trailerResource: Resource<MovieTrailer>,
-                                  val castResource: List<Resource<Actor>>): UIState(), MVRxLiteState
+                                  val castResource: List<Resource<Actor>>): UIState()
 
     sealed class AccountScreenState: UIState() {
         object AuthenticatedScreenState: AccountScreenState()
@@ -42,17 +42,5 @@ sealed class UIState {
     data class ActorDetailsScreenState(val actorId: Int,
                                        val transitionName: String? = null,
                                        val sharedView: View? = null,
-                                       val actorResource: Resource<Actor>): UIState(), MVRxLiteState
-}
-
-sealed class MovieItemType(val name: String) {
-    sealed class MovieType(name: String): MovieItemType(name) {
-        object Popular: MovieType("popular")
-        object TopRated: MovieType("top-rated")
-        object SearchResult: MovieType("search-result")
-    }
-    sealed class LibraryType(name: String): MovieItemType(name) {
-        object Favourite: LibraryType("favourite")
-        object Watchlisted: LibraryType("watchlisted")
-    }
+                                       val actorResource: Resource<Actor>): UIState()
 }
