@@ -8,6 +8,8 @@ import android.view.MenuItem
 import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
@@ -24,10 +26,13 @@ class MainActivity : AppCompatActivity() {
 
     private val mainViewModel: MainViewModel by viewModel()
     private var backPressListener: BackPressListener? = null
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        navController = (supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment).navController
 
         with(mainViewModel) {
             snackbar.observe(this@MainActivity, Observer { message ->
@@ -41,17 +46,24 @@ class MainActivity : AppCompatActivity() {
             backPressListener.observe(this@MainActivity, Observer { listener ->
                 this@MainActivity.backPressListener = listener
             })
+            navigationGraph.observe(this@MainActivity, Observer { graphResId ->
+                navController.setGraph(graphResId)
+            })
         }
 
-        (supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment).let { host ->
-            mainNavView.setupWithNavController(host.navController)
-            // TODO Setup app bar with nav controller?
-            host.navController
+        if (mainViewModel.isAuthenticated) {
+            navController.setGraph(R.navigation.nav_graph_logged_in)
+        } else {
+            navController.setGraph(R.navigation.nav_graph_logged_out)
         }
+
+        mainNavView.setupWithNavController(navController)
+
         setSupportActionBar(mainToolbar)
         supportActionBar?.apply {
             title = getString(R.string.app_name)
         }
+
     }
 
     private fun handleStateChange(state: UIState) {

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_logged_in"
+    app:startDestination="@id/homeFragmentDestination">
+
+    <fragment
+        android:id="@+id/homeFragmentDestination"
+        android:name="com.kshitijchauhan.haroldadmin.moviedb.ui.main.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragmentDestination" />
+    </fragment>
+    <fragment
+        android:id="@+id/libraryFragmentDestination"
+        android:name="com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryFragment"
+        android:label="fragment_library"
+        tools:layout="@layout/fragment_library">
+        <action
+            android:id="@+id/action_libraryFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragmentDestination" />
+    </fragment>
+    <fragment
+        android:id="@+id/inTheatresFragmentDestination"
+        android:name="com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresFragment"
+        android:label="fragment_in_theatres"
+        tools:layout="@layout/fragment_in_theatres">
+        <action
+            android:id="@+id/action_inTheatresFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragmentDestination" />
+    </fragment>
+    <fragment
+        android:id="@+id/accountFragmentDestination"
+        android:name="com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AccountFragment"
+        android:label="fragment_account"
+        tools:layout="@layout/fragment_account" />
+    <fragment
+        android:id="@+id/loggedOutFragmentDestination"
+        android:name="com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoggedOutFragment"
+        android:label="LoggedOutFragment" />
+    <fragment
+        android:id="@+id/movieDetailsFragmentDestination"
+        android:name="com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.MovieDetailsFragment"
+        android:label="fragment_movie_details"
+        tools:layout="@layout/fragment_movie_details">
+
+        <action
+            android:id="@+id/action_movieDetailsFragment_to_actorDetailsFragment"
+            app:destination="@id/actorDetailsFragmentDestination" />
+
+        <argument
+            android:name="movieIdArg"
+            android:defaultValue="-1"
+            app:argType="integer" />
+
+        <argument
+            android:name="transitionNameArg"
+            android:defaultValue=" "
+            app:argType="string" />
+
+        <argument
+            android:name="isAuthenticatedArg"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </fragment>
+    <fragment
+        android:id="@+id/actorDetailsFragmentDestination"
+        android:name="com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details.ActorDetailsFragment"
+        android:label="actor_details_fragment"
+        tools:layout="@layout/actor_details_fragment" >
+        <argument
+            android:name="actorIdArg"
+            app:argType="integer"
+            android:defaultValue="-1" />
+        <argument
+            android:name="transitionNameArg"
+            app:argType="string"
+            android:defaultValue='""' />
+    </fragment>
+</navigation>

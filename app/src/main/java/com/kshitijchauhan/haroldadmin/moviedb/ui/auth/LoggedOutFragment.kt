@@ -52,11 +52,6 @@ class LoggedOutFragment : BaseFragment() {
 
         authWebView.apply {
             webViewClient = object : WebViewClient() {
-
-                override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
-                    super.onPageStarted(view, url, favicon)
-                }
-
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
                     if (url?.contains("allow") == true) {
@@ -100,7 +95,7 @@ class LoggedOutFragment : BaseFragment() {
                         authorizeToken(tokenResource.data)
                     }
                     is Resource.Error -> {
-                        // TODO handle this
+                        mainViewModel.showSnackbar("An error occurred while trying to login")
                     }
                     is Resource.Loading -> {
                         // TODO handle this
@@ -149,7 +144,7 @@ class LoggedOutFragment : BaseFragment() {
                 is Resource.Success -> {
                     mainViewModel.apply {
                         showSnackbar(getString(R.string.message_login_success))
-//                        signalClearBackstack()
+                        mainViewModel.setNavigationGraph(R.navigation.nav_graph_logged_in)
                     }
                     Unit
                 }

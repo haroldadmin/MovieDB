@@ -66,6 +66,7 @@ class AccountFragment : BaseFragment() {
 
         btLogout.setOnClickListener {
             handleLogout()
+            mainViewModel.setNavigationGraph(R.navigation.nav_graph_logged_out)
         }
     }
 
