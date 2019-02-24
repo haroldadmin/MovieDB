@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.RequestManager
 import com.jakewharton.rxbinding2.internal.Notification
@@ -39,15 +40,14 @@ class HomeFragment :
 
     private val callbacks = object : EpoxyCallbacks {
         override fun onMovieItemClicked(id: Int, transitionName: String, sharedView: View?) {
-            mainViewModel.updateStateTo(UIState.DetailsScreenState(
-                movieId = id,
-                transitionName = transitionName,
-                sharedView = sharedView,
-                movieResource = Resource.Loading(),
-                accountStatesResource = Resource.Loading(),
-                trailerResource = Resource.Loading(),
-                castResource = listOf(Resource.Loading())
-            ))
+            HomeFragmentDirections.actionHomeFragmentToMovieDetailsFragment()
+                .apply {
+                    movieIdArg = id
+                    isAuthenticatedArg = mainViewModel.isAuthenticated
+                    transitionNameArg = transitionName
+                }.also { action ->
+                    findNavController().navigate(action)
+                }
         }
     }
 
@@ -73,16 +73,8 @@ class HomeFragment :
         parametersOf(associatedUIState)
     }
 
-    override fun notifyBottomNavManager() {
-        mainViewModel.updateBottomNavManagerState(this.associatedUIState)
-    }
-
     override fun updateToolbarTitle() {
         mainViewModel.updateToolbarTitle(getString(R.string.app_name))
-    }
-
-    companion object {
-        fun newInstance() = HomeFragment()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

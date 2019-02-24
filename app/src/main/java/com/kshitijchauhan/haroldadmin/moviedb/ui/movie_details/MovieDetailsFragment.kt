@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DataSource
@@ -36,6 +38,7 @@ import org.koin.core.parameter.parametersOf
 class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenState> {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
+    private val safeArgs: MovieDetailsFragmentArgs by navArgs()
 
     private val callbacks = object : DetailsEpoxyController.MovieDetailsCallbacks {
         override fun toggleMovieFavouriteStatus() {
@@ -55,12 +58,14 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
         }
 
         override fun onActorItemClicked(id: Int, transitionName: String, sharedView: View?) {
-            mainViewModel.updateStateTo(UIState.ActorDetailsScreenState(
-                id,
-                transitionName,
-                sharedView,
-                Resource.Loading()
-            ))
+            MovieDetailsFragmentDirections.actionMovieDetailsFragmentToActorDetailsFragment()
+                .apply {
+                    actorIdArg = id
+                    transitionNameArg = transitionName
+                }
+                .also { action ->
+                    findNavController().navigate(action)
+                }
         }
     }
 
@@ -85,31 +90,12 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
     }
 
     private val movieDetailsViewModel: MovieDetailsViewModel by viewModel {
-        val isAuthenticated = mainViewModel.isAuthenticated
-        val movieId = arguments?.getInt(Constants.KEY_MOVIE_ID, -1)
-        parametersOf(isAuthenticated, movieId, associatedUIState)
-    }
-
-    override fun notifyBottomNavManager() {
-        // TODO make this a part of render state
-        mainViewModel.updateBottomNavManagerState(this.associatedUIState)
+        parametersOf(safeArgs.isAuthenticatedArg, safeArgs.movieIdArg, associatedUIState)
     }
 
     override fun updateToolbarTitle() {
         // TODO make this a part of render state
         // The title will be updated when the movie details are retrieved
-    }
-
-    companion object {
-        fun newInstance(movieId: Int, transitionName: String): MovieDetailsFragment {
-            val newInstance = MovieDetailsFragment()
-            newInstance.arguments = Bundle()
-                .apply {
-                    putInt(Constants.KEY_MOVIE_ID, movieId)
-                    putString(Constants.KEY_TRANSITION_NAME, transitionName)
-                }
-            return newInstance
-        }
     }
 
     override fun onCreateView(
@@ -119,7 +105,7 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
         postponeEnterTransition()
         inflater.inflate(R.layout.fragment_movie_details, container, false)
             .apply {
-                ViewCompat.setTransitionName(this.ivPoster, arguments?.getString(Constants.KEY_TRANSITION_NAME))
+                ViewCompat.setTransitionName(this.ivPoster, safeArgs.transitionNameArg)
             }
             .also {
                 return it

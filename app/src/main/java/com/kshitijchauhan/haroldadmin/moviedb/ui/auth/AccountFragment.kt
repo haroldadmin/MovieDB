@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
@@ -30,31 +31,23 @@ class AccountFragment : BaseFragment() {
     private val glideRequestManager: RequestManager by inject("fragment-glide-request-manager") {
         parametersOf(this)
     }
-    override val associatedUIState: UIState = UIState.AccountScreenState.AuthenticatedScreenState
-
-    override fun notifyBottomNavManager() {
-        mainViewModel.updateBottomNavManagerState(this.associatedUIState)
+    override val associatedUIState: UIState by lazy {
+        UIState.AccountScreenState.AuthenticatedScreenState
     }
 
     override fun updateToolbarTitle() {
         mainViewModel.updateToolbarTitle(getString(R.string.title_account_screen))
     }
 
-    companion object {
-        fun newInstance() = AccountFragment()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        log("onCreateView")
         return inflater.inflate(R.layout.fragment_account, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
         updateToolbarTitle()
 
         if (authenticationViewModel.accountDetails.value == null) {
@@ -82,7 +75,6 @@ class AccountFragment : BaseFragment() {
             setAuthenticationStatus(false)
             setSessionId("")
             showSnackbar(getString(R.string.message_logout_success))
-            signalClearBackstack()
         }
     }
 

@@ -8,6 +8,8 @@ apply plugin: 'kotlin-kapt'
 
 apply plugin: 'io.fabric'
 
+apply plugin: "androidx.navigation.safeargs"
+
 // For Epoxy
 kapt {
     correctErrorTypes = true
@@ -34,7 +36,7 @@ android {
             } else {
                 buildConfigField('String', 'API_KEY', "\"mock-key\"")
             }
-            manifestPlaceholders = [enableCrashReporting:"false"]
+            manifestPlaceholders = [enableCrashReporting: "false"]
         }
         release {
             minifyEnabled true
@@ -45,7 +47,7 @@ android {
             } else {
                 buildConfigField('String', 'API_KEY', "\"mock-key\"")
             }
-            manifestPlaceholders = [enableCrashReporting:"true"]
+            manifestPlaceholders = [enableCrashReporting: "true"]
         }
 
     }
@@ -78,22 +80,28 @@ android {
 }
 
 dependencies {
-    def lifecycle_version = "2.0.0"
-    def koin_version = '1.0.2'
-    def room_version = "2.1.0-alpha04"
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
     // Android
+    def lifecycle_version = "2.0.0"
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha02'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation 'com.google.android.material:material:1.0.0'
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+    implementation 'androidx.core:core-ktx:1.0.1'
+
+    def room_version = "2.1.0-alpha04"
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
-    implementation 'androidx.core:core-ktx:1.0.1'
+
+    def nav_version = "1.0.0-rc01"
+    implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "android.arch.navigation:navigation-ui-ktx:$nav_version"
+
     // Networking
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
@@ -102,6 +110,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
     implementation 'com.squareup.moshi:moshi-adapters:1.8.0'
     // DI
+    def koin_version = '1.0.2'
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-androidx-scope:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"

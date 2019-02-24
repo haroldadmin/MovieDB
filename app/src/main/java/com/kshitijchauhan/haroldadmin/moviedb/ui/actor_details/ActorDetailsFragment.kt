@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DataSource
@@ -33,6 +34,7 @@ import org.koin.core.parameter.parametersOf
 class ActorDetailsFragment : BaseFragment(), MVRxLiteView<UIState.ActorDetailsScreenState> {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
+    private val safeArgs: ActorDetailsFragmentArgs by navArgs()
 
     private val glideRequestManager: RequestManager by inject("fragment-glide-request-manager") {
         parametersOf(this)
@@ -48,26 +50,11 @@ class ActorDetailsFragment : BaseFragment(), MVRxLiteView<UIState.ActorDetailsSc
     }
 
     private val actorDetailsViewModel: ActorDetailsViewModel by viewModel {
-        parametersOf(arguments?.getInt(Constants.KEY_ACTOR_ID) ?: -1, associatedUIState)
-    }
-
-    override fun notifyBottomNavManager() {
-        mainViewModel.updateBottomNavManagerState(this.associatedUIState)
+        parametersOf(safeArgs.actorIdArg, associatedUIState)
     }
 
     override fun updateToolbarTitle() {
         // Toolbar title will be updated when actor details are available
-    }
-
-    companion object {
-        fun newInstance(actorId: Int, transtitionName: String): ActorDetailsFragment {
-            val newInstance = ActorDetailsFragment()
-            newInstance.arguments = Bundle().apply {
-                putInt(Constants.KEY_ACTOR_ID, actorId)
-                putString(Constants.KEY_TRANSITION_NAME, transtitionName)
-            }
-            return newInstance
-        }
     }
 
     override fun onCreateView(
@@ -76,7 +63,7 @@ class ActorDetailsFragment : BaseFragment(), MVRxLiteView<UIState.ActorDetailsSc
     ): View? {
         postponeEnterTransition()
         val view = inflater.inflate(R.layout.actor_details_fragment, container, false)
-        ViewCompat.setTransitionName(view.ivActorPhoto, arguments?.getString(Constants.KEY_TRANSITION_NAME))
+        ViewCompat.setTransitionName(view.ivActorPhoto, safeArgs.transitionNameArg)
         return view
     }
 

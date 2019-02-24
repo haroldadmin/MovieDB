@@ -1,20 +1,13 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui
 
-import android.content.Context
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 
-abstract class BaseFragment: Fragment() {
+abstract class BaseFragment : Fragment() {
 
     protected abstract val associatedUIState: UIState
-
-    protected abstract fun notifyBottomNavManager()
 
     protected abstract fun updateToolbarTitle()
 
@@ -31,11 +24,6 @@ abstract class BaseFragment: Fragment() {
                 }
             }
         }
-    }
-
-    override fun onResume() {
-        notifyBottomNavManager()
-        super.onResume()
     }
 
     override fun postponeEnterTransition() {

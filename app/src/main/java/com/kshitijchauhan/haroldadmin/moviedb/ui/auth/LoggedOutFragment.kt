@@ -34,16 +34,8 @@ class LoggedOutFragment : BaseFragment() {
 
     override val associatedUIState: UIState = UIState.AccountScreenState.UnauthenticatedScreenState
 
-    override fun notifyBottomNavManager() {
-        mainViewModel.updateBottomNavManagerState(this.associatedUIState)
-    }
-
     override fun updateToolbarTitle() {
         mainViewModel.updateToolbarTitle(getString(R.string.title_account_screen))
-    }
-
-    companion object {
-        fun newInstance() = LoggedOutFragment()
     }
 
     override fun onCreateView(
@@ -157,7 +149,7 @@ class LoggedOutFragment : BaseFragment() {
                 is Resource.Success -> {
                     mainViewModel.apply {
                         showSnackbar(getString(R.string.message_login_success))
-                        signalClearBackstack()
+//                        signalClearBackstack()
                     }
                     Unit
                 }

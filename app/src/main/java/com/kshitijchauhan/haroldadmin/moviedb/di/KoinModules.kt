@@ -34,7 +34,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details.ActorDetailsEpoxyController
 import com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details.ActorDetailsViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.auth.AuthenticationViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BottomNavManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
 import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresEpoxyController
 import com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres.InTheatresViewModel
@@ -168,8 +167,6 @@ val repositoryModule = module {
 
 val uiModule = module {
 
-    single { BottomNavManager() }
-
     viewModel { (initialState: UIState.HomeScreenState) ->
         HomeViewModel(get(), get(), initialState)
     }
@@ -186,7 +183,7 @@ val uiModule = module {
     viewModel { (isAuthenticated: Boolean, movieId: Int, initialState: UIState.DetailsScreenState) ->
         MovieDetailsViewModel(isAuthenticated, movieId, get(), initialState)
     }
-    viewModel { MainViewModel(get(), get()) }
+    viewModel { MainViewModel(get()) }
 
     viewModel { (actorId: Int, initialState: UIState.ActorDetailsScreenState) ->
         ActorDetailsViewModel(actorId, get(), initialState)

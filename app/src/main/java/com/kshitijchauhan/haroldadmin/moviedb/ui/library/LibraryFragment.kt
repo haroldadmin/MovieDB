@@ -6,6 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.R
@@ -32,17 +34,15 @@ class LibraryFragment : BaseFragment(), MVRxLiteView<UIState.LibraryScreenState>
 
     private val callbacks = object : EpoxyCallbacks {
         override fun onMovieItemClicked(id: Int, transitionName: String, sharedView: View?) {
-            mainViewModel.updateStateTo(
-                UIState.DetailsScreenState(
-                    movieId = id,
-                    transitionName = transitionName,
-                    sharedView = sharedView,
-                    movieResource = Resource.Loading(),
-                    accountStatesResource = Resource.Loading(),
-                    trailerResource = Resource.Loading(),
-                    castResource = listOf(Resource.Loading())
-                )
-            )
+            LibraryFragmentDirections.actionLibraryFragmentToMovieDetailsFragment()
+                .apply {
+                    movieIdArg = id
+                    isAuthenticatedArg = mainViewModel.isAuthenticated
+                    transitionNameArg = transitionName
+                }
+                .also { action ->
+                    findNavController().navigate(action)
+                }
         }
     }
 
@@ -66,16 +66,8 @@ class LibraryFragment : BaseFragment(), MVRxLiteView<UIState.LibraryScreenState>
         parametersOf(mainViewModel.accountId, associatedUIState)
     }
 
-    override fun notifyBottomNavManager() {
-        mainViewModel.updateBottomNavManagerState(this.associatedUIState)
-    }
-
     override fun updateToolbarTitle() {
         mainViewModel.updateToolbarTitle(getString(R.string.title_library_screen))
-    }
-
-    companion object {
-        fun newInstance() = LibraryFragment()
     }
 
     override fun onCreateView(
