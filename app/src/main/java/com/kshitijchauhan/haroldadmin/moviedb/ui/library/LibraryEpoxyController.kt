@@ -1,5 +1,6 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.library
 
+import android.os.Handler
 import com.airbnb.epoxy.AutoModel
 import com.airbnb.epoxy.TypedEpoxyController
 import com.bumptech.glide.RequestManager
@@ -11,8 +12,9 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 
 class LibraryEpoxyController(
     private val callbacks: EpoxyCallbacks,
-    private val glide: RequestManager
-) : TypedEpoxyController<UIState.LibraryScreenState>() {
+    private val glide: RequestManager,
+    epoxyHandler: Handler
+) : TypedEpoxyController<UIState.LibraryScreenState>(epoxyHandler, epoxyHandler) {
 
     @AutoModel
     lateinit var emptyListModelFavourited: InfoTextModel_

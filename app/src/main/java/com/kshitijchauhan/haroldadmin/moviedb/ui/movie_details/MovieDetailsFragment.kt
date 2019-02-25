@@ -101,11 +101,9 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
         parametersOf(callbacks, glideRequestManager)
     }
 
-    // We will treat this as initial state for now
-    // TODO Remove this and move to a navigator based system
-    override val associatedUIState: UIState by lazy {
+    override val initialState: UIState by lazy {
         UIState.DetailsScreenState(
-            movieId = this.arguments?.getInt(Constants.KEY_MOVIE_ID) ?: -1,
+            movieId = safeArgs.movieIdArg,
             accountStatesResource = Resource.Loading(),
             movieResource = Resource.Loading(),
             trailerResource = Resource.Loading(),
@@ -115,7 +113,7 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
     }
 
     private val movieDetailsViewModel: MovieDetailsViewModel by viewModel {
-        parametersOf(safeArgs.isAuthenticatedArg, safeArgs.movieIdArg, associatedUIState)
+        parametersOf(safeArgs.isAuthenticatedArg, safeArgs.movieIdArg, initialState)
     }
 
     override fun updateToolbarTitle() {

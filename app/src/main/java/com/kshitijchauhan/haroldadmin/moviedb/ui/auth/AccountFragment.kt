@@ -30,7 +30,7 @@ class AccountFragment : BaseFragment() {
     private val glideRequestManager: RequestManager by inject("fragment-glide-request-manager") {
         parametersOf(this)
     }
-    override val associatedUIState: UIState by lazy {
+    override val initialState: UIState by lazy {
         UIState.AccountScreenState.AuthenticatedScreenState
     }
 

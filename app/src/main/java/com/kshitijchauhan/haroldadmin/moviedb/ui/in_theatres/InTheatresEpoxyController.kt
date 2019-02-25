@@ -1,5 +1,6 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres
 
+import android.os.Handler
 import com.airbnb.epoxy.TypedEpoxyController
 import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
@@ -9,8 +10,9 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 
 class InTheatresEpoxyController(
     private val callbacks: EpoxyCallbacks,
-    private val glide: RequestManager
-): TypedEpoxyController<UIState.InTheatresScreenState>() {
+    private val glide: RequestManager,
+    epoxyHandler: Handler
+): TypedEpoxyController<UIState.InTheatresScreenState>(epoxyHandler, epoxyHandler) {
 
     override fun buildModels(state: UIState.InTheatresScreenState) {
         with(state) {

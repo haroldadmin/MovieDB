@@ -43,15 +43,15 @@ class ActorDetailsFragment : BaseFragment(), MVRxLiteView<UIState.ActorDetailsSc
 
     private val actorDetailsEpoxyController: ActorDetailsEpoxyController by inject()
 
-    override val associatedUIState: UIState by lazy {
+    override val initialState: UIState by lazy {
         UIState.ActorDetailsScreenState(
-            this.arguments?.getInt(Constants.KEY_ACTOR_ID, -1) ?: -1,
+            safeArgs.actorIdArg,
             actorResource = Resource.Loading()
         )
     }
 
     private val actorDetailsViewModel: ActorDetailsViewModel by viewModel {
-        parametersOf(safeArgs.actorIdArg, associatedUIState)
+        parametersOf(safeArgs.actorIdArg, initialState)
     }
 
     override fun updateToolbarTitle() {

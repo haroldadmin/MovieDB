@@ -1,5 +1,6 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details
 
+import android.os.Handler
 import com.airbnb.epoxy.TypedEpoxyController
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
@@ -9,7 +10,9 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.loading
 import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.mainText
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 
-class ActorDetailsEpoxyController: TypedEpoxyController<UIState.ActorDetailsScreenState>() {
+class ActorDetailsEpoxyController(
+    epoxyHandler: Handler
+): TypedEpoxyController<UIState.ActorDetailsScreenState>(epoxyHandler, epoxyHandler) {
 
     override fun buildModels(state: UIState.ActorDetailsScreenState) {
         with(state) {

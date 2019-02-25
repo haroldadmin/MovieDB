@@ -7,7 +7,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 
 abstract class BaseFragment : Fragment() {
 
-    protected abstract val associatedUIState: UIState
+    protected abstract val initialState: UIState
 
     protected abstract fun updateToolbarTitle()
 

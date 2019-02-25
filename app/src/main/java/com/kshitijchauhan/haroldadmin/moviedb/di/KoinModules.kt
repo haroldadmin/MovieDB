@@ -2,6 +2,8 @@ package com.kshitijchauhan.haroldadmin.moviedb.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Handler
+import android.os.HandlerThread
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.room.Room
@@ -198,22 +200,33 @@ val uiModule = module {
     }
 
     factory { (callbacks: DetailsEpoxyController.MovieDetailsCallbacks, glide: RequestManager) ->
-        DetailsEpoxyController(callbacks, glide)
+        DetailsEpoxyController(callbacks, glide, get<Handler>("epoxy-handler"))
     }
 
     factory { (callbacks: EpoxyCallbacks, glide: RequestManager) ->
-        HomeEpoxyController(callbacks, glide)
+        HomeEpoxyController(callbacks, glide, get("epoxy-handler"))
     }
 
     factory { (callbacks: EpoxyCallbacks, glide: RequestManager) ->
-        LibraryEpoxyController(callbacks, glide)
+        LibraryEpoxyController(callbacks, glide, get("epoxy-handler"))
     }
 
     factory { (callbacks: EpoxyCallbacks, glide: RequestManager) ->
-        InTheatresEpoxyController(callbacks, glide)
+        InTheatresEpoxyController(callbacks, glide, get("epoxy-handler"))
     }
 
-    factory { ActorDetailsEpoxyController() }
+    factory { ActorDetailsEpoxyController(get("epoxy-handler")) }
+
+    single("epoxy-handler-thread") {
+        HandlerThread("epoxy").apply {
+            start()
+        }
+    }
+
+    single("epoxy-handler") {
+        val handlerThread = get<HandlerThread>("epoxy-handler-thread")
+        Handler(handlerThread.looper)
+    }
 }
 
 

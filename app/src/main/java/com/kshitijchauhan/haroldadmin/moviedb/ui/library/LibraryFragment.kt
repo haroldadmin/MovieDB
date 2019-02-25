@@ -59,7 +59,7 @@ class LibraryFragment : BaseFragment(), MVRxLiteView<UIState.LibraryScreenState>
         parametersOf(callbacks, glideRequestManager)
     }
 
-    override val associatedUIState: UIState by lazy {
+    override val initialState: UIState by lazy {
         UIState.LibraryScreenState(
             Resource.Loading(),
             Resource.Loading(),
@@ -68,7 +68,7 @@ class LibraryFragment : BaseFragment(), MVRxLiteView<UIState.LibraryScreenState>
     }
 
     private val libraryViewModel: LibraryViewModel by viewModel {
-        parametersOf(mainViewModel.accountId, associatedUIState)
+        parametersOf(mainViewModel.accountId, initialState)
     }
 
     override fun updateToolbarTitle() {

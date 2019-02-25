@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.FragmentNavigatorExtras
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.RequestManager
@@ -15,7 +14,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
-import com.kshitijchauhan.haroldadmin.moviedb.ui.library.LibraryFragmentDirections
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
@@ -31,10 +29,12 @@ class InTheatresFragment : BaseFragment(), MVRxLiteView<UIState.InTheatresScreen
 
     private val mainViewModel: MainViewModel by sharedViewModel()
 
-    override val associatedUIState: UIState = UIState.InTheatresScreenState(Resource.Loading())
+    override val initialState: UIState by lazy {
+        UIState.InTheatresScreenState(Resource.Loading())
+    }
 
     private val inTheatresViewModel: InTheatresViewModel by viewModel {
-        parametersOf(associatedUIState)
+        parametersOf(initialState)
     }
 
     private val callbacks = object : EpoxyCallbacks {

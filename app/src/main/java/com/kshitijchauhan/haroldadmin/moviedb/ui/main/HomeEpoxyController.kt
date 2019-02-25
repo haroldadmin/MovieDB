@@ -1,5 +1,6 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
+import android.os.Handler
 import com.airbnb.epoxy.TypedEpoxyController
 import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
@@ -10,8 +11,9 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 
 class HomeEpoxyController(
     private val callbacks: EpoxyCallbacks,
-    private val glide: RequestManager
-): TypedEpoxyController<UIState.HomeScreenState>() {
+    private val glide: RequestManager,
+    epoxyHandler: Handler
+): TypedEpoxyController<UIState.HomeScreenState>(epoxyHandler, epoxyHandler) {
 
     override fun buildModels(state: UIState.HomeScreenState) {
         with(state) {

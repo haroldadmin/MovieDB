@@ -1,5 +1,6 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details
 
+import android.os.Handler
 import android.view.View
 import com.airbnb.epoxy.*
 import com.bumptech.glide.RequestManager
@@ -14,8 +15,9 @@ import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 
 class DetailsEpoxyController(
     private val callbacks: DetailsEpoxyController.MovieDetailsCallbacks,
-    private val glide: RequestManager
-) : TypedEpoxyController<UIState.DetailsScreenState>() {
+    private val glide: RequestManager,
+    epoxyHandler: Handler
+) : TypedEpoxyController<UIState.DetailsScreenState>(epoxyHandler, epoxyHandler) {
 
     interface MovieDetailsCallbacks {
         fun toggleMovieFavouriteStatus()

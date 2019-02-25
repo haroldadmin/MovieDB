@@ -70,11 +70,6 @@ abstract class MovieModel : EpoxyModelWithHolder<MovieModel.MovieViewHolder>() {
         holder.poster.setOnClickListener(clickListener)
     }
 
-    override fun unbind(holder: MovieViewHolder) {
-        super.unbind(holder)
-        glide.clear(holder.poster)
-    }
-
     inner class MovieViewHolder : KotlinEpoxyHolder(), KoinComponent {
         val poster by bind<ImageView>(R.id.ivPoster)
     }

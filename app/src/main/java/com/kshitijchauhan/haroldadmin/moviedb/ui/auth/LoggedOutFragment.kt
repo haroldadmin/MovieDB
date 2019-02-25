@@ -32,7 +32,7 @@ class LoggedOutFragment : BaseFragment() {
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val authenticationViewModel: AuthenticationViewModel by viewModel()
 
-    override val associatedUIState: UIState = UIState.AccountScreenState.UnauthenticatedScreenState
+    override val initialState: UIState = UIState.AccountScreenState.UnauthenticatedScreenState
 
     override fun updateToolbarTitle() {
         mainViewModel.updateToolbarTitle(getString(R.string.title_account_screen))
