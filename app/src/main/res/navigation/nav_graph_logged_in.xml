@@ -60,6 +60,12 @@
             app:enterAnim="@animator/fade_in_short"
             app:exitAnim="@animator/fade_out_short" />
 
+        <action
+            android:id="@+id/action_movieDetailsFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragmentDestination"
+            app:enterAnim="@animator/fade_in_short"
+            app:exitAnim="@animator/fade_out_short" />
+
         <argument
             android:name="movieIdArg"
             android:defaultValue="-1"

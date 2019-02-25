@@ -74,6 +74,23 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
                     }
                 }
         }
+
+        override fun onMovieItemClicked(id: Int, transitionName: String, sharedView: View?) {
+            MovieDetailsFragmentDirections.actionMovieDetailsFragmentToMovieDetailsFragment()
+                .apply {
+                    movieIdArg = id
+                    transitionNameArg = transitionName
+                    isAuthenticatedArg = mainViewModel.isAuthenticated
+                }
+                .also { action ->
+                    sharedView?.let {
+                        val extras = FragmentNavigatorExtras(it to transitionName)
+                        findNavController().navigate(action, extras)
+                    } ?: run  {
+                        findNavController().navigate(action)
+                    }
+                }
+        }
     }
 
     private val glideRequestManager: RequestManager by inject("fragment-glide-request-manager") {
@@ -92,7 +109,8 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
             accountStatesResource = Resource.Loading(),
             movieResource = Resource.Loading(),
             trailerResource = Resource.Loading(),
-            castResource = listOf(Resource.Loading())
+            castResource = listOf(Resource.Loading()),
+            similarMoviesResource = Resource.Loading()
         )
     }
 
@@ -154,7 +172,9 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
     }
 
     override fun renderState(state: UIState.DetailsScreenState) {
+
         detailsEpoxyController.setData(state)
+
         when (val movieResource = state.movieResource) {
             is Resource.Success -> {
                 val movie = movieResource.data

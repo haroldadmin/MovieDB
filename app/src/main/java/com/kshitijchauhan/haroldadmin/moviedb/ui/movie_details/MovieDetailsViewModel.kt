@@ -1,8 +1,6 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.*
@@ -14,6 +12,7 @@ import com.kshitijchauhan.haroldadmin.mvrxlite.base.MVRxLiteViewModel
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import java.io.IOException
 import java.util.concurrent.TimeoutException
@@ -74,6 +73,14 @@ class MovieDetailsViewModel(
                             setState { copy(castResource = actorsList) }
                         },
                         { error -> handleError(error, "get-movie-cast") }
+                    )
+                    .disposeWith(compositeDisposable)
+                switchMapSingle { getSimilarMovies() }
+                    .subscribeBy(
+                        onNext = { similarMovies ->
+                            setState { copy(similarMoviesResource = similarMovies) }
+                        },
+                        onError = { error -> handleError(error, "get-similar-movies") }
                     )
                     .disposeWith(compositeDisposable)
             }
@@ -151,6 +158,11 @@ class MovieDetailsViewModel(
     private fun forceRefreshMovieDetails(): Observable<Resource<Movie>> {
         return moviesRepository.forceRefreshMovieDetails(movieId)
             .init(compositeDisposable)
+            .subscribeOn(Schedulers.io())
+    }
+
+    private fun getSimilarMovies(): Single<Resource<List<Movie>>> {
+        return moviesRepository.getSimilarMoviesForMovie(movieId)
             .subscribeOn(Schedulers.io())
     }
 

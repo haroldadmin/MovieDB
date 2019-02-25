@@ -9,10 +9,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.AccountState
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MovieTrailer
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.ActorModel_
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.header
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.infoText
-import com.kshitijchauhan.haroldadmin.moviedb.ui.common.loading
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.*
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 
 class DetailsEpoxyController(
@@ -24,6 +21,7 @@ class DetailsEpoxyController(
         fun toggleMovieFavouriteStatus()
         fun toggleMovieWatchlistStatus()
         fun onActorItemClicked(id: Int, transitionName: String, sharedView: View?)
+        fun onMovieItemClicked(id: Int, transitionName: String = "", sharedView: View?)
     }
 
     override fun buildModels(state: UIState.DetailsScreenState) {
@@ -31,7 +29,8 @@ class DetailsEpoxyController(
             buildAccountStatesResource(accountStatesResource)
             buildMovieResource(movieResource)
             buildCastResource(castResource)
-//            buildTrailerResource(trailerResource)
+            buildSimilarMoviesModel(similarMoviesResource)
+            buildTrailerResource(trailerResource)
         }
     }
 
@@ -162,7 +161,37 @@ class DetailsEpoxyController(
                     }
                 }
             }
-        }
+    }
+
+    private fun buildSimilarMoviesModel(similarMovies: Resource<List<Movie>>) {
+        when (similarMovies) {
+            is Resource.Success -> {
+                header {
+                    id("similar-movies")
+                    title("Similar Movies")
+                    spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
+                }
+
+                carousel {
+                    id("similar-movies-carousel")
+                    numViewsToShowOnScreen(this@DetailsEpoxyController.spanCount.toFloat().minus(1f).times(1.05f))
+                    withModelsFrom(similarMovies.data) { similarMovie ->
+                        MovieModel_()
+                            .id(similarMovie.id)
+                            .movieId(similarMovie.id)
+                            .glide(glide)
+                            .posterUrl(similarMovie.posterPath)
+                            .transitionName("poster-${similarMovie.id}")
+                            .clickListener { model, _, clickedView, _ ->
+                                callbacks.onMovieItemClicked(model.movieId!!, model.transitionName(), clickedView)
+                            }
+                    }
+                }
+            }
+            is Resource.Error -> Unit
+            is Resource.Loading -> Unit
+        }.safe
+    }
 
     /** For use in the buildModels method of EpoxyController. A shortcut for creating a Carousel model, initializing it, and adding it to the controller.
      *

@@ -32,7 +32,8 @@ sealed class UIState: MVRxLiteState {
                                   val movieResource: Resource<Movie>,
                                   val accountStatesResource: Resource<AccountState>,
                                   val trailerResource: Resource<MovieTrailer>,
-                                  val castResource: List<Resource<Actor>>): UIState()
+                                  val castResource: List<Resource<Actor>>,
+                                  val similarMoviesResource: Resource<List<Movie>>): UIState()
 
     sealed class AccountScreenState: UIState() {
         object AuthenticatedScreenState: AccountScreenState()
