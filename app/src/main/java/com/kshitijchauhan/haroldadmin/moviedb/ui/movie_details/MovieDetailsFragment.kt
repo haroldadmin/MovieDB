@@ -14,6 +14,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
 import com.bumptech.glide.request.RequestListener
@@ -24,7 +25,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.format
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
@@ -86,7 +86,7 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
                     sharedView?.let {
                         val extras = FragmentNavigatorExtras(it to transitionName)
                         findNavController().navigate(action, extras)
-                    } ?: run  {
+                    } ?: run {
                         findNavController().navigate(action)
                     }
                 }
@@ -184,6 +184,7 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
                             .placeholder(R.drawable.ic_round_local_movies_24px)
                             .error(R.drawable.ic_round_local_movies_24px)
                             .fallback(R.drawable.ic_round_local_movies_24px)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
                     }
                     .listener(object : RequestListener<Drawable> {
                         override fun onLoadFailed(
@@ -213,6 +214,10 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
                     .asBitmap()
                     .transition(BitmapTransitionOptions.withCrossFade())
                     .load(movie.backdropPath)
+                    .apply {
+                        RequestOptions()
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    }
                     .into(ivBackdrop)
 
                 tvTitle.text = movie.title

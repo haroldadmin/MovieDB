@@ -6,4 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/movie_grid_poster_height"
     android:scaleType="centerCrop"
-    tools:srcCompat="@tools:sample/avatars" />
+    tools:srcCompat="@tools:sample/avatars"
+    android:foreground="?attr/selectableItemBackground"
+    android:background="@color/colorSurface"/>

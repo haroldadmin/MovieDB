@@ -22,7 +22,8 @@
         app:layout_constraintEnd_toStartOf="@+id/posterWidthGuideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@tools:sample/avatars" />
+        tools:src="@tools:sample/avatars"
+        android:background="@color/colorSurfaceLight"/>
 
     <ImageView
         android:id="@+id/ivBackdrop"
@@ -38,7 +39,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        tools:src="@tools:sample/backgrounds/scenic" />
+        tools:src="@tools:sample/backgrounds/scenic"
+        android:background="@color/colorSurface"/>
 
     <TextView
         android:id="@+id/tvTitle"

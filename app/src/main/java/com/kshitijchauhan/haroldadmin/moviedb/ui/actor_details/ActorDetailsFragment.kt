@@ -12,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
@@ -125,6 +126,7 @@ class ActorDetailsFragment : BaseFragment(), MVRxLiteView<UIState.ActorDetailsSc
                     .fallback(R.drawable.ic_round_account_circle_24px)
                     .error(R.drawable.ic_round_account_circle_24px)
                     .placeholder(R.drawable.ic_round_account_circle_24px)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .circleCrop()
             }
             .listener(object : RequestListener<Drawable> {
@@ -157,7 +159,12 @@ class ActorDetailsFragment : BaseFragment(), MVRxLiteView<UIState.ActorDetailsSc
     private fun handleResourceError() {
         startPostponedEnterTransition()
         mainViewModel.updateToolbarTitle(getString(R.string.actor_name_error))
-        glideRequestManager.load(R.drawable.ic_round_account_circle_24px)
+        glideRequestManager
+            .load(R.drawable.ic_round_account_circle_24px)
+            .apply {
+                RequestOptions()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+            }
             .into(ivActorPhoto)
         tvActorName.text = getString(R.string.actor_name_error)
     }

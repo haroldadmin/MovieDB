@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
@@ -91,6 +92,7 @@ class AccountFragment : BaseFragment() {
                                 .placeholder(R.drawable.ic_round_account_circle_24px)
                                 .fallback(R.drawable.ic_round_account_circle_24px)
                                 .error(R.drawable.ic_round_account_circle_24px)
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .circleCrop()
                         )
                         .into(ivAvatar)

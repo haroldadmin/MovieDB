@@ -11,6 +11,7 @@ import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
 import com.airbnb.epoxy.ModelView
 import com.bumptech.glide.RequestManager
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
@@ -64,6 +65,7 @@ abstract class MovieModel : EpoxyModelWithHolder<MovieModel.MovieViewHolder>() {
                     .placeholder(R.drawable.ic_round_local_movies_24px)
                     .error(R.drawable.ic_round_local_movies_24px)
                     .fallback(R.drawable.ic_round_local_movies_24px)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
             }
             .into(holder.poster)
         ViewCompat.setTransitionName(holder.poster, transitionName)
@@ -132,6 +134,7 @@ abstract class ActorModel : EpoxyModelWithHolder<ActorModel.ActorHolder>() {
                         .placeholder(R.drawable.ic_round_account_circle_24px)
                         .error(R.drawable.ic_round_account_circle_24px)
                         .fallback(R.drawable.ic_round_account_circle_24px)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .circleCrop()
                 )
                 .into(actorPicture)
@@ -185,6 +188,7 @@ abstract class MovieSearchResultModel : EpoxyModelWithHolder<MovieSearchResultMo
                         .placeholder(R.drawable.ic_round_local_movies_24px)
                         .error(R.drawable.ic_round_local_movies_24px)
                         .fallback(R.drawable.ic_round_local_movies_24px)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                 }
                 .into(holder.poster)
         }
