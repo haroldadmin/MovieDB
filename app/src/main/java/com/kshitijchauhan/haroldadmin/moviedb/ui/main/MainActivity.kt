@@ -5,17 +5,12 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
-import androidx.transition.Fade
 import com.kshitijchauhan.haroldadmin.moviedb.R
-import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BackPressListener
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.snackbar
@@ -51,10 +46,12 @@ class MainActivity : AppCompatActivity() {
             })
         }
 
-        if (mainViewModel.isAuthenticated) {
-            navController.setGraph(R.navigation.nav_graph_logged_in)
-        } else {
-            navController.setGraph(R.navigation.nav_graph_logged_out)
+        if (savedInstanceState == null) {
+            if (mainViewModel.isAuthenticated) {
+                navController.setGraph(R.navigation.nav_graph_logged_in)
+            } else {
+                navController.setGraph(R.navigation.nav_graph_logged_out)
+            }
         }
 
         mainNavView.setupWithNavController(navController)

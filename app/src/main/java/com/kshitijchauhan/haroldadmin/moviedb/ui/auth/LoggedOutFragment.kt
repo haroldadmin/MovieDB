@@ -1,6 +1,5 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.auth
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -149,8 +148,7 @@ class LoggedOutFragment : BaseFragment() {
                     Unit
                 }
                 is Resource.Error -> {
-                    // TODO Handle this
-                    Unit
+                    mainViewModel.showSnackbar(accountDetailsResource.errorMessage)
                 }
                 is Resource.Loading -> {
                     // TODO Handle this
