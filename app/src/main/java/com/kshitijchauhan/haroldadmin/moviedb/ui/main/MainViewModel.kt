@@ -1,7 +1,6 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
 import android.content.SharedPreferences
-import androidx.annotation.NavigationRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,7 +9,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BackPressListener
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SharedPreferencesDelegate
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 
 class MainViewModel(
     sharedPreferences: SharedPreferences
@@ -19,7 +17,6 @@ class MainViewModel(
     private val _state = SingleLiveEvent<UIState>()
     private val _snackbar = SingleLiveEvent<String>()
     private val _toolbarTitle = SingleLiveEvent<String>()
-    private val _navigationGraph = SingleLiveEvent<Int>()
     private var _isAuthenticated by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_IS_AUTHENTICATED, false)
     private var _sessionId by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_SESSION_ID, "")
     private var _accountId by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_ACCOUNT_ID, -1)
@@ -43,9 +40,6 @@ class MainViewModel(
     val backPressListener: LiveData<BackPressListener>
         get() = _backPressListener
 
-    val navigationGraph: LiveData<Int>
-        get() = _navigationGraph
-
     fun showSnackbar(message: String) {
         _snackbar.postValue(message)
     }
@@ -63,6 +57,4 @@ class MainViewModel(
     }
 
     fun setBackPressListener(listener: BackPressListener?) = _backPressListener.postValue(listener)
-
-    fun setNavigationGraph(@NavigationRes graphResId: Int) = _navigationGraph.postValue(graphResId)
 }

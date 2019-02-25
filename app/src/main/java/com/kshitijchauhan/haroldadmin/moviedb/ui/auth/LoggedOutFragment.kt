@@ -9,6 +9,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.transition.Fade
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
@@ -35,6 +36,15 @@ class LoggedOutFragment : BaseFragment() {
 
     override fun updateToolbarTitle() {
         mainViewModel.updateToolbarTitle(getString(R.string.title_account_screen))
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (mainViewModel.isAuthenticated) {
+            // We know mainViewModel already exists, so we can access its properties
+            LoggedOutFragmentDirections.actionLoggedOutFragmentDestinationToAccountFragmentDestination()
+                .let { findNavController().navigate(it) }
+        }
     }
 
     override fun onCreateView(
@@ -143,7 +153,7 @@ class LoggedOutFragment : BaseFragment() {
                 is Resource.Success -> {
                     mainViewModel.apply {
                         showSnackbar(getString(R.string.message_login_success))
-                        mainViewModel.setNavigationGraph(R.navigation.nav_graph_logged_in)
+                        findNavController().popBackStack()
                     }
                     Unit
                 }

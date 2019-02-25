@@ -47,7 +47,15 @@
     <fragment
         android:id="@+id/loggedOutFragmentDestination"
         android:name="com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoggedOutFragment"
-        android:label="LoggedOutFragment" />
+        android:label="LoggedOutFragment" >
+        <action
+            android:id="@+id/action_loggedOutFragmentDestination_to_accountFragmentDestination"
+            app:destination="@id/accountFragmentDestination"
+            app:popUpTo="@+id/homeFragmentDestination"
+            app:popUpToInclusive="false"
+            app:popEnterAnim="@animator/fade_in_short"
+            app:popExitAnim="@animator/fade_out_short"/>
+    </fragment>
     <fragment
         android:id="@+id/movieDetailsFragmentDestination"
         android:name="com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.MovieDetailsFragment"

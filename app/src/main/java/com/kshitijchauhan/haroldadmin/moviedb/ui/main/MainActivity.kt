@@ -41,17 +41,6 @@ class MainActivity : AppCompatActivity() {
             backPressListener.observe(this@MainActivity, Observer { listener ->
                 this@MainActivity.backPressListener = listener
             })
-            navigationGraph.observe(this@MainActivity, Observer { graphResId ->
-                navController.setGraph(graphResId)
-            })
-        }
-
-        if (savedInstanceState == null) {
-            if (mainViewModel.isAuthenticated) {
-                navController.setGraph(R.navigation.nav_graph_logged_in)
-            } else {
-                navController.setGraph(R.navigation.nav_graph_logged_out)
-            }
         }
 
         mainNavView.setupWithNavController(navController)

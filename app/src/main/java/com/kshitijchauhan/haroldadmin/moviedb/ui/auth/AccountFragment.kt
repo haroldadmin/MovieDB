@@ -16,7 +16,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.acc
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 import kotlinx.android.synthetic.main.fragment_account.*
 import org.koin.android.ext.android.inject
@@ -66,7 +65,7 @@ class AccountFragment : BaseFragment() {
 
         btLogout.setOnClickListener {
             handleLogout()
-            mainViewModel.setNavigationGraph(R.navigation.nav_graph_logged_out)
+            findNavController().popBackStack()
         }
     }
 

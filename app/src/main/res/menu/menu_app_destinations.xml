@@ -16,7 +16,7 @@
         android:title="In Theatres"/>
 
     <item
-        android:id="@+id/accountFragmentDestination"
+        android:id="@+id/loggedOutFragmentDestination"
         android:icon="@drawable/ic_round_account_circle_24px"
         android:title="Account" />
 </menu>
