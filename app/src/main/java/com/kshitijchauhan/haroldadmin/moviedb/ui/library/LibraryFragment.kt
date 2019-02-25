@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.FragmentNavigatorExtras
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.RequestManager
@@ -102,22 +101,17 @@ class LibraryFragment : BaseFragment(), MVRxLiteView<UIState.LibraryScreenState>
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        libraryViewModel.message.observe(viewLifecycleOwner, Observer { message ->
-            mainViewModel.showSnackbar(message)
-        })
+        with(libraryViewModel) {
+            state.observe(viewLifecycleOwner, Observer { state ->
+                log("Received state update: $state")
+                renderState(state)
+            })
 
-        if (mainViewModel.isAuthenticated) {
-            libraryViewModel.apply {
+            message.observe(viewLifecycleOwner, Observer { message ->
+                mainViewModel.showSnackbar(message)
+            })
 
-                state.observe(viewLifecycleOwner, Observer { state ->
-                    log("Received state update: $state")
-                    renderState(state)
-                })
-
-                message.observe(viewLifecycleOwner, Observer { message ->
-                    mainViewModel.showSnackbar(message)
-                })
-
+            if (mainViewModel.isAuthenticated) {
                 forceRefreshCollection(mainViewModel.accountId, CollectionType.Favourite)
                 forceRefreshCollection(mainViewModel.accountId, CollectionType.Watchlist)
             }
