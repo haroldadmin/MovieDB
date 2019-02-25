@@ -2,11 +2,13 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
@@ -64,7 +66,12 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
                     transitionNameArg = transitionName
                 }
                 .also { action ->
-                    findNavController().navigate(action)
+                    sharedView?.let {
+                        val extras = FragmentNavigatorExtras(it to transitionName)
+                        findNavController().navigate(action, extras)
+                    } ?: run {
+                        findNavController().navigate(action)
+                    }
                 }
         }
     }
@@ -102,13 +109,23 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val transition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        val animatorDuration = requireContext().resources.getInteger(R.integer.sharedElementTransitionDuration).toLong()
+
+        sharedElementEnterTransition = transition.apply {
+            duration = animatorDuration
+        }
+
+        sharedElementReturnTransition = transition.apply {
+            duration = animatorDuration
+        }
+
         postponeEnterTransition()
-        inflater.inflate(R.layout.fragment_movie_details, container, false)
+        return inflater
+            .inflate(R.layout.fragment_movie_details, container, false)
             .apply {
                 ViewCompat.setTransitionName(this.ivPoster, safeArgs.transitionNameArg)
-            }
-            .also {
-                return it
             }
     }
 

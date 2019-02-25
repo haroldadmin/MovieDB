@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -41,7 +42,12 @@ class LibraryFragment : BaseFragment(), MVRxLiteView<UIState.LibraryScreenState>
                     transitionNameArg = transitionName
                 }
                 .also { action ->
-                    findNavController().navigate(action)
+                    sharedView?.let {
+                        val extras = FragmentNavigatorExtras(it to transitionName)
+                        findNavController().navigate(action, extras)
+                    } ?: run {
+                        findNavController().navigate(action)
+                    }
                 }
         }
     }

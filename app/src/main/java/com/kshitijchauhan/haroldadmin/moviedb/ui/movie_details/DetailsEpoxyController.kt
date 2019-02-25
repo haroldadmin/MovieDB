@@ -30,7 +30,7 @@ class DetailsEpoxyController(
         with(state) {
             buildAccountStatesResource(accountStatesResource)
             buildMovieResource(movieResource)
-            buildTrailerResource(trailerResource)
+//            buildTrailerResource(trailerResource)
             buildCastResource(castResource)
         }
     }
@@ -72,7 +72,7 @@ class DetailsEpoxyController(
                 }
 
                 loading {
-                    id("load-favourite-movies")
+                    id("load-movie-description")
                     description("Loading Description")
                     spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                 }
@@ -129,19 +129,7 @@ class DetailsEpoxyController(
                     spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                 }
             }
-            is Resource.Loading -> {
-                header {
-                    id("trailer")
-                    title("Trailer")
-                    spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
-                }
-
-                loading {
-                    id("load-trailer")
-                    description("Loading trailer")
-                    spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
-                }
-            }
+            is Resource.Loading -> Unit
         }.safe
     }
 
@@ -168,14 +156,13 @@ class DetailsEpoxyController(
                             }
                         }
                     }
-                    is Resource.Error -> Unit
-                    is Resource.Loading -> {
-                        loading {
-                            id("load-cast")
-                            description("Loading cast")
-                            spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
+                    is Resource.Error -> {
+                        infoText {
+                            id("error-cast")
+                            text("An error occurred while trying to load the cast for this movie")
                         }
                     }
+                    is Resource.Loading -> Unit
                 }.safe
 
             } ?: infoText {

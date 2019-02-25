@@ -5,6 +5,8 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.util.TypedValue
+import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import com.kshitijchauhan.haroldadmin.moviedb.BuildConfig
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.Config

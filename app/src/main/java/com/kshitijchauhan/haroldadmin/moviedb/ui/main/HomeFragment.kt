@@ -1,11 +1,13 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.RequestManager
@@ -46,7 +48,12 @@ class HomeFragment :
                     isAuthenticatedArg = mainViewModel.isAuthenticated
                     transitionNameArg = transitionName
                 }.also { action ->
-                    findNavController().navigate(action)
+                    sharedView?.let {
+                        val extras = FragmentNavigatorExtras(it to transitionName)
+                        findNavController().navigate(action, extras)
+                    } ?: run {
+                        findNavController().navigate(action)
+                    }
                 }
         }
     }
@@ -100,6 +107,16 @@ class HomeFragment :
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val transition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        sharedElementEnterTransition = transition.apply {
+            duration = 500
+        }
+
+        sharedElementReturnTransition = transition.apply {
+            duration = 500
+        }
+
         postponeEnterTransition()
         return inflater.inflate(R.layout.fragment_home, container, false)
     }

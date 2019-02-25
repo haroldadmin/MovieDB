@@ -12,7 +12,10 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_movieDetailsFragment"
-            app:destination="@id/movieDetailsFragmentDestination" />
+            app:destination="@id/movieDetailsFragmentDestination"
+            app:enterAnim="@animator/fade_in_short"
+            app:exitAnim="@animator/fade_out_short"
+            app:popExitAnim="@animator/fade_out_short" />
     </fragment>
     <fragment
         android:id="@+id/libraryFragmentDestination"
@@ -21,7 +24,9 @@
         tools:layout="@layout/fragment_library">
         <action
             android:id="@+id/action_libraryFragment_to_movieDetailsFragment"
-            app:destination="@id/movieDetailsFragmentDestination" />
+            app:destination="@id/movieDetailsFragmentDestination"
+            app:enterAnim="@animator/fade_in_short"
+            app:exitAnim="@animator/fade_out_short" />
     </fragment>
     <fragment
         android:id="@+id/inTheatresFragmentDestination"
@@ -30,7 +35,9 @@
         tools:layout="@layout/fragment_in_theatres">
         <action
             android:id="@+id/action_inTheatresFragment_to_movieDetailsFragment"
-            app:destination="@id/movieDetailsFragmentDestination" />
+            app:destination="@id/movieDetailsFragmentDestination"
+            app:enterAnim="@animator/fade_in_short"
+            app:exitAnim="@animator/fade_out_short" />
     </fragment>
     <fragment
         android:id="@+id/accountFragmentDestination"
@@ -49,7 +56,9 @@
 
         <action
             android:id="@+id/action_movieDetailsFragment_to_actorDetailsFragment"
-            app:destination="@id/actorDetailsFragmentDestination" />
+            app:destination="@id/actorDetailsFragmentDestination"
+            app:enterAnim="@animator/fade_in_short"
+            app:exitAnim="@animator/fade_out_short" />
 
         <argument
             android:name="movieIdArg"

@@ -2,6 +2,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -61,10 +62,24 @@ class ActorDetailsFragment : BaseFragment(), MVRxLiteView<UIState.ActorDetailsSc
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val transition = TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+        val animatorDuration = requireContext().resources.getInteger(R.integer.sharedElementTransitionDuration).toLong()
+
+        sharedElementEnterTransition = transition.apply {
+            duration = animatorDuration
+        }
+
+        sharedElementReturnTransition = transition.apply {
+            duration = animatorDuration
+        }
+
         postponeEnterTransition()
-        val view = inflater.inflate(R.layout.actor_details_fragment, container, false)
-        ViewCompat.setTransitionName(view.ivActorPhoto, safeArgs.transitionNameArg)
-        return view
+        return inflater
+            .inflate(R.layout.actor_details_fragment, container, false)
+            .apply {
+                ViewCompat.setTransitionName(this.ivActorPhoto, safeArgs.transitionNameArg)
+            }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
