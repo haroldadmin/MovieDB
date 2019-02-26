@@ -2,7 +2,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.utils
 
 object Constants {
 
-    val KEY_SESSION_ID = "session-id"
+    const val KEY_SESSION_ID = "session-id"
 
     val Genres = mapOf(
         19 to "Action",
@@ -43,21 +43,25 @@ object Constants {
         0 to "original"
     )
 
-    val KEY_MOVIE_ID = "movie-id"
+    const val KEY_MOVIE_ID = "movie-id"
 
-    val KEY_TRANSITION_NAME = "transition-name"
+    const val KEY_TRANSITION_NAME = "transition-name"
 
-    val KEY_IS_AUTHENTICATED: String = "isAuthenticated"
+    const val KEY_IS_AUTHENTICATED: String = "isAuthenticated"
 
-    val KEY_ACCOUNT_ID: String = "accountId"
+    const val KEY_ACCOUNT_ID: String = "accountId"
 
-    val KEY_ACTOR_ID: String = "actorId"
+    const val KEY_ACTOR_ID: String = "actorId"
 
-    val KEY_COUNTRY_CODE: String = "country"
+    const val KEY_COUNTRY_CODE: String = "country"
 
-    val KEY_COUNTRY_NAME: String = "countryName"
+    const val KEY_COUNTRY_NAME: String = "countryName"
 
-    val PRIVACY_POLICY_URL = "https://github.com/haroldadmin/MovieDB/blob/master/docs/privacy-policy.md"
+    const val KEY_CRASHLYTICS: String = "crashlytics"
 
-    val TERMS_AND_CONDITIONS_URL = "https://github.com/haroldadmin/MovieDB/blob/master/docs/terms-and-conditions.md"
+    const val KEY_ANALYTICS: String = "analytics"
+
+    const val PRIVACY_POLICY_URL = "https://github.com/haroldadmin/MovieDB/blob/master/docs/privacy-policy.md"
+
+    const val TERMS_AND_CONDITIONS_URL = "https://github.com/haroldadmin/MovieDB/blob/master/docs/terms-and-conditions.md"
 }

@@ -16,8 +16,15 @@
         <SwitchPreference
             app:icon="@drawable/ic_round_bug_report_24px"
             app:key="@string/key_crashlytics"
-            app:summary="Send reports to help us find issues with the app"
+            app:summary="Changing this requires an app restart"
             app:title="Automatic crash reports"
-            android:defaultValue="true"/>
+            app:defaultValue="true"/>
+
+        <SwitchPreference
+            app:icon="@drawable/ic_round_info_24px"
+            app:key="@string/key_analytics"
+            app:summary="Analytics help us make the app better"
+            app:title="Usage analytics"
+            app:defaultValue="true" />
     </PreferenceCategory>
 </PreferenceScreen>

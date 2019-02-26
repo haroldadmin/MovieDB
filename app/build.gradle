@@ -36,7 +36,6 @@ android {
             } else {
                 buildConfigField('String', 'API_KEY', "\"mock-key\"")
             }
-            manifestPlaceholders = [enableCrashReporting: "false"]
         }
         release {
             minifyEnabled true
@@ -47,7 +46,6 @@ android {
             } else {
                 buildConfigField('String', 'API_KEY', "\"mock-key\"")
             }
-            manifestPlaceholders = [enableCrashReporting: "true"]
         }
 
     }
