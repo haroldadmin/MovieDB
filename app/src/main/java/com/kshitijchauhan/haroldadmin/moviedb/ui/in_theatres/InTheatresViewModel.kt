@@ -2,6 +2,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionType
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionsRepository
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
@@ -73,9 +74,9 @@ class InTheatresViewModel(
                 error.printStackTrace()
             }
         when (error) {
-            is IOException -> _message.postValue(SnackbarAction("Please check your internet connection"))
-            is TimeoutException -> _message.postValue(SnackbarAction("Request timed out"))
-            else -> _message.postValue(SnackbarAction("An error occurred"))
+            is IOException -> _message.postValue(SnackbarAction(R.string.error_check_internet))
+            is TimeoutException -> _message.postValue(SnackbarAction(R.string.error_timeout))
+            else -> _message.postValue(SnackbarAction(R.string.error_general_error))
         }
     }
 

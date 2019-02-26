@@ -11,7 +11,7 @@ import java.util.*
 private val df = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 private val currentDate: String = df.format(Date())
 private val pastDate = run {
-    val day = Calendar.getInstance().apply { add(Calendar.WEEK_OF_MONTH, -2) }
+    val day = Calendar.getInstance().apply { add(Calendar.MONTH, -1) }
     df.format(Date(day.timeInMillis))
 }
 

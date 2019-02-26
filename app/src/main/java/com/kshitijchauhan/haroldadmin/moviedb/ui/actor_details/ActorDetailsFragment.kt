@@ -17,6 +17,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
+import com.google.android.material.snackbar.Snackbar
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
@@ -95,7 +96,7 @@ class ActorDetailsFragment : BaseFragment(), MVRxLiteView<UIState.ActorDetailsSc
         super.onActivityCreated(savedInstanceState)
         actorDetailsViewModel.apply {
             message.observe(viewLifecycleOwner, Observer { message ->
-                mainViewModel.showSnackbar(message)
+                view?.let { Snackbar.make(it, message, Snackbar.LENGTH_SHORT).show() }
             })
 
             state.observe(viewLifecycleOwner, Observer { state ->

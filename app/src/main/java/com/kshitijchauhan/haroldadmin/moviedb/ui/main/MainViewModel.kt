@@ -2,6 +2,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
 import android.content.SharedPreferences
 import android.view.View
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -44,14 +45,23 @@ class MainViewModel(
     val backPressListener: LiveData<BackPressListener>
         get() = _backPressListener
 
-    fun showSnackbar(message: String) {
+    fun showSnackbar(@StringRes message: Int) {
         _snackbar.postValue(SnackbarAction(message))
     }
 
-    fun showSnackbar(message: String, actionText: String, clickListener: View.OnClickListener) {
+    fun showSnackbar(@StringRes message: Int, @StringRes actionText: Int, clickListener: View.OnClickListener) {
         _snackbar.postValue(SnackbarAction(
             message = message,
             actionText = actionText,
+            action = clickListener
+        ))
+    }
+
+    fun showSnackbar(@StringRes message: Int, @StringRes actionText: Int, length: Int, clickListener: View.OnClickListener) {
+        _snackbar.postValue(SnackbarAction(
+            message = message,
+            actionText = actionText,
+            length = length,
             action = clickListener
         ))
     }

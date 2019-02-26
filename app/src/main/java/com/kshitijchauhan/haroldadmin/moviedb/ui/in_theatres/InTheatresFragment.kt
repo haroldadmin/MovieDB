@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.RequestManager
+import com.google.android.material.snackbar.Snackbar
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
@@ -123,5 +124,15 @@ class InTheatresFragment : BaseFragment(), MVRxLiteView<UIState.InTheatresScreen
 
     override fun renderState(state: UIState.InTheatresScreenState) {
         inTheatresEpoxyController.setData(state)
+        if (state.inTheatresMoviesResource is Resource.Success && state.inTheatresMoviesResource.data.isEmpty()) {
+            mainViewModel.showSnackbar(
+                R.string.change_country_message,
+                R.string.action_settings,
+                Snackbar.LENGTH_LONG,
+                View.OnClickListener {
+                    findNavController().navigate(R.id.settingsFragment)
+                }
+            )
+        }
     }
 }

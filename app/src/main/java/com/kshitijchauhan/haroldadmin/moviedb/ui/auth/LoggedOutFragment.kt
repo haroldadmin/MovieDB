@@ -14,6 +14,7 @@ import androidx.transition.Fade
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
 import androidx.transition.TransitionSet
+import com.google.android.material.snackbar.Snackbar
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.auth.CreateSessionRequest
@@ -104,7 +105,7 @@ class LoggedOutFragment : BaseFragment() {
                         authorizeToken(tokenResource.data)
                     }
                     is Resource.Error -> {
-                        mainViewModel.showSnackbar("An error occurred while trying to login")
+                        mainViewModel.showSnackbar(R.string.error_login)
                     }
                     is Resource.Loading -> {
                         // TODO handle this
@@ -152,13 +153,13 @@ class LoggedOutFragment : BaseFragment() {
             when (accountDetailsResource) {
                 is Resource.Success -> {
                     mainViewModel.apply {
-                        showSnackbar(getString(R.string.message_login_success))
+                        showSnackbar(R.string.message_login_success)
                         findNavController().popBackStack()
                     }
                     Unit
                 }
                 is Resource.Error -> {
-                    mainViewModel.showSnackbar(accountDetailsResource.errorMessage)
+                    view?.let { Snackbar.make(it, accountDetailsResource.errorMessage, Snackbar.LENGTH_SHORT).show() }
                 }
                 is Resource.Loading -> {
                     // TODO Handle this

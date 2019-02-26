@@ -75,7 +75,7 @@ class AccountFragment : BaseFragment() {
         mainViewModel.apply {
             setAuthenticationStatus(false)
             setSessionId("")
-            showSnackbar(getString(R.string.message_logout_success))
+            showSnackbar(R.string.message_logout_success)
         }
     }
 

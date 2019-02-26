@@ -20,6 +20,7 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.Target
+import com.google.android.material.snackbar.Snackbar
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
@@ -47,7 +48,9 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
             if (mainViewModel.isAuthenticated) {
                 movieDetailsViewModel.toggleMovieFavouriteStatus(mainViewModel.accountId)
             } else {
-                mainViewModel.showSnackbar(getString(R.string.message_need_to_login))
+                mainViewModel.showSnackbar(R.string.message_need_to_login, R.string.action_login, View.OnClickListener {
+                    findNavController().navigate(R.id.loggedOutFragmentDestination)
+                })
             }
         }
 
@@ -55,7 +58,9 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
             if (mainViewModel.isAuthenticated) {
                 movieDetailsViewModel.toggleMovieWatchlistStatus(mainViewModel.accountId)
             } else {
-                mainViewModel.showSnackbar(getString(R.string.message_need_to_login))
+                mainViewModel.showSnackbar(R.string.message_need_to_login, R.string.action_login, View.OnClickListener {
+                    findNavController().navigate(R.id.loggedOutFragmentDestination)
+                })
             }
         }
 
@@ -161,7 +166,7 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
         with(movieDetailsViewModel) {
             getAllMovieInfo()
             message.observe(viewLifecycleOwner, Observer { message ->
-                mainViewModel.showSnackbar(message)
+                view?.let { Snackbar.make(it, message, Snackbar.LENGTH_SHORT).show() }
             })
             state.observe(viewLifecycleOwner, Observer { state ->
                 renderState(state)

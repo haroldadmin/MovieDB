@@ -10,6 +10,7 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.RequestManager
+import com.google.android.material.snackbar.Snackbar
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionType
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
@@ -108,7 +109,7 @@ class LibraryFragment : BaseFragment(), MVRxLiteView<UIState.LibraryScreenState>
             })
 
             message.observe(viewLifecycleOwner, Observer { message ->
-                mainViewModel.showSnackbar(message)
+                view?.let { Snackbar.make(it, message, Snackbar.LENGTH_SHORT).show() }
             })
 
             if (mainViewModel.isAuthenticated) {

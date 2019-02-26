@@ -11,6 +11,7 @@ import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.RequestManager
+import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding2.internal.Notification
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.jakewharton.rxrelay2.PublishRelay
@@ -89,7 +90,7 @@ class HomeFragment :
         homeViewModel.apply {
 
             message.observe(viewLifecycleOwner, Observer { message ->
-                mainViewModel.showSnackbar(message)
+                view?.let { Snackbar.make(it, message, Snackbar.LENGTH_SHORT).show() }
             })
 
             state.observe(viewLifecycleOwner, Observer { state ->
