@@ -18,11 +18,11 @@ class CollectionsRepository(
      * This method should be used with care because the upstream observables it is working on may not emit onComplete,
      * and the downstream might suffer because of it
      */
-    fun getCollectionFlowable(accountId: Int = 0, type: CollectionType): NetworkBoundResource<List<Movie>> {
+    fun getCollectionFlowable(accountId: Int = 0, type: CollectionType, region: String = ""): NetworkBoundResource<List<Movie>> {
 
         return object : NetworkBoundResource<List<Movie>>() {
             override fun fetchFromNetwork(): Flowable<Resource<List<Movie>>> {
-                return remoteCollectionsSource.getCollection(accountId, type)
+                return remoteCollectionsSource.getCollection(accountId, type, region)
                     .flatMap { response ->
                         Single.just(
                             when (response) {
@@ -56,11 +56,11 @@ class CollectionsRepository(
         }
     }
 
-    fun forceRefreshCollection(accountId: Int = 0, type: CollectionType): NetworkBoundResource<Collection> {
+    fun forceRefreshCollection(accountId: Int = 0, type: CollectionType, region: String = ""): NetworkBoundResource<Collection> {
         log("Force refreshing collection")
         return object : NetworkBoundResource<Collection>() {
             override fun fetchFromNetwork(): Flowable<Resource<Collection>> {
-                return remoteCollectionsSource.getCollection(accountId, type).toFlowable()
+                return remoteCollectionsSource.getCollection(accountId, type, region).toFlowable()
             }
 
             override fun fetchFromDatabase(): Flowable<Resource<Collection>> {

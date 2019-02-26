@@ -23,7 +23,9 @@ sealed class UIState: MVRxLiteState {
     ): UIState()
 
     data class InTheatresScreenState(
-        val inTheatresMoviesResource: Resource<List<Movie>>
+        val inTheatresMoviesResource: Resource<List<Movie>>,
+        val countryCode: String,
+        val countryName: String
     ): UIState()
 
     data class DetailsScreenState(val movieId: Int = -1,

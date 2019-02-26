@@ -12,13 +12,13 @@ class RemoteCollectionsSource(
     private val accountService: AccountService
 ) {
 
-    fun getCollection(accountId: Int, type: CollectionType): Single<Resource<Collection>> {
+    fun getCollection(accountId: Int, type: CollectionType, region: String): Single<Resource<Collection>> {
         return when (type) {
             CollectionType.Favourite -> getFavouritesCollection(accountId)
             CollectionType.Watchlist -> getWatchlistedCollection(accountId)
             CollectionType.Popular -> getPopularCollection()
             CollectionType.TopRated -> getTopRatedCollection()
-            CollectionType.InTheatres -> getInTheatresCollection()
+            CollectionType.InTheatres -> getInTheatresCollection(region)
         }
     }
 
@@ -122,8 +122,8 @@ class RemoteCollectionsSource(
             }
     }
 
-    private fun getInTheatresCollection(): Single<Resource<Collection>> {
-        return discoveryService.getMoviesInTheatre()
+    private fun getInTheatresCollection(givenRegion: String): Single<Resource<Collection>> {
+        return discoveryService.getMoviesInTheatre(region = givenRegion)
             .flatMap { topRatedResponse ->
                 Single.just(when (topRatedResponse) {
                     is NetworkResponse.Success -> {

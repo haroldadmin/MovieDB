@@ -1,26 +1,30 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.main
 
 import android.content.SharedPreferences
+import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.preference.PreferenceManager
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BackPressListener
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.SnackbarAction
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SharedPreferencesDelegate
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
+import java.util.*
 
 class MainViewModel(
     sharedPreferences: SharedPreferences
 ) : ViewModel() {
 
     private val _state = SingleLiveEvent<UIState>()
-    private val _snackbar = SingleLiveEvent<String>()
+    private val _snackbar = SingleLiveEvent<SnackbarAction>()
     private val _toolbarTitle = SingleLiveEvent<String>()
+    private var _backPressListener = MutableLiveData<BackPressListener>()
     private var _isAuthenticated by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_IS_AUTHENTICATED, false)
     private var _sessionId by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_SESSION_ID, "")
     private var _accountId by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_ACCOUNT_ID, -1)
-    private var _backPressListener = MutableLiveData<BackPressListener>()
 
     val state: LiveData<UIState>
         get() = _state
@@ -31,7 +35,7 @@ class MainViewModel(
     val accountId: Int
         get() = _accountId
 
-    val snackbar: LiveData<String>
+    val snackbar: LiveData<SnackbarAction>
         get() = _snackbar
 
     val toolbarTitle: LiveData<String>
@@ -41,7 +45,15 @@ class MainViewModel(
         get() = _backPressListener
 
     fun showSnackbar(message: String) {
-        _snackbar.postValue(message)
+        _snackbar.postValue(SnackbarAction(message))
+    }
+
+    fun showSnackbar(message: String, actionText: String, clickListener: View.OnClickListener) {
+        _snackbar.postValue(SnackbarAction(
+            message = message,
+            actionText = actionText,
+            action = clickListener
+        ))
     }
 
     fun setAuthenticationStatus(status: Boolean) {

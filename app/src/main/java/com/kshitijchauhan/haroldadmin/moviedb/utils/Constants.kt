@@ -53,6 +53,10 @@ object Constants {
 
     val KEY_ACTOR_ID: String = "actorId"
 
+    val KEY_COUNTRY_CODE: String = "country"
+
+    val KEY_COUNTRY_NAME: String = "countryName"
+
     val PRIVACY_POLICY_URL = "https://github.com/haroldadmin/MovieDB/blob/master/docs/privacy-policy.md"
 
     val TERMS_AND_CONDITIONS_URL = "https://github.com/haroldadmin/MovieDB/blob/master/docs/terms-and-conditions.md"

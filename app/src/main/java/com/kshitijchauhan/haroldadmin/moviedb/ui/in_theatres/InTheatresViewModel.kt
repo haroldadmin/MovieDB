@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionType
 import com.kshitijchauhan.haroldadmin.moviedb.repository.collections.CollectionsRepository
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
+import com.kshitijchauhan.haroldadmin.moviedb.ui.common.SnackbarAction
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
 import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.kshitijchauhan.haroldadmin.mvrxlite.base.MVRxLiteViewModel
@@ -19,29 +20,49 @@ class InTheatresViewModel(
     initialState: UIState.InTheatresScreenState
 ) : MVRxLiteViewModel<UIState.InTheatresScreenState>(initialState) {
 
-    private val _message = MutableLiveData<String>()
+    private val _message = MutableLiveData<SnackbarAction>()
     private val compositeDisposable = CompositeDisposable()
 
-    val message: LiveData<String>
+    val message: LiveData<SnackbarAction>
         get() = _message
 
     fun getMoviesInTheatres() {
-        collectionsRepository.getCollectionFlowable(type = CollectionType.InTheatres)
-            .init(compositeDisposable)
-            .subscribeOn(Schedulers.io())
-            .subscribeBy(
-                onNext = { inTheatreMovies ->
-                    setState { copy(inTheatresMoviesResource = inTheatreMovies) }
-                },
-                onError = { error -> handleError(error, "get-movies-in-theatres") }
-            )
-            .disposeWith(compositeDisposable)
+        withState { state ->
+            collectionsRepository.getCollectionFlowable(type = CollectionType.InTheatres, region = state.countryCode)
+                .init(compositeDisposable)
+                .subscribeOn(Schedulers.io())
+                .subscribeBy(
+                    onNext = { inTheatreMovies ->
+                        setState { copy(inTheatresMoviesResource = inTheatreMovies) }
+                    },
+                    onError = { error -> handleError(error, "get-movies-in-theatres") }
+                )
+                .disposeWith(compositeDisposable)
+        }
     }
 
     fun forceRefreshInTheatresCollection() {
-        collectionsRepository.forceRefreshCollection(type = CollectionType.InTheatres)
-            .init(compositeDisposable)
-            .subscribeOn(Schedulers.io())
+        withState { state ->
+            collectionsRepository.forceRefreshCollection(type = CollectionType.InTheatres, region = state.countryCode)
+                .init(compositeDisposable)
+                .subscribeOn(Schedulers.io())
+        }
+    }
+
+    fun changeCountryCode(code: String) {
+        withState { currentState ->
+            if (currentState.countryCode != code) {
+                setState { copy(countryCode = code) }
+            }
+        }
+    }
+
+    fun changeCountryName(name: String) {
+        withState { currentState ->
+            if (currentState.countryName != name) {
+                setState { copy(countryName = name) }
+            }
+        }
     }
 
     private fun handleError(error: Throwable, caller: String) {
@@ -52,9 +73,9 @@ class InTheatresViewModel(
                 error.printStackTrace()
             }
         when (error) {
-            is IOException -> _message.postValue("Please check your internet connection")
-            is TimeoutException -> _message.postValue("Request timed out")
-            else -> _message.postValue("An error occurred")
+            is IOException -> _message.postValue(SnackbarAction("Please check your internet connection"))
+            is TimeoutException -> _message.postValue(SnackbarAction("Request timed out"))
+            else -> _message.postValue(SnackbarAction("An error occurred"))
         }
     }
 

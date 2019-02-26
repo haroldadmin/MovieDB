@@ -21,7 +21,7 @@ interface DiscoveryService {
     fun getMoviesInTheatre(
         @Query("sort_by") sortBy: String = SortParameters.PopularityDsc,
         @Query("page") page: Int = 1,
-        @Query("region") region: String = Locale.getDefault().country,
+        @Query("region") region: String,
         @Query("primary_release_date.lte") releaseDateGte: String = currentDate,
         @Query("primary_release_date.gte") releaseDateLte: String = pastDate
     ): Single<NetworkResponse<DiscoverMoviesResponse, ErrorResponse>>

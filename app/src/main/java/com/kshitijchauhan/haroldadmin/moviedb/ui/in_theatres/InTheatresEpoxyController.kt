@@ -1,6 +1,7 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres
 
 import android.os.Handler
+import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.epoxy.TypedEpoxyController
 import com.bumptech.glide.RequestManager
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
@@ -18,7 +19,7 @@ class InTheatresEpoxyController(
         with(state) {
             header {
                 id("in-theatres-header")
-                title("Movies in theatres")
+                title(state.countryName)
                 spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
             }
 

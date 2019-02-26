@@ -12,6 +12,6 @@
     <string name="message_need_to_login">You need to login to do that</string>
     <string name="menu_privacy_policy">Privacy Policy</string>
     <string name="menu_terms_and_conditions">Terms and Conditions</string>
-    <string name="key_country">KEY_COUNTRY</string>
-    <string name="key_crashlytics">KEY_CRASHLYTICS</string>
+    <string name="key_country">country</string>
+    <string name="key_crashlytics">crashlytics</string>
 </resources>

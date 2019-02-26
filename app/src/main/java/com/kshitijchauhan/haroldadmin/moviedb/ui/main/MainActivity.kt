@@ -8,14 +8,13 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.snackbar.Snackbar
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BackPressListener
 import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -32,8 +31,12 @@ class MainActivity : AppCompatActivity() {
         navController = (supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment).navController
 
         with(mainViewModel) {
-            snackbar.observe(this@MainActivity, Observer { message ->
-                homeRootView.snackbar(message)
+            snackbar.observe(this@MainActivity, Observer { snackbarAction ->
+                val snackbar = Snackbar.make(homeRootView, snackbarAction.message, snackbarAction.length)
+                if (snackbarAction.actionText != null && snackbarAction.action != null) {
+                    snackbar.setAction(snackbarAction.actionText, snackbarAction.action)
+                }
+                snackbar.show()
             })
             toolbarTitle.observe(this@MainActivity, Observer { newTitle ->
                 supportActionBar?.apply {
