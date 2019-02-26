@@ -103,4 +103,9 @@
             app:argType="string"
             android:defaultValue='""' />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.kshitijchauhan.haroldadmin.moviedb.ui.settings.SettingsFragment"
+        android:label="settings_fragment"
+        tools:layout="@layout/settings_fragment" />
 </navigation>

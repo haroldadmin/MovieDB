@@ -15,6 +15,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 class MovieDetailsViewModel(
@@ -39,6 +40,7 @@ class MovieDetailsViewModel(
      */
     fun getAllMovieInfo() {
         this.getMovieDetails()
+            .observeOn(Schedulers.computation())
             .doOnNext { movie ->
                 setState { copy(movieResource = movie) }
             }
@@ -92,6 +94,7 @@ class MovieDetailsViewModel(
         return moviesRepository.getMovieDetailsFlowable(movieId)
             .init(compositeDisposable)
             .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
     }
 
     private fun getMovieAccountStates(): Observable<Resource<AccountState>> {
@@ -99,6 +102,7 @@ class MovieDetailsViewModel(
             moviesRepository.getAccountStatesForMovieResource(movieId)
                 .init(compositeDisposable)
                 .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
         } else {
             Observable.just(Resource.Success(AccountState(null, null, movieId)))
         }
@@ -109,6 +113,7 @@ class MovieDetailsViewModel(
             moviesRepository
                 .toggleMovieFavouriteStatus(movieId, accountId)
                 .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
                 .subscribe(
                     // OnNext
                     { log("Movie status updated successfully") },
@@ -126,6 +131,7 @@ class MovieDetailsViewModel(
             moviesRepository
                 .toggleMovieWatchlistStatus(movieId, accountId)
                 .subscribeOn(Schedulers.io())
+                .observeOn(Schedulers.computation())
                 .subscribe(
                     // OnNext
                     { log("Movie status updated successfully") },
@@ -142,28 +148,33 @@ class MovieDetailsViewModel(
         return moviesRepository.getMovieCast(movieId)
             .init(compositeDisposable)
             .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
     }
 
     private fun getMovieActors(ids: List<Int>, count: Int = 8): Single<List<Resource<Actor>>> {
         return moviesRepository.getActorsInMovie(ids.take(count))
             .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
     }
 
     private fun getMovieTrailer(): Observable<Resource<MovieTrailer>> {
         return moviesRepository.getMovieTrailer(movieId)
             .init(compositeDisposable)
             .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
     }
 
     private fun forceRefreshMovieDetails(): Observable<Resource<Movie>> {
         return moviesRepository.forceRefreshMovieDetails(movieId)
             .init(compositeDisposable)
             .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
     }
 
     private fun getSimilarMovies(): Single<Resource<List<Movie>>> {
         return moviesRepository.getSimilarMoviesForMovie(movieId)
             .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
     }
 
     override fun onCleared() {

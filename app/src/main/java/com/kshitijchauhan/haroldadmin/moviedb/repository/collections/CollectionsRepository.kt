@@ -20,7 +20,6 @@ class CollectionsRepository(
      */
     fun getCollectionFlowable(accountId: Int = 0, type: CollectionType): NetworkBoundResource<List<Movie>> {
 
-
         return object : NetworkBoundResource<List<Movie>>() {
             override fun fetchFromNetwork(): Flowable<Resource<List<Movie>>> {
                 return remoteCollectionsSource.getCollection(accountId, type)
@@ -78,10 +77,5 @@ class CollectionsRepository(
                 localCollectionsSource.saveCollection(collection)
             }
         }
-//        return remoteCollectionsSource.getCollection(accountId, type)
-//            .doOnSuccess { collection ->
-//                log("Writing collection to the database")
-//                localCollectionsSource.saveCollection(collection)
-//            }
     }
 }

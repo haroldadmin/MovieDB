@@ -8,7 +8,9 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BackPressListener
@@ -63,8 +65,8 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
             R.id.menuPrivacyPolicy -> {
                 Intent().apply {
                     action = Intent.ACTION_VIEW
@@ -83,7 +85,9 @@ class MainActivity : AppCompatActivity() {
                 }
                 true
             }
-            else -> super.onOptionsItemSelected(item)
+            else -> {
+                item.onNavDestinationSelected(navController) || super.onOptionsItemSelected(item)
+            }
         }
     }
 }

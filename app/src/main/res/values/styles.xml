@@ -9,6 +9,7 @@
         <item name="fontFamily">@font/open_sans</item>
         <item name="android:actionOverflowButtonStyle">@style/Widget.AppCompat.ActionButton.Overflow.MainToolbarIcon
         </item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material.MovieDBPreferenceTheme</item>
     </style>
 
     <style name="Widget.MaterialComponents.Button.TextButton.MainSectionButton">
@@ -102,4 +103,7 @@
         <item name="android:textColor">@color/colorSurfaceLight</item>
     </style>
 
+    <style name="PreferenceThemeOverlay.v14.Material.MovieDBPreferenceTheme">
+        <item name="android:textColorSecondary">@color/textOnSurfaceMediumEmphasis</item>
+    </style>
 </resources>

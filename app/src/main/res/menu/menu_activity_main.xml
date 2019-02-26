@@ -10,4 +10,9 @@
         android:id="@+id/menuTandC"
         android:title="@string/menu_terms_and_conditions"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/settingsFragment"
+        android:title="Settings"
+        app:showAsAction="never"/>
 </menu>
