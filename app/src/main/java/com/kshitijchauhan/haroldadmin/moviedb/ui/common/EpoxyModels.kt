@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
+import com.vlad1m1r.lemniscate.BernoullisProgressView
 import org.koin.core.parameter.parametersOf
 import org.koin.standalone.KoinComponent
 import org.koin.standalone.inject
@@ -222,7 +223,6 @@ abstract class LoadingModel: EpoxyModelWithHolder<LoadingModel.LoadingHolder>() 
     }
 
     inner class LoadingHolder: KotlinEpoxyHolder() {
-        val progressBar by bind<ProgressBar>(R.id.pbContentLoading)
         val description by bind<TextView>(R.id.tvLoadingDescription)
     }
 }

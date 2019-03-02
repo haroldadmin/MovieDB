@@ -132,6 +132,7 @@ dependencies {
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:9.0.1'
     implementation 'com.airbnb.android:epoxy:3.2.0'
     kapt 'com.airbnb.android:epoxy-processor:3.2.0'
+    implementation 'com.github.VladimirWrites:Lemniscate:1.4.4'
     // Firebase
     implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
