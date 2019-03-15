@@ -33,5 +33,5 @@ MovieDB is a gorgeous client application for [TMDb](https://www.themoviedb.org) 
 ## Planned Features
 * Notify the user when an unreleased movie in their watchlist is released.
 * Get movie recommendations based on any given movie
-* Safer networking calls by wrapping Retrofit responses into a Resource class to have Success and Failure response types.
-* Migrate to [MVRx](https://github.com/airbnb/mvrx) at some point.
+* ~~Safer networking calls by wrapping Retrofit responses into a Resource class to have Success and Failure response types~~
+* ~~Migrate to [MVRx](https://github.com/airbnb/mvrx) at some point.~~
