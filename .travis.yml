@@ -20,6 +20,8 @@ cache:
     - $HOME/.android/build-cache
 before_install:
 - yes | sdkmanager "platforms;android-28"
+before_script:
+- chmod +x gradlew
 script:
   # Build parameter 'dev' ensures that the google-services.json
   # file in app/src/dev is used

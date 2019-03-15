@@ -97,7 +97,7 @@ dependencies {
     implementation 'androidx.preference:preference:1.0.0'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0' // For access to material theme for preferences
 
-    def nav_version = "1.0.0-rc02"
+    def nav_version = "1.0.0"
     implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version"
     implementation "android.arch.navigation:navigation-ui-ktx:$nav_version"
 
@@ -113,8 +113,8 @@ dependencies {
     implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
     implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.0'
     // Image Loading
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
-    kapt 'com.github.bumptech.glide:compiler:4.8.0'
+    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    kapt 'com.github.bumptech.glide:compiler:4.9.0'
     // Tests
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.24.5'
@@ -122,8 +122,8 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     // UI
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:9.0.1'
-    implementation 'com.airbnb.android:epoxy:3.2.0'
-    kapt 'com.airbnb.android:epoxy-processor:3.2.0'
+    implementation 'com.airbnb.android:epoxy:3.3.0'
+    kapt 'com.airbnb.android:epoxy-processor:3.3.0'
     implementation 'com.github.VladimirWrites:Lemniscate:1.4.4'
     // Firebase
     implementation 'com.google.firebase:firebase-core:16.0.7'
