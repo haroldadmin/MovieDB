@@ -20,9 +20,8 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.kshitijchauhan.haroldadmin.moviedb.BuildConfig
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.BackPressListener
-import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getMainHandler
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.postDelayed
+import com.kshitijchauhan.haroldadmin.moviedb.core.extensions.getMainHandler
+import com.kshitijchauhan.haroldadmin.moviedb.core.extensions.postDelayed
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.get
@@ -38,14 +37,14 @@ class MainActivity : AppCompatActivity() {
 
     private val prefsListener = SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
         when (key) {
-            Constants.KEY_CRASHLYTICS -> {
+            com.kshitijchauhan.haroldadmin.moviedb.core.Constants.KEY_CRASHLYTICS -> {
                 toggleCrashlytics(prefs)
                 Toast.makeText(this, "Restarting MovieDB", Toast.LENGTH_LONG).show()
                 getMainHandler().postDelayed(1000) {
                     recreate()
                 }
             }
-            Constants.KEY_ANALYTICS -> {
+            com.kshitijchauhan.haroldadmin.moviedb.core.Constants.KEY_ANALYTICS -> {
                 toggleAnalytics(prefs)
             }
         }
@@ -105,7 +104,7 @@ class MainActivity : AppCompatActivity() {
             R.id.menuPrivacyPolicy -> {
                 Intent().apply {
                     action = Intent.ACTION_VIEW
-                    data = Uri.parse(Constants.PRIVACY_POLICY_URL)
+                    data = Uri.parse(com.kshitijchauhan.haroldadmin.moviedb.core.Constants.PRIVACY_POLICY_URL)
                 }.also {
                     startActivity(it)
                 }
@@ -114,7 +113,7 @@ class MainActivity : AppCompatActivity() {
             R.id.menuTandC -> {
                 Intent().apply {
                     action = Intent.ACTION_VIEW
-                    data = Uri.parse(Constants.TERMS_AND_CONDITIONS_URL)
+                    data = Uri.parse(com.kshitijchauhan.haroldadmin.moviedb.core.Constants.TERMS_AND_CONDITIONS_URL)
                 }.also {
                     startActivity(it)
                 }
@@ -127,14 +126,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun toggleCrashlytics(prefs: SharedPreferences) {
-        enableCrashlytics = prefs.getBoolean(Constants.KEY_CRASHLYTICS, true)
+        enableCrashlytics = prefs.getBoolean(com.kshitijchauhan.haroldadmin.moviedb.core.Constants.KEY_CRASHLYTICS, true)
         if (enableCrashlytics && !BuildConfig.DEBUG) {
             Fabric.with(this, Crashlytics())
         }
     }
 
     private fun toggleAnalytics(prefs: SharedPreferences) {
-        enableAnalytics = prefs.getBoolean(Constants.KEY_ANALYTICS, true)
+        enableAnalytics = prefs.getBoolean(com.kshitijchauhan.haroldadmin.moviedb.core.Constants.KEY_ANALYTICS, true)
         if (enableAnalytics && !BuildConfig.DEBUG) {
             FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(true)
         }

@@ -2,11 +2,9 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
@@ -15,14 +13,13 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.RequestManager
 import com.google.android.material.snackbar.Snackbar
 import com.kshitijchauhan.haroldadmin.moviedb.R
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
+import com.kshitijchauhan.haroldadmin.moviedb.core.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.EpoxyCallbacks
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.EqualSpaceGridItemDecoration
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.getNumberOfColumns
+import com.kshitijchauhan.haroldadmin.moviedb.core.extensions.getNumberOfColumns
 import com.kshitijchauhan.haroldadmin.mvrxlite.base.MVRxLiteView
 import kotlinx.android.synthetic.main.fragment_in_theatres.*
 import org.koin.android.ext.android.get
@@ -38,10 +35,10 @@ class InTheatresFragment : BaseFragment(), MVRxLiteView<UIState.InTheatresScreen
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val countryCode: String by lazy {
         PreferenceManager.getDefaultSharedPreferences(activity)
-            .getString(Constants.KEY_COUNTRY_CODE, Locale.getDefault().country)
+            .getString(com.kshitijchauhan.haroldadmin.moviedb.core.Constants.KEY_COUNTRY_CODE, Locale.getDefault().country)
     }
     private val countryName: String by lazy {
-        get<SharedPreferences>().getString(Constants.KEY_COUNTRY_NAME, Locale.getDefault().displayCountry)
+        get<SharedPreferences>().getString(com.kshitijchauhan.haroldadmin.moviedb.core.Constants.KEY_COUNTRY_NAME, Locale.getDefault().displayCountry)
     }
 
     override val initialState: UIState by lazy {

@@ -2,7 +2,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.utils
 
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
+import com.kshitijchauhan.haroldadmin.moviedb.core.extensions.log
 import kotlin.reflect.KProperty
 
 class SharedPreferencesDelegate<T>(

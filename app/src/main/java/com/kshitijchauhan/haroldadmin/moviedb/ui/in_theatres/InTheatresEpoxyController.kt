@@ -1,13 +1,12 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres
 
 import android.os.Handler
-import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.epoxy.TypedEpoxyController
 import com.bumptech.glide.RequestManager
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
+import com.kshitijchauhan.haroldadmin.moviedb.core.Resource
+import com.kshitijchauhan.haroldadmin.moviedb.core.extensions.safe
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.*
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 
 class InTheatresEpoxyController(
     private val callbacks: EpoxyCallbacks,

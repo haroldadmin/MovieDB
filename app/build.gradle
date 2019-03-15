@@ -81,6 +81,10 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
+    implementation project(path: ':core')
+    implementation project(path: ':repository')
+    implementation project(path: ':mvrxlite')
+
     // Android
     def lifecycle_version = "2.0.0"
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha02'
@@ -93,22 +97,10 @@ dependencies {
     implementation 'androidx.preference:preference:1.0.0'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0' // For access to material theme for preferences
 
-    def room_version = "2.1.0-alpha04"
-    implementation "androidx.room:room-runtime:$room_version"
-    implementation "androidx.room:room-rxjava2:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-
     def nav_version = "1.0.0-rc02"
     implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version"
     implementation "android.arch.navigation:navigation-ui-ktx:$nav_version"
 
-    // Networking
-    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
-    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.13.1'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.13.1'
-    implementation 'com.squareup.retrofit2:converter-moshi:2.4.0'
-    implementation 'com.squareup.moshi:moshi-adapters:1.8.0'
     // DI
     def koin_version = "1.0.2"
     implementation "org.koin:koin-android:$koin_version"
@@ -137,7 +129,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
 
-    implementation project(path: ':mvrxlite')
+    // To resolve SessionIDInterceptor. Without this gradle shows error that supertype for okhttp3.interceptor could not be resolved
+    implementation 'com.squareup.okhttp3:okhttp:3.14.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

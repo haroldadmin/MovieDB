@@ -25,7 +25,7 @@ abstract class MVRxLiteViewModel<S : MVRxLiteState>(
     init {
         stateStore.observable
             .subscribe { state: S -> _state.postValue(state) }
-            .disposeWith(compositeDisposable)
+            .disposeBy(compositeDisposable)
     }
 
     protected fun setState(reducer: S.() -> S) {
@@ -42,7 +42,7 @@ abstract class MVRxLiteViewModel<S : MVRxLiteState>(
         compositeDisposable.dispose()
     }
 
-    private fun Disposable.disposeWith(compositeDisposable: CompositeDisposable) {
+    private fun Disposable.disposeBy(compositeDisposable: CompositeDisposable) {
         compositeDisposable.add(this)
     }
 }

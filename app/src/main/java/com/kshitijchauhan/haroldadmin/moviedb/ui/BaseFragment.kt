@@ -3,7 +3,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui
 import androidx.core.view.postDelayed
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
+import com.kshitijchauhan.haroldadmin.moviedb.core.extensions.log
 
 abstract class BaseFragment : Fragment() {
 

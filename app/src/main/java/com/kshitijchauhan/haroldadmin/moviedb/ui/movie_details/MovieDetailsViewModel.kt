@@ -1,13 +1,13 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details
 
 import androidx.lifecycle.LiveData
+import com.kshitijchauhan.haroldadmin.moviedb.core.Resource
+import com.kshitijchauhan.haroldadmin.moviedb.core.extensions.disposeWith
+import com.kshitijchauhan.haroldadmin.moviedb.core.extensions.log
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.*
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import com.kshitijchauhan.haroldadmin.mvrxlite.base.MVRxLiteViewModel
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -15,7 +15,6 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import java.io.IOException
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 
 class MovieDetailsViewModel(

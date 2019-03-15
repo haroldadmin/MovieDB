@@ -6,7 +6,6 @@ import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SharedPreferencesDelegate
 import org.koin.android.ext.android.get
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -18,7 +17,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private var countryName by SharedPreferencesDelegate(
         get<SharedPreferences>(),
-        Constants.KEY_COUNTRY_NAME,
+        com.kshitijchauhan.haroldadmin.moviedb.core.Constants.KEY_COUNTRY_NAME,
         Locale.getDefault().displayCountry
     )
 
@@ -32,7 +31,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         findPreference(getText(R.string.key_country))
             .setOnPreferenceChangeListener { preference, newValue ->
                 when (preference.key) {
-                    Constants.KEY_COUNTRY_CODE -> {
+                    com.kshitijchauhan.haroldadmin.moviedb.core.Constants.KEY_COUNTRY_CODE -> {
                         val listPreference = preference as ListPreference
                         val index = listPreference.findIndexOfValue(newValue as String)
                         countryName = listPreference.entries[index].toString()

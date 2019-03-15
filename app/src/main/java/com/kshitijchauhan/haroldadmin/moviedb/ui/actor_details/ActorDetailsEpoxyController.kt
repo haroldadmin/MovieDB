@@ -2,13 +2,13 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details
 
 import android.os.Handler
 import com.airbnb.epoxy.TypedEpoxyController
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
+import com.kshitijchauhan.haroldadmin.moviedb.core.Resource
+import com.kshitijchauhan.haroldadmin.moviedb.core.extensions.safe
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.header
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.infoText
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.loading
 import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.mainText
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 
 class ActorDetailsEpoxyController(
     epoxyHandler: Handler
@@ -31,7 +31,7 @@ class ActorDetailsEpoxyController(
                     } else {
                         mainText {
                             id(actorResource.data.id)
-                            text(actorResource.data.biography)
+                            text(actorResource.data.biography ?: "This actor has no description")
                         }
                     }
                 }

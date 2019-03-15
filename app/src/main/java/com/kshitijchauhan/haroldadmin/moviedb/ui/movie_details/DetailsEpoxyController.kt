@@ -4,14 +4,14 @@ import android.os.Handler
 import android.view.View
 import com.airbnb.epoxy.*
 import com.bumptech.glide.RequestManager
+import com.kshitijchauhan.haroldadmin.moviedb.core.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.AccountState
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MovieTrailer
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
+import com.kshitijchauhan.haroldadmin.moviedb.core.extensions.safe
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.*
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.safe
 
 class DetailsEpoxyController(
     private val callbacks: DetailsEpoxyController.MovieDetailsCallbacks,

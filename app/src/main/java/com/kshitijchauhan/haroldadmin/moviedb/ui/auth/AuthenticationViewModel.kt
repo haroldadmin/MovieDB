@@ -4,16 +4,15 @@ import android.content.SharedPreferences
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.Resource
+import com.kshitijchauhan.haroldadmin.moviedb.core.Resource
+import com.kshitijchauhan.haroldadmin.moviedb.core.extensions.disposeWith
+import com.kshitijchauhan.haroldadmin.moviedb.core.extensions.log
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.ApiManager
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.SessionIdInterceptor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.account.AccountDetailsResponse
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.auth.CreateSessionRequest
-import com.kshitijchauhan.haroldadmin.moviedb.utils.Constants
+import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.SessionIdInterceptor
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SharedPreferencesDelegate
 import com.kshitijchauhan.haroldadmin.moviedb.utils.SingleLiveEvent
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.disposeWith
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
@@ -30,9 +29,9 @@ class AuthenticationViewModel(sharedPreferences: SharedPreferences,
     private val _accountDetails = MutableLiveData<Resource<AccountDetailsResponse>>()
     private val _message = SingleLiveEvent<String>()
     private val compositeDisposable = CompositeDisposable()
-    private var sessionIdPref by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_SESSION_ID, "")
-    private var isAuthenticatedPref by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_IS_AUTHENTICATED, false)
-    private var accountIdPref by SharedPreferencesDelegate(sharedPreferences, Constants.KEY_ACCOUNT_ID, -1)
+    private var sessionIdPref by SharedPreferencesDelegate(sharedPreferences, com.kshitijchauhan.haroldadmin.moviedb.core.Constants.KEY_SESSION_ID, "")
+    private var isAuthenticatedPref by SharedPreferencesDelegate(sharedPreferences, com.kshitijchauhan.haroldadmin.moviedb.core.Constants.KEY_IS_AUTHENTICATED, false)
+    private var accountIdPref by SharedPreferencesDelegate(sharedPreferences, com.kshitijchauhan.haroldadmin.moviedb.core.Constants.KEY_ACCOUNT_ID, -1)
 
     val requestToken: LiveData<Resource<String>>
         get() = _requestToken

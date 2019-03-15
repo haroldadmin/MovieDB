@@ -2,7 +2,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.common
 
 import android.view.View
 import com.airbnb.epoxy.EpoxyHolder
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.log
+import com.kshitijchauhan.haroldadmin.moviedb.core.extensions.log
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 

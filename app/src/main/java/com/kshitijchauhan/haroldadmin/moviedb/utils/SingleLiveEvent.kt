@@ -20,7 +20,7 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.kshitijchauhan.haroldadmin.moviedb.utils.extensions.*
+import com.kshitijchauhan.haroldadmin.moviedb.core.extensions.log
 
 import java.util.concurrent.atomic.AtomicBoolean
 
