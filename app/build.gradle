@@ -1,13 +1,8 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
-
 apply plugin: 'kotlin-kapt'
-
 apply plugin: 'io.fabric'
-
 apply plugin: "androidx.navigation.safeargs"
 
 // For Epoxy
@@ -75,58 +70,61 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     implementation project(path: ':core')
     implementation project(path: ':repository')
     implementation project(path: ':mvrxlite')
 
     // Android
-    def lifecycle_version = "2.0.0"
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha02'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
-    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
+    implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
+    implementation "androidx.legacy:legacy-support-v4:$supportv4_version"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation "com.google.android.material:material:$material_version"
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    implementation 'androidx.core:core-ktx:1.0.1'
-    implementation 'androidx.preference:preference:1.0.0'
-    implementation 'androidx.legacy:legacy-preference-v14:1.0.0' // For access to material theme for preferences
+    implementation "androidx.core:core-ktx:$ktx_version"
+    implementation "androidx.preference:preference:$preference_version"
+    implementation "androidx.legacy:legacy-preference-v14:$preferencelegacy_version" // For access to material theme for preferences
 
-    def nav_version = "1.0.0"
+    // Navigation AAC
     implementation "android.arch.navigation:navigation-fragment-ktx:$nav_version"
     implementation "android.arch.navigation:navigation-ui-ktx:$nav_version"
 
     // DI
-    def koin_version = "1.0.2"
     implementation "org.koin:koin-android:$koin_version"
     implementation "org.koin:koin-androidx-scope:$koin_version"
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+
     // Rx
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.7'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
-    implementation 'com.jakewharton.rxbinding2:rxbinding:2.2.0'
-    implementation 'com.jakewharton.rxrelay2:rxrelay:2.1.0'
+    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
+    implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
+    implementation "com.jakewharton.rxbinding2:rxbinding:$rxbinding_version"
+    implementation "com.jakewharton.rxrelay2:rxrelay:$rxrelay_version"
+
     // Image Loading
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
-    kapt 'com.github.bumptech.glide:compiler:4.9.0'
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
+
     // Tests
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:2.24.5'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
     // UI
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:9.0.1'
-    implementation 'com.airbnb.android:epoxy:3.3.0'
-    kapt 'com.airbnb.android:epoxy-processor:3.3.0'
+    implementation "com.airbnb.android:epoxy:$epoxy_version"
+    kapt "com.airbnb.android:epoxy-processor:$epoxy_version"
     implementation 'com.github.VladimirWrites:Lemniscate:1.4.4'
+
     // Firebase
-    implementation 'com.google.firebase:firebase-core:16.0.7'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
+    implementation "com.google.firebase:firebase-core:$firebase_version"
+    implementation "com.crashlytics.sdk.android:crashlytics:$crashlytics_version"
 
     // To resolve SessionIDInterceptor. Without this gradle shows error that supertype for okhttp3.interceptor could not be resolved
-    implementation 'com.squareup.okhttp3:okhttp:3.14.0'
+    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
 }
 
 apply plugin: 'com.google.gms.google-services'
