@@ -14,11 +14,11 @@ android {
     kotlinOptions {
         jvmTarget = '1.6'
     }
-    compileSdkVersion 28
+    compileSdkVersion rootProject.ext.compileSdk
     defaultConfig {
-        applicationId "com.kshitijchauhan.haroldadmin.moviedb"
-        minSdkVersion 21
-        targetSdkVersion 28
+        applicationId rootProject.ext.applicationId
+        minSdkVersion rootProject.ext.minSdk
+        targetSdkVersion rootProject.ext.targetSdk
         versionCode 8
         versionName "0.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
