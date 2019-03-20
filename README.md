@@ -6,6 +6,8 @@
 
 MovieDB is a gorgeous client application for [TMDb](https://www.themoviedb.org) on Android, built using Kotlin.
 
+[![Master branch](https://travis-ci.com/haroldadmin/MovieDB.svg?branch=master)](https://travis-ci.com/haroldadmin/MovieDB.svg?branch=master)
+
 ## Architecture and Tech-stack
 
 * Built on MVVM architecture pattern
