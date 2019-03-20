@@ -8,7 +8,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.zipWith
 import io.reactivex.schedulers.Schedulers
 
-class MoviesRepository(
+class MoviesRepository internal constructor(
     private val localMoviesSource: LocalMoviesSource,
     private val remoteMoviesSource: RemoteMoviesSource
 ) {

@@ -15,7 +15,7 @@ import java.util.*
  * conditions with each other.
  *
  */
-class StateStore<S : Any>(initialState: S) : MVRxLiteStateStore<S> {
+internal class StateStore<S : Any>(initialState: S) : MVRxLiteStateStore<S> {
     /**
      * The subject is where state changes should be pushed to.
      */

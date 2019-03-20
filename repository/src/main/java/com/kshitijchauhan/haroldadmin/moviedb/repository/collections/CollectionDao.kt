@@ -6,7 +6,7 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 
 @Dao
-interface CollectionDao {
+internal interface CollectionDao {
 
     @Query("SELECT * FROM collections WHERE name = '${CollectionNames.FAVOURITES_NAME}'")
     fun getFavouriteMoviesFlowable(): Flowable<Collection>

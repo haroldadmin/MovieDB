@@ -15,7 +15,7 @@ private val pastDate = run {
     df.format(Date(day.timeInMillis))
 }
 
-interface DiscoveryService {
+internal interface DiscoveryService {
 
     @GET("discover/movie")
     fun getMoviesInTheatre(

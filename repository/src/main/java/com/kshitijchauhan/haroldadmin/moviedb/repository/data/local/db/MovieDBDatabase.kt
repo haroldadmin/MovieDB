@@ -18,7 +18,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.*
 @TypeConverters(Converters::class)
 abstract class MovieDBDatabase : RoomDatabase() {
 
-    abstract fun moviesDao(): MovieDao
-    abstract fun actorsDao(): ActorsDao
-    abstract fun collectionsDao(): CollectionDao
+    internal abstract fun moviesDao(): MovieDao
+    internal abstract fun actorsDao(): ActorsDao
+    internal abstract fun collectionsDao(): CollectionDao
 }

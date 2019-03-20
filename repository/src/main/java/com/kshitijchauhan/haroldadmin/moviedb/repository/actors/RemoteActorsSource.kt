@@ -9,7 +9,7 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
-class RemoteActorsSource(
+internal class RemoteActorsSource(
     private val personService: PersonService) {
 
     fun getActor(id: Int): Single<Resource<Actor>> {

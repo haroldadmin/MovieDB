@@ -2,7 +2,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.repository.actors
 
 import io.reactivex.Flowable
 
-class LocalActorsSource(private val actorsDao: ActorsDao) {
+internal class LocalActorsSource(private val actorsDao: ActorsDao) {
 
     fun getActor(id: Int) = actorsDao.getActor(id)
 

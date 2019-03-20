@@ -8,7 +8,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import io.reactivex.Flowable
 import io.reactivex.Single
 
-class CollectionsRepository(
+class CollectionsRepository internal constructor(
     private val localCollectionsSource: LocalCollectionsSource,
     private val remoteCollectionsSource: RemoteCollectionsSource,
     private val localMoviesResource: LocalMoviesSource

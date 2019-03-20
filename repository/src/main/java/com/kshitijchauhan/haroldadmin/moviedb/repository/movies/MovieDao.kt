@@ -6,7 +6,7 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 
 @Dao
-interface MovieDao {
+internal interface MovieDao {
 
     /**
      * Methods that return [Flowable] should be used where data needs to be continuously observed, and notified of

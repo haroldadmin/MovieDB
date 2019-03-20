@@ -4,7 +4,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.core.extensions.log
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.ActorsDao
 
-class LocalMoviesSource(private val moviesDao: MovieDao,
+internal class LocalMoviesSource (private val moviesDao: MovieDao,
                         private val actorsDao: ActorsDao) {
 
     fun getMovieFlowable(id: Int) = moviesDao.getMovieFlowable(id)

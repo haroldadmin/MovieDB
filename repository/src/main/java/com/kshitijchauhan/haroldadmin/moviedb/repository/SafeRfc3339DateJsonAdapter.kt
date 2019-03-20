@@ -10,7 +10,7 @@ import java.util.*
  * This class is an extension for the Rfc3339 Date adapter in Moshi.
  * It handles cases where dates are empty strings too.
  */
-class SafeRfc3339DateJsonAdapter(private val delegate: Rfc3339DateJsonAdapter): JsonAdapter<Date>() {
+internal class SafeRfc3339DateJsonAdapter(private val delegate: Rfc3339DateJsonAdapter): JsonAdapter<Date>() {
 
     override fun fromJson(reader: JsonReader): Date? {
         return try {

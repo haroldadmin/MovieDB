@@ -20,7 +20,7 @@ import java.lang.reflect.Type
  * Note: This adapter must be registered before an adapter that is capable of adapting RxJava
  * streams.
  */
-class KotlinRxJava2CallAdapterFactory private constructor() : CallAdapter.Factory() {
+internal class KotlinRxJava2CallAdapterFactory private constructor() : CallAdapter.Factory() {
 
     companion object {
         @JvmStatic

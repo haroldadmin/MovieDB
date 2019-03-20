@@ -6,7 +6,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MovieDao
 import io.reactivex.Flowable
 import io.reactivex.Single
 
-class LocalCollectionsSource(
+internal class LocalCollectionsSource(
     private val collectionsDao: CollectionDao,
     private val moviesDao: MovieDao
 ) {

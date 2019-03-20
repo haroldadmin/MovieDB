@@ -6,7 +6,7 @@ import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-interface MovieService {
+internal interface MovieService {
 
     @GET("movie/{movieId}")
     fun getMovieDetails(@Path("movieId") movieId: Int): Single<NetworkResponse<MovieResponse, ErrorResponse>>

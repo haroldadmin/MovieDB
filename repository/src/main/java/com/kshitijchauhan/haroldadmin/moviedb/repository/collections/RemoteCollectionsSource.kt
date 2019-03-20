@@ -7,7 +7,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.Netwo
 import com.kshitijchauhan.haroldadmin.moviedb.repository.toMovie
 import io.reactivex.Single
 
-class RemoteCollectionsSource(
+internal class RemoteCollectionsSource(
     private val discoveryService: DiscoveryService,
     private val accountService: AccountService
 ) {

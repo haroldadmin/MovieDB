@@ -8,7 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
-interface AccountService {
+internal interface AccountService {
 
     @GET("account")
     fun getAccountDetails(): Single<NetworkResponse<AccountDetailsResponse, ErrorResponse>>

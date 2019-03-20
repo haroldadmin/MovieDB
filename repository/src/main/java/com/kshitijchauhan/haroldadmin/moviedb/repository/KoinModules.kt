@@ -112,7 +112,7 @@ val apiModule = module {
     single { get<Retrofit>().create(MovieService::class.java) }
     single { get<Retrofit>().create(AccountService::class.java) }
     single { get<Retrofit>().create(PersonService::class.java) }
-    single { ApiManager(get(), get(), get(), get(), get()) }
+    single { ApiManager(get(), get()) }
 }
 
 val repositoryModule = module {

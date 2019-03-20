@@ -2,7 +2,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.di
 
 
 
-object SortParameters {
+internal object SortParameters {
 
     const val PopularityAsc = "popularity.asc"
     const val PopularityDsc = "popularity.dsc"

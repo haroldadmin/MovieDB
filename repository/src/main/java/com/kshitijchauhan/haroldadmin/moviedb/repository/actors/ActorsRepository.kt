@@ -6,7 +6,7 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.zipWith
 
-class ActorsRepository(
+class ActorsRepository internal constructor(
     private val localActorsSource: LocalActorsSource,
     private val remoteActorsSource: RemoteActorsSource
 ) {

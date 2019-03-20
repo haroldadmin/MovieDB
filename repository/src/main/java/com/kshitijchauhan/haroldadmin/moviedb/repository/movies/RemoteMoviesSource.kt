@@ -14,7 +14,7 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 
-class RemoteMoviesSource(
+internal class RemoteMoviesSource (
     private val movieService: MovieService,
     private val accountService: AccountService,
     private val searchService: SearchService

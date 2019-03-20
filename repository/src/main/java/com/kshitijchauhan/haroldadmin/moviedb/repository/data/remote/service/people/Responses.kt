@@ -6,7 +6,7 @@ import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 @Parcelize
-data class PersonResponse(
+internal data class PersonResponse(
     @field:Json(name = "id") val id: Int,
     @field:Json(name = "profile_path") val profilePath: String?,
     @field:Json(name = "name") val name: String,

@@ -2,7 +2,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils
 
 import java.io.IOException
 
-sealed class NetworkResponse<out T : Any, out U : Any> {
+internal sealed class NetworkResponse<out T : Any, out U : Any> {
 
     /**
      * A request that resulted in a response with a 2xx status code that has a body.

@@ -12,7 +12,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.AccountState
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.Movie
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MovieTrailer
 
-fun GeneralMovieResponse.toMovie(): Movie {
+internal fun GeneralMovieResponse.toMovie(): Movie {
     return Movie(
         this.id,
         this.title,
@@ -30,7 +30,7 @@ fun GeneralMovieResponse.toMovie(): Movie {
     )
 }
 
-fun MovieResponse.toMovie(): Movie {
+internal fun MovieResponse.toMovie(): Movie {
     return Movie(
         id = this.id,
         title = this.title,
@@ -48,7 +48,7 @@ fun MovieResponse.toMovie(): Movie {
     )
 }
 
-fun CastMember.toActor(): Actor {
+internal fun CastMember.toActor(): Actor {
     return Actor(
         this.id,
         this.profilePath.getProfilePictureUrl(),
@@ -59,7 +59,7 @@ fun CastMember.toActor(): Actor {
     )
 }
 
-fun PersonResponse.toActor(): Actor {
+internal fun PersonResponse.toActor(): Actor {
     return Actor(
         this.id,
         this.profilePath.getProfilePictureUrl(),
@@ -70,14 +70,14 @@ fun PersonResponse.toActor(): Actor {
     )
 }
 
-fun MovieVideo.toMovieTrailer(movieId: Int): MovieTrailer {
+internal fun MovieVideo.toMovieTrailer(movieId: Int): MovieTrailer {
     return MovieTrailer(
         movieId,
         this.key
     )
 }
 
-fun MovieStatesResponse.toAccountState(movieId: Int): AccountState {
+internal fun MovieStatesResponse.toAccountState(movieId: Int): AccountState {
     return AccountState(
         isWatchlisted = this.isWatchlisted ?: false,
         isFavourited = this.isFavourited ?: false,
@@ -85,21 +85,21 @@ fun MovieStatesResponse.toAccountState(movieId: Int): AccountState {
     )
 }
 
-fun String.getYoutubeUrl() = "https://www.youtube.com/watch?v=$this"
+internal fun String.getYoutubeUrl() = "https://www.youtube.com/watch?v=$this"
 
-fun String?.getPosterUrl(): String {
+internal fun String?.getPosterUrl(): String {
     return this?.let {
         "${Config.BASE_IMAGE_URL}${Config.DEFAULT_POSTER_SIZE}$it"
     } ?: ""
 }
 
-fun String?.getBackdropUrl(): String {
+internal fun String?.getBackdropUrl(): String {
     return this?.let {
         "${Config.BASE_IMAGE_URL}${Config.DEFAULT_BACKDROP_SIZE}${this}"
     } ?: ""
 }
 
-fun String?.getProfilePictureUrl(): String {
+internal fun String?.getProfilePictureUrl(): String {
     return this?.let {
         "${Config.BASE_IMAGE_URL}${Config.SMALL_PROFILE_PICTURE_SIZE}$this"
     } ?: ""

@@ -8,7 +8,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 
-interface AuthenticationService {
+internal interface AuthenticationService {
 
     @GET("authentication/guest_session/new")
     fun getGuestSessionToken(): Single<NetworkResponse<GuestSessionResponse, ErrorResponse>>

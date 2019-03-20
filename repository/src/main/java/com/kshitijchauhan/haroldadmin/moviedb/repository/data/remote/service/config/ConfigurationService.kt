@@ -3,7 +3,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.co
 import io.reactivex.Single
 import retrofit2.http.GET
 
-interface ConfigurationService {
+internal interface ConfigurationService {
 
     @GET("configuration")
     fun getConfiguration(): Single<ConfigurationResponse>

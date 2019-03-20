@@ -3,7 +3,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.repository.data.local
 import androidx.room.TypeConverter
 import java.util.*
 
-class Converters {
+internal class Converters {
 
     // Date Converter
     @TypeConverter

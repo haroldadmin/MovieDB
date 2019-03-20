@@ -1,6 +1,6 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils
 
-object Config {
+internal object Config {
 
     const val API_VERSION: Int = 3
 

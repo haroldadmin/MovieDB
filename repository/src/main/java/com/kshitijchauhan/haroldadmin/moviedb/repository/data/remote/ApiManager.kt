@@ -13,30 +13,9 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.sea
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.NetworkResponse
 import io.reactivex.Single
 
-class ApiManager (
+class ApiManager internal constructor(
     private val authenticationService: AuthenticationService,
-    private val discoveryService: DiscoveryService,
-    private val searchService: SearchService,
-    private val movieService: MovieService,
     private val accountService: AccountService) {
-
-    fun createGuestSession() = authenticationService.getGuestSessionToken()
-
-    fun getPopularMovies() = discoveryService.getPopularMovies()
-
-    fun getMoviesInTheatres(movieRegion: String = "IN") = discoveryService.getMoviesInTheatre(region = movieRegion)
-
-    fun search(query: String) = searchService.searchForMovie(query)
-
-    fun getMovieDetails(movieId: Int) = movieService.getMovieDetails(movieId)
-
-    fun getAccountStatesForMovie(movieId: Int) = movieService.getAccountStatesForMovie(movieId)
-
-    fun getVideosForMovie(movieId: Int) = movieService.getVideosForMovie(movieId)
-
-    fun getCreditsForMovie(movieId: Int) = movieService.getCreditsForMovie(movieId)
-
-    fun getTopRatedMovies() = discoveryService.getTopRatedMovies()
 
     fun getRequestToken(): Single<Resource<String>> {
         return authenticationService
@@ -90,14 +69,4 @@ class ApiManager (
                 })
             }
     }
-
-    fun getMoviesWatchList(accountId: Int) = accountService.getMoviesWatchList(accountId)
-
-    fun getFavouriteMovies(accountId: Int) = accountService.getFavouriteMovies(accountId)
-
-    fun toggleMediaFavouriteStatus(accountId: Int, request: ToggleMediaFavouriteStatusRequest) =
-            accountService.toggleMediaFavouriteStatus(accountId, request)
-
-    fun toggleMediaWatchlistStatus(accountId: Int, request: ToggleMediaWatchlistStatusRequest) =
-            accountService.toggleMediaWatchlistStatus(accountId, request)
 }

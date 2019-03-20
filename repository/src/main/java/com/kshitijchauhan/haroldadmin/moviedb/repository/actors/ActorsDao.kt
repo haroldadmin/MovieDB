@@ -5,7 +5,7 @@ import io.reactivex.Flowable
 import io.reactivex.Single
 
 @Dao
-interface ActorsDao {
+internal interface ActorsDao {
 
     @Query("SELECT * FROM actors")
     fun getAllActors(): Flowable<List<Actor>>
