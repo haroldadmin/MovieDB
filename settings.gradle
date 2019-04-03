@@ -1,1 +1,1 @@
-include ':app', ':mvrxlite', ':repository', ':core'
+include ':app', ':mvrxlite', ':repository', ':core', ':about'

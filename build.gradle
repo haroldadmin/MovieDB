@@ -5,10 +5,11 @@ ext {
     targetSdk = 28
     minSdk = 21
     applicationId = "com.kshitijchauhan.haroldadmin.moviedb"
+    versionCode = 10
+    versionName = "0.5"
 }
 
 buildscript {
-
     project.ext {
         kotlin_version = "1.3.21"
         agp_version = "3.3.2"
@@ -54,7 +55,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:$agp_version"
+        classpath "com.android.tools.build:gradle:3.5.0-alpha09"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.gms:google-services:$googleservices_version"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
@@ -64,14 +65,10 @@ buildscript {
 
 allprojects {
     repositories {
-        jcenter()
-        maven {
-            url 'https://maven.google.com/'
-        }
-        maven {
-            url 'https://jitpack.io'
-        }
         google()
+        maven { url 'https://maven.google.com/' }
+        maven { url 'https://jitpack.io' }
+        jcenter()
     }
 }
 

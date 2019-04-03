@@ -19,8 +19,8 @@ android {
         applicationId rootProject.ext.applicationId
         minSdkVersion rootProject.ext.minSdk
         targetSdkVersion rootProject.ext.targetSdk
-        versionCode 9
-        versionName "0.4"
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -31,14 +31,12 @@ android {
         }
         release {
             minifyEnabled true
-            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         dev {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-
     }
 
     def build_param = "${build}"
@@ -66,6 +64,7 @@ android {
     androidExtensions {
         experimental = true
     }
+    dynamicFeatures = [":about"]
 }
 
 dependencies {
@@ -85,7 +84,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
     implementation "androidx.core:core-ktx:$ktx_version"
     implementation "androidx.preference:preference:$preference_version"
-    implementation "androidx.legacy:legacy-preference-v14:$preferencelegacy_version" // For access to material theme for preferences
+    // For access to material theme for preferences
+    implementation "androidx.legacy:legacy-preference-v14:$preferencelegacy_version"
 
     // Navigation AAC
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
@@ -125,6 +125,9 @@ dependencies {
 
     // To resolve SessionIDInterceptor. Without this gradle shows error that supertype for okhttp3.interceptor could not be resolved
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
+
+    implementation "com.github.daniel-stoneuk:material-about-library:2.4.2"
+
 }
 
 apply plugin: 'com.google.gms.google-services'

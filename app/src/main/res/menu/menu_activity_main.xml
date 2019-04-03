@@ -15,4 +15,9 @@
         android:id="@+id/settingsFragment"
         android:title="Settings"
         app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/aboutFragmentDestination"
+        android:title="About"
+        app:showAsAction="never"/>
 </menu>

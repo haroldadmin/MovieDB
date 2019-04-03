@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Mal.Dark.AboutMovieDB">
+        <item name="mal_color_primary">@color/textOnPrimaryHighEmphasis</item>
+        <item name="mal_card_background">@color/colorPrimary</item>
+        <item name="mal_color_secondary">@color/textOnPrimaryMediumEmphasis</item>
+    </style>
+</resources>

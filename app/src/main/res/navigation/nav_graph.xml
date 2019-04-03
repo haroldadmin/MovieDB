@@ -108,4 +108,9 @@
         android:name="com.kshitijchauhan.haroldadmin.moviedb.ui.settings.SettingsFragment"
         android:label="settings_fragment"
         tools:layout="@layout/settings_fragment" />
+    <fragment
+        android:id="@+id/aboutFragmentDestination"
+        android:name="com.kshitijchauhan.haroldadmin.moviedb.about.AboutFragment"
+        android:label="about_fragment"/>
+
 </navigation>

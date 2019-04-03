@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_about">About</string>
+    <string name="version">Version</string>
+    <string name="rate_the_app">Rate the app</string>
+    <string name="author">Author</string>
+    <string name="author_name">Kshitij Chauhan</string>
+    <string name="github_username">haroldadmin</string>
+    <string name="rate_the_app_subtext">Give the app 5 stars to show your support!</string>
+    <string name="github_repository">Github Repository</string>
+    <string name="app_contributions">Contributions are welcome</string>
+    <string name="app_description">A gorgeous client for TheMovieDatabase API</string>
+    <string name="tmdb_credit">Powered by TMDb</string>
+    <string name="tmdb_credits_desc">This app uses TheMovieDatabase API to fetch and show information.</string>
+</resources>
