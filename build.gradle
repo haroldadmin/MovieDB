@@ -26,7 +26,7 @@ buildscript {
         preference_version = "1.0.0"
         preferencelegacy_version = "1.0.0"
 
-        koin_version = "1.0.2"
+        koin_version = "2.0.0-rc-2"
 
         rxjava_version = "2.2.7"
         rxandroid_version = "2.1.1"

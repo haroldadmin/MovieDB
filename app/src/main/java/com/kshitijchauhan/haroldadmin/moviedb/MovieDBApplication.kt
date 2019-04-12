@@ -7,19 +7,23 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.apiModule
 import com.kshitijchauhan.haroldadmin.moviedb.repository.databaseModule
 import com.kshitijchauhan.haroldadmin.moviedb.repository.repositoryModule
 import com.kshitijchauhan.haroldadmin.moviedb.repository.retrofitModule
-import org.koin.android.ext.android.startKoin
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
 class MovieDBApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        startKoin(this.applicationContext, listOf(
-            applicationModule,
-            retrofitModule,
-            apiModule,
-            uiModule,
-            databaseModule,
-            repositoryModule
-        ))
+        startKoin {
+            androidContext(this@MovieDBApplication.applicationContext)
+            modules(
+                applicationModule,
+                retrofitModule,
+                apiModule,
+                uiModule,
+                databaseModule,
+                repositoryModule
+            )
+        }
     }
 }

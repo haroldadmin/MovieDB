@@ -24,8 +24,9 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.DetailsEpoxyController
 import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.MovieDetailsViewModel
 import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.viewmodel.ext.koin.viewModel
-import org.koin.dsl.module.module
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 
 val applicationModule = module {
     single<SharedPreferences> {
@@ -60,40 +61,40 @@ val uiModule = module {
         ActorDetailsViewModel(actorId, get(), initialState)
     }
 
-    factory("fragment-glide-request-manager") { (fragment: Fragment) ->
+    factory(named("fragment-glide-request-manager")) { (fragment: Fragment) ->
         Glide.with(fragment)
     }
 
-    factory("view-glide-request-manager") { (view: View) ->
+    factory(named("view-glide-request-manager")) { (view: View) ->
         Glide.with(view)
     }
 
     factory { (callbacks: DetailsEpoxyController.MovieDetailsCallbacks, glide: RequestManager) ->
-        DetailsEpoxyController(callbacks, glide, get<Handler>("epoxy-handler"))
+        DetailsEpoxyController(callbacks, glide, get<Handler>(named("epoxy-handler")))
     }
 
     factory { (callbacks: EpoxyCallbacks, glide: RequestManager) ->
-        HomeEpoxyController(callbacks, glide, get("epoxy-handler"))
+        HomeEpoxyController(callbacks, glide, get(named("epoxy-handler")))
     }
 
     factory { (callbacks: EpoxyCallbacks, glide: RequestManager) ->
-        LibraryEpoxyController(callbacks, glide, get("epoxy-handler"))
+        LibraryEpoxyController(callbacks, glide, get(named("epoxy-handler")))
     }
 
     factory { (callbacks: EpoxyCallbacks, glide: RequestManager) ->
-        InTheatresEpoxyController(callbacks, glide, get("epoxy-handler"))
+        InTheatresEpoxyController(callbacks, glide, get(named("epoxy-handler")))
     }
 
-    factory { ActorDetailsEpoxyController(get("epoxy-handler")) }
+    factory { ActorDetailsEpoxyController(get(named("epoxy-handler"))) }
 
-    single("epoxy-handler-thread") {
+    single(named("epoxy-handler-thread")) {
         HandlerThread("epoxy").apply {
             start()
         }
     }
 
-    single("epoxy-handler") {
-        val handlerThread = get<HandlerThread>("epoxy-handler-thread")
+    single(named("epoxy-handler")) {
+        val handlerThread = get<HandlerThread>(named("epoxy-handler-thread"))
         Handler(handlerThread.looper)
     }
 }

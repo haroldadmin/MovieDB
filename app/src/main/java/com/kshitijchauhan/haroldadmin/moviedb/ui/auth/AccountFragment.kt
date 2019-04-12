@@ -23,12 +23,13 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 
 class AccountFragment : BaseFragment() {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val authenticationViewModel: AuthenticationViewModel by viewModel()
-    private val glideRequestManager: RequestManager by inject("fragment-glide-request-manager") {
+    private val glideRequestManager: RequestManager by inject(named("fragment-glide-request-manager")) {
         parametersOf(this)
     }
     override val initialState: UIState by lazy {

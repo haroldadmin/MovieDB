@@ -20,11 +20,11 @@ import com.bumptech.glide.request.target.Target
 import com.google.android.material.snackbar.Snackbar
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.core.Resource
+import com.kshitijchauhan.haroldadmin.moviedb.core.extensions.safe
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.Actor
 import com.kshitijchauhan.haroldadmin.moviedb.ui.BaseFragment
 import com.kshitijchauhan.haroldadmin.moviedb.ui.UIState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
-import com.kshitijchauhan.haroldadmin.moviedb.core.extensions.safe
 import com.kshitijchauhan.haroldadmin.mvrxlite.base.MVRxLiteView
 import kotlinx.android.synthetic.main.actor_details_fragment.*
 import kotlinx.android.synthetic.main.actor_details_fragment.view.*
@@ -32,13 +32,14 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 
 class ActorDetailsFragment : BaseFragment(), MVRxLiteView<UIState.ActorDetailsScreenState> {
 
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val safeArgs: ActorDetailsFragmentArgs by navArgs()
 
-    private val glideRequestManager: RequestManager by inject("fragment-glide-request-manager") {
+    private val glideRequestManager: RequestManager by inject(named("fragment-glide-request-manager")) {
         parametersOf(this)
     }
 

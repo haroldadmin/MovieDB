@@ -27,6 +27,7 @@ import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
+import org.koin.core.qualifier.named
 import kotlin.math.roundToInt
 
 class LibraryFragment : BaseFragment(), MVRxLiteView<UIState.LibraryScreenState> {
@@ -52,7 +53,7 @@ class LibraryFragment : BaseFragment(), MVRxLiteView<UIState.LibraryScreenState>
         }
     }
 
-    private val glideRequestManager: RequestManager by inject("fragment-glide-request-manager") {
+    private val glideRequestManager: RequestManager by inject(named("fragment-glide-request-manager")) {
         parametersOf(this)
     }
 

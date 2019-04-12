@@ -10,39 +10,7 @@
         <item name="android:actionOverflowButtonStyle">@style/Widget.AppCompat.ActionButton.Overflow.MainToolbarIcon
         </item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material.MovieDBPreferenceTheme</item>
-    </style>
-
-    <style name="Widget.MaterialComponents.Button.TextButton.MainSectionButton">
-        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Headline4</item>
-        <item name="android:padding">0dp</item>
-        <item name="fontFamily">@font/open_sans_light</item>
-    </style>
-
-    <style name="AppTheme.FragmentHeadingTextView">
-        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Headline4</item>
-        <item name="android:textColor">@color/colorSecondary</item>
-        <item name="fontFamily">@font/open_sans_light</item>
-        <item name="android:textSize">48sp</item>
-    </style>
-
-    <style name="AppTheme.ButtonStyleTextView">
-        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Headline4</item>
-        <item name="android:textColor">@color/colorSecondary</item>
-        <item name="fontFamily">@font/open_sans_light</item>
-        <item name="android:background">?attr/selectableItemBackground</item>
-        <item name="android:clickable">true</item>
-    </style>
-
-    <style name="AppTheme.ButtonStyleTextView.HomeFragmentButtonTextView">
-        <item name="android:textSize">40sp</item>
-        <item name="android:paddingTop">4dp</item>
-        <item name="android:paddingBottom">4dp</item>
-    </style>
-
-    <style name="Widget.AppCompat.RatingBar.Small.MyRatingBar">
-        <item name="android:isIndicator">true</item>
-        <item name="android:colorControlNormal">@color/colorSecondary</item>
-        <item name="android:colorControlActivated">@color/colorSecondary</item>
+        <item name="android:navigationBarColor">@color/colorSurface</item>
     </style>
 
     <style name="Base.Widget.MaterialComponents.TextInputLayout.SearchBox">

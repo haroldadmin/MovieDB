@@ -16,9 +16,8 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.vlad1m1r.lemniscate.BernoullisProgressView
+import org.koin.core.KoinComponent
 import org.koin.core.parameter.parametersOf
-import org.koin.standalone.KoinComponent
-import org.koin.standalone.inject
 
 @EpoxyModelClass(layout = R.layout.item_section_header)
 abstract class HeaderModel : EpoxyModelWithHolder<HeaderModel.HeaderViewHolder>() {
