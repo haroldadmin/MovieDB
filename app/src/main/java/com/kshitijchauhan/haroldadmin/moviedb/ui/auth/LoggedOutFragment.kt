@@ -43,8 +43,8 @@ class LoggedOutFragment : BaseFragment() {
         super.onCreate(savedInstanceState)
         if (mainViewModel.isAuthenticated) {
             // We know mainViewModel already exists, so we can access its properties
-            LoggedOutFragmentDirections.actionLoggedOutFragmentDestinationToAccountFragmentDestination()
-                .let { findNavController().navigate(it) }
+            val action = LoggedOutFragmentDirections.viewAccountDetails()
+            findNavController().navigate(action)
         }
     }
 

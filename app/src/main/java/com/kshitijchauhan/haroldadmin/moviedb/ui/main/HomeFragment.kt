@@ -44,19 +44,15 @@ class HomeFragment :
 
     private val callbacks = object : EpoxyCallbacks {
         override fun onMovieItemClicked(id: Int, transitionName: String, sharedView: View?) {
-            HomeFragmentDirections.actionHomeFragmentToMovieDetailsFragment()
-                .apply {
-                    movieIdArg = id
-                    isAuthenticatedArg = mainViewModel.isAuthenticated
-                    transitionNameArg = transitionName
-                }.also { action ->
-                    sharedView?.let {
-                        val extras = FragmentNavigatorExtras(it to transitionName)
-                        findNavController().navigate(action, extras)
-                    } ?: run {
-                        findNavController().navigate(action)
-                    }
-                }
+            val action = HomeFragmentDirections.viewMovieDetails(
+                movieIdArg = id,
+                isAuthenticatedArg = mainViewModel.isAuthenticated,
+                transitionNameArg = transitionName
+            )
+            sharedView?.let {
+                val extras = FragmentNavigatorExtras(sharedView to transitionName)
+                findNavController().navigate(action, extras)
+            } ?: findNavController().navigate(action)
         }
     }
 

@@ -2,9 +2,11 @@ package com.kshitijchauhan.haroldadmin.moviedb.ui.in_theatres
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
@@ -36,10 +38,16 @@ class InTheatresFragment : BaseFragment(), MVRxLiteView<UIState.InTheatresScreen
     private val mainViewModel: MainViewModel by sharedViewModel()
     private val countryCode: String by lazy {
         PreferenceManager.getDefaultSharedPreferences(activity)
-            .getString(com.kshitijchauhan.haroldadmin.moviedb.core.Constants.KEY_COUNTRY_CODE, Locale.getDefault().country)
+            .getString(
+                com.kshitijchauhan.haroldadmin.moviedb.core.Constants.KEY_COUNTRY_CODE,
+                Locale.getDefault().country
+            )
     }
     private val countryName: String by lazy {
-        get<SharedPreferences>().getString(com.kshitijchauhan.haroldadmin.moviedb.core.Constants.KEY_COUNTRY_NAME, Locale.getDefault().displayCountry)
+        get<SharedPreferences>().getString(
+            com.kshitijchauhan.haroldadmin.moviedb.core.Constants.KEY_COUNTRY_NAME,
+            Locale.getDefault().displayCountry
+        )
     }
 
     override val initialState: UIState by lazy {
@@ -52,20 +60,15 @@ class InTheatresFragment : BaseFragment(), MVRxLiteView<UIState.InTheatresScreen
 
     private val callbacks = object : EpoxyCallbacks {
         override fun onMovieItemClicked(id: Int, transitionName: String, sharedView: View?) {
-            InTheatresFragmentDirections.actionInTheatresFragmentToMovieDetailsFragment()
-                .apply {
-                    movieIdArg = id
-                    isAuthenticatedArg = mainViewModel.isAuthenticated
-                    transitionNameArg = transitionName
-                }
-                .also { action ->
-                    sharedView?.let {
-                        val extras = FragmentNavigatorExtras(it to transitionName)
-                        findNavController().navigate(action, extras)
-                    } ?: run {
-                        findNavController().navigate(action)
-                    }
-                }
+            val action = InTheatresFragmentDirections.viewMovieDetails(
+                movieIdArg = id,
+                isAuthenticatedArg = mainViewModel.isAuthenticated,
+                transitionNameArg = transitionName
+            )
+            sharedView?.let {
+                val extras = FragmentNavigatorExtras(it to transitionName)
+                findNavController().navigate(action, extras)
+            } ?: findNavController().navigate(action)
         }
     }
 

@@ -11,7 +11,7 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_homeFragment_to_movieDetailsFragment"
+            android:id="@+id/viewMovieDetails"
             app:destination="@id/movieDetailsFragmentDestination"
             app:enterAnim="@animator/fade_in_short"
             app:exitAnim="@animator/fade_out_short"
@@ -23,7 +23,7 @@
         android:label="fragment_library"
         tools:layout="@layout/fragment_library">
         <action
-            android:id="@+id/action_libraryFragment_to_movieDetailsFragment"
+            android:id="@+id/viewMovieDetails"
             app:destination="@id/movieDetailsFragmentDestination"
             app:enterAnim="@animator/fade_in_short"
             app:exitAnim="@animator/fade_out_short" />
@@ -34,7 +34,7 @@
         android:label="fragment_in_theatres"
         tools:layout="@layout/fragment_in_theatres">
         <action
-            android:id="@+id/action_inTheatresFragment_to_movieDetailsFragment"
+            android:id="@+id/viewMovieDetails"
             app:destination="@id/movieDetailsFragmentDestination"
             app:enterAnim="@animator/fade_in_short"
             app:exitAnim="@animator/fade_out_short" />
@@ -49,7 +49,7 @@
         android:name="com.kshitijchauhan.haroldadmin.moviedb.ui.auth.LoggedOutFragment"
         android:label="LoggedOutFragment" >
         <action
-            android:id="@+id/action_loggedOutFragmentDestination_to_accountFragmentDestination"
+            android:id="@+id/viewAccountDetails"
             app:destination="@id/accountFragmentDestination"
             app:popUpTo="@+id/homeFragmentDestination"
             app:popUpToInclusive="false"
@@ -63,13 +63,13 @@
         tools:layout="@layout/fragment_movie_details">
 
         <action
-            android:id="@+id/action_movieDetailsFragment_to_actorDetailsFragment"
+            android:id="@+id/viewActorDetails"
             app:destination="@id/actorDetailsFragmentDestination"
             app:enterAnim="@animator/fade_in_short"
             app:exitAnim="@animator/fade_out_short" />
 
         <action
-            android:id="@+id/action_movieDetailsFragment_to_movieDetailsFragment"
+            android:id="@+id/viewMovieDetails"
             app:destination="@id/movieDetailsFragmentDestination"
             app:enterAnim="@animator/fade_in_short"
             app:exitAnim="@animator/fade_out_short" />

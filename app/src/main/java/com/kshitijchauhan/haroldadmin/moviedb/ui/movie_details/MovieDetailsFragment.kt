@@ -66,36 +66,26 @@ class MovieDetailsFragment : BaseFragment(), MVRxLiteView<UIState.DetailsScreenS
         }
 
         override fun onActorItemClicked(id: Int, transitionName: String, sharedView: View?) {
-            MovieDetailsFragmentDirections.actionMovieDetailsFragmentToActorDetailsFragment()
-                .apply {
-                    actorIdArg = id
-                    transitionNameArg = transitionName
-                }
-                .also { action ->
-                    sharedView?.let {
-                        val extras = FragmentNavigatorExtras(it to transitionName)
-                        findNavController().navigate(action, extras)
-                    } ?: run {
-                        findNavController().navigate(action)
-                    }
-                }
+            val action = MovieDetailsFragmentDirections.viewActorDetails(
+                actorIdArg = id,
+                transitionNameArg = transitionName
+            )
+            sharedView?.let {
+                val extras = FragmentNavigatorExtras(it to transitionName)
+                findNavController().navigate(action, extras)
+            } ?: findNavController().navigate(action)
         }
 
         override fun onMovieItemClicked(id: Int, transitionName: String, sharedView: View?) {
-            MovieDetailsFragmentDirections.actionMovieDetailsFragmentToMovieDetailsFragment()
-                .apply {
-                    movieIdArg = id
-                    transitionNameArg = transitionName
-                    isAuthenticatedArg = mainViewModel.isAuthenticated
-                }
-                .also { action ->
-                    sharedView?.let {
-                        val extras = FragmentNavigatorExtras(it to transitionName)
-                        findNavController().navigate(action, extras)
-                    } ?: run {
-                        findNavController().navigate(action)
-                    }
-                }
+            val action = MovieDetailsFragmentDirections.viewMovieDetails(
+                movieIdArg = id,
+                transitionNameArg = transitionName,
+                isAuthenticatedArg = mainViewModel.isAuthenticated
+            )
+            sharedView?.let {
+                val extras = FragmentNavigatorExtras(it to transitionName)
+                findNavController().navigate(action, extras)
+            } ?: findNavController().navigate(action)
         }
     }
 

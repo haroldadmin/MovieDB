@@ -1,23 +1,18 @@
 package com.kshitijchauhan.haroldadmin.moviedb.ui.common
 
 import android.view.View
-import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.ViewCompat
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModelClass
 import com.airbnb.epoxy.EpoxyModelWithHolder
-import com.airbnb.epoxy.ModelView
 import com.bumptech.glide.RequestManager
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.RequestOptions
 import com.kshitijchauhan.haroldadmin.moviedb.R
-import com.vlad1m1r.lemniscate.BernoullisProgressView
 import org.koin.core.KoinComponent
-import org.koin.core.parameter.parametersOf
 
 @EpoxyModelClass(layout = R.layout.item_section_header)
 abstract class HeaderModel : EpoxyModelWithHolder<HeaderModel.HeaderViewHolder>() {
@@ -214,11 +209,6 @@ abstract class LoadingModel: EpoxyModelWithHolder<LoadingModel.LoadingHolder>() 
     override fun bind(holder: LoadingHolder) {
         super.bind(holder)
         holder.description.text = description
-    }
-
-    override fun unbind(holder: LoadingHolder) {
-        super.unbind(holder)
-        holder.description.text = ""
     }
 
     inner class LoadingHolder: KotlinEpoxyHolder() {

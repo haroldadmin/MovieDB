@@ -16,7 +16,7 @@ buildscript {
         fabrictools_version = "1.27.1"
 
         lifecycle_version = "2.0.0"
-        nav_version = "1.0.0"
+        nav_version = "2.1.0-alpha02"
         room_version = "2.1.0-alpha05"
         ktx_version = "1.0.1"
         constraintlayout_version = "2.0.0-alpha3"
@@ -57,7 +57,7 @@ buildscript {
         classpath "com.android.tools.build:gradle:$agp_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.gms:google-services:$googleservices_version"
-        classpath "android.arch.navigation:navigation-safe-args-gradle-plugin:$nav_version"
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
         classpath "io.fabric.tools:gradle:$fabrictools_version"
     }
 }

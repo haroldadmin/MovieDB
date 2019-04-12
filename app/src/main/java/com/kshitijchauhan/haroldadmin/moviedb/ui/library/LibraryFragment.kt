@@ -36,20 +36,15 @@ class LibraryFragment : BaseFragment(), MVRxLiteView<UIState.LibraryScreenState>
 
     private val callbacks = object : EpoxyCallbacks {
         override fun onMovieItemClicked(id: Int, transitionName: String, sharedView: View?) {
-            LibraryFragmentDirections.actionLibraryFragmentToMovieDetailsFragment()
-                .apply {
-                    movieIdArg = id
-                    isAuthenticatedArg = mainViewModel.isAuthenticated
-                    transitionNameArg = transitionName
-                }
-                .also { action ->
-                    sharedView?.let {
-                        val extras = FragmentNavigatorExtras(it to transitionName)
-                        findNavController().navigate(action, extras)
-                    } ?: run {
-                        findNavController().navigate(action)
-                    }
-                }
+            val action = LibraryFragmentDirections.viewMovieDetails(
+                movieIdArg = id,
+                isAuthenticatedArg = mainViewModel.isAuthenticated,
+                transitionNameArg = transitionName
+            )
+            sharedView?.let {
+                val extras = FragmentNavigatorExtras(it to transitionName)
+                findNavController().navigate(action, extras)
+            } ?: findNavController().navigate(action)
         }
     }
 
