@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion rootProject.ext.minSdk
         targetSdkVersion rootProject.ext.targetSdk
-        versionCode 1
-        versionName "1.0"
+        versionCode rootProject.ext.versionCode
+        versionName rootProject.ext.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -36,14 +36,14 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation Libs.kotlin_stdlib_jdk7
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    testImplementation Libs.junit
+    androidTestImplementation Libs.androidx_test_runner
+    androidTestImplementation Libs.androidx_test_espresso_espresso_core
 
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
+    implementation Libs.lifecycle_extensions
+    implementation Libs.rxjava
 }
 repositories {
     mavenCentral()

@@ -69,65 +69,50 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation Libs.kotlin_stdlib_jdk7
 
     implementation project(path: ':core')
     implementation project(path: ':repository')
     implementation project(path: ':mvrxlite')
 
-    // Android
-    implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
-    implementation "androidx.legacy:legacy-support-v4:$supportv4_version"
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    implementation "com.google.android.material:material:$material_version"
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
-    implementation "androidx.core:core-ktx:$ktx_version"
-    implementation "androidx.preference:preference:$preference_version"
-    // For access to material theme for preferences
-    implementation "androidx.legacy:legacy-preference-v14:$preferencelegacy_version"
+    implementation Libs.appcompat
+    implementation Libs.constraintlayout
+    implementation Libs.legacy_support_v4
+    implementation Libs.lifecycle_extensions
+    implementation Libs.material
+    implementation Libs.core_ktx
+    implementation Libs.preference
+    implementation Libs.legacy_preference_v14
 
-    // Navigation AAC
-    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    implementation Libs.navigation_fragment_ktx
+    implementation Libs.navigation_ui_ktx
 
-    // DI
-    implementation "org.koin:koin-android:$koin_version"
-    implementation "org.koin:koin-androidx-scope:$koin_version"
-    implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+    implementation Libs.koin_android
+    implementation Libs.koin_androidx_scope
+    implementation Libs.koin_androidx_viewmodel
 
-    // Rx
-    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
-    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
-    implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
-    implementation "com.jakewharton.rxbinding2:rxbinding:$rxbinding_version"
-    implementation "com.jakewharton.rxrelay2:rxrelay:$rxrelay_version"
+    implementation Libs.rxjava
+    implementation Libs.rxandroid
+    implementation Libs.rxkotlin
+    implementation Libs.rxbinding
+    implementation Libs.rxrelay
 
-    // Image Loading
-    implementation "com.github.bumptech.glide:glide:$glide_version"
-    kapt "com.github.bumptech.glide:compiler:$glide_version"
+    implementation Libs.glide
+    kapt Libs.com_github_bumptech_glide_compiler
 
-    // Tests
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'org.mockito:mockito-core:2.24.5'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    implementation Libs.com_pierfrancescosoffritti_androidyoutubeplayer_core
+    implementation Libs.lemniscate
+    implementation Libs.epoxy
+    kapt Libs.epoxy_processor
 
-    // UI
-    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:9.0.1'
-    implementation "com.airbnb.android:epoxy:$epoxy_version"
-    kapt "com.airbnb.android:epoxy-processor:$epoxy_version"
-    implementation 'com.github.VladimirWrites:Lemniscate:1.4.4'
+    testImplementation Libs.junit
+    testImplementation Libs.mockito_core
+    androidTestImplementation Libs.androidx_test_runner
+    androidTestImplementation Libs.androidx_test_espresso_espresso_core
 
-    // Firebase
-    implementation "com.google.firebase:firebase-core:$firebase_version"
-    implementation "com.crashlytics.sdk.android:crashlytics:$crashlytics_version"
-
-    // To resolve SessionIDInterceptor. Without this gradle shows error that supertype for okhttp3.interceptor could not be resolved
-    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
-
-    implementation "com.github.daniel-stoneuk:material-about-library:2.4.2"
-
+    implementation Libs.firebase_core
+    implementation Libs.crashlytics
+    implementation Libs.okhttp
 }
 
 apply plugin: 'com.google.gms.google-services'

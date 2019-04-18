@@ -59,34 +59,33 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
+    implementation Libs.kotlin_stdlib_jdk7
     implementation project(path: ':core')
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    testImplementation Libs.junit
+    androidTestImplementation Libs.androidx_test_runner
+    androidTestImplementation Libs.androidx_test_espresso_espresso_core
 
     // Rx
-    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
-    implementation "io.reactivex.rxjava2:rxandroid:$rxandroid_version"
-    implementation "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
-    implementation "com.jakewharton.rxrelay2:rxrelay:$rxrelay_version"
+    implementation Libs.rxjava
+    implementation Libs.rxandroid
+    implementation Libs.rxkotlin
+    implementation Libs.rxrelay
 
     // Networking
-    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofit_version"
-    implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
-    implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
-    implementation "com.squareup.retrofit2:converter-moshi:$moshi_version"
-    implementation "com.squareup.moshi:moshi-adapters:$moshiadapters_version"
+    implementation Libs.retrofit
+    implementation Libs.adapter_rxjava2
+    implementation Libs.okhttp
+    implementation Libs.logging_interceptor
+    implementation Libs.converter_moshi
+    implementation Libs.moshi_adapters
 
     // Room
-    implementation "androidx.room:room-runtime:$room_version"
-    implementation "androidx.room:room-rxjava2:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
+    implementation Libs.room_runtime
+    implementation Libs.room_rxjava2
+    kapt Libs.room_compiler
 
-    implementation "org.koin:koin-android:$koin_version"
+    implementation Libs.koin_android
 }
 
 repositories {

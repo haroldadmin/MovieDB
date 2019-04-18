@@ -34,15 +34,15 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation Libs.kotlin_stdlib_jdk7
 
-    implementation "androidx.appcompat:appcompat:$appcompat_version"
-    implementation "io.reactivex.rxjava2:rxjava:$rxjava_version"
-    implementation "com.jakewharton.rxrelay2:rxrelay:$rxrelay_version"
+    implementation Libs.appcompat
+    implementation Libs.rxjava
+    implementation Libs.rxrelay
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    testImplementation Libs.junit
+    androidTestImplementation Libs.androidx_test_runner
+    androidTestImplementation Libs.androidx_test_espresso_espresso_core
 }
 repositories {
     mavenCentral()
