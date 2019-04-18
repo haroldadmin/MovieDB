@@ -10,6 +10,7 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -87,14 +88,17 @@ class MainActivity : AppCompatActivity() {
             when (destination.id) {
                 R.id.aboutFragment -> {
                     mainNavView.animateHideDown()
+                    window.navigationBarColor = ContextCompat.getColor(this, R.color.colorSurfaceDark)
                 }
                 R.id.movieDetailsFragment, R.id.actorDetailsFragment -> {
                     mainNavView.animateHideDown()
                     mainToolbar.animatedHideUp()
+                    window.navigationBarColor = ContextCompat.getColor(this, R.color.colorSurfaceDark)
                 }
                 else -> {
                     mainNavView.animateShowUp()
                     mainToolbar.animateShowDown()
+                    window.navigationBarColor = ContextCompat.getColor(this, R.color.colorSurface)
                 }
             }
         }

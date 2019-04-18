@@ -15,4 +15,6 @@
     <color name="colorError">#b00020</color>
     <color name="onPrimaryActivated">#FFFFFF</color>
     <color name="primaryColor50">#ECEFF1</color>
+    <color name="colorSurfaceTransluscent">#80455a64</color>
+    <color name="colorSurfaceDarkTransluscent">#80263238</color>
 </resources>
