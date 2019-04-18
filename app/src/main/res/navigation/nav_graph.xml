@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/viewMovieDetails"
-            app:destination="@id/movieDetailsFragmentDestination"
+            app:destination="@id/movieDetailsFragment"
             app:enterAnim="@animator/fade_in_short"
             app:exitAnim="@animator/fade_out_short"
             app:popExitAnim="@animator/fade_out_short" />
@@ -24,7 +24,7 @@
         tools:layout="@layout/fragment_library">
         <action
             android:id="@+id/viewMovieDetails"
-            app:destination="@id/movieDetailsFragmentDestination"
+            app:destination="@id/movieDetailsFragment"
             app:enterAnim="@animator/fade_in_short"
             app:exitAnim="@animator/fade_out_short" />
     </fragment>
@@ -35,7 +35,7 @@
         tools:layout="@layout/fragment_in_theatres">
         <action
             android:id="@+id/viewMovieDetails"
-            app:destination="@id/movieDetailsFragmentDestination"
+            app:destination="@id/movieDetailsFragment"
             app:enterAnim="@animator/fade_in_short"
             app:exitAnim="@animator/fade_out_short" />
     </fragment>
@@ -57,20 +57,20 @@
             app:popExitAnim="@animator/fade_out_short"/>
     </fragment>
     <fragment
-        android:id="@+id/movieDetailsFragmentDestination"
+        android:id="@+id/movieDetailsFragment"
         android:name="com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.MovieDetailsFragment"
         android:label="fragment_movie_details"
         tools:layout="@layout/fragment_movie_details">
 
         <action
             android:id="@+id/viewActorDetails"
-            app:destination="@id/actorDetailsFragmentDestination"
+            app:destination="@id/actorDetailsFragment"
             app:enterAnim="@animator/fade_in_short"
             app:exitAnim="@animator/fade_out_short" />
 
         <action
             android:id="@+id/viewMovieDetails"
-            app:destination="@id/movieDetailsFragmentDestination"
+            app:destination="@id/movieDetailsFragment"
             app:enterAnim="@animator/fade_in_short"
             app:exitAnim="@animator/fade_out_short" />
 
@@ -90,7 +90,7 @@
             app:argType="boolean" />
     </fragment>
     <fragment
-        android:id="@+id/actorDetailsFragmentDestination"
+        android:id="@+id/actorDetailsFragment"
         android:name="com.kshitijchauhan.haroldadmin.moviedb.ui.actor_details.ActorDetailsFragment"
         android:label="actor_details_fragment"
         tools:layout="@layout/actor_details_fragment" >

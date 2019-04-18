@@ -10,6 +10,7 @@ import com.danielstone.materialaboutlibrary.items.MaterialAboutItem
 import com.danielstone.materialaboutlibrary.items.MaterialAboutTitleItem
 import com.danielstone.materialaboutlibrary.model.MaterialAboutCard
 import com.danielstone.materialaboutlibrary.model.MaterialAboutList
+import com.kshitijchauhan.haroldadmin.moviedb.BuildConfig
 
 class AboutFragment : MaterialAboutFragment() {
 
@@ -26,7 +27,7 @@ class AboutFragment : MaterialAboutFragment() {
                 .desc(getString(R.string.app_description))
                 .icon(com.kshitijchauhan.haroldadmin.moviedb.R.mipmap.ic_launcher)
                 .setOnLongClickAction {
-                    Toast.makeText(requireContext(), "There's an easter egg hidden somewhere here", Toast.LENGTH_SHORT)
+                    Toast.makeText(requireContext(), getString(R.string.easter_egg_message), Toast.LENGTH_SHORT)
                         .show()
                 }
                 .build()
@@ -87,17 +88,27 @@ class AboutFragment : MaterialAboutFragment() {
                     ).onClick()
                 }
                 .setOnLongClickAction {
-                    Toast.makeText(requireContext(), "Congratulations. You found the easter egg!", Toast.LENGTH_SHORT)
+                    Toast.makeText(requireContext(), getString(R.string.easter_egg), Toast.LENGTH_SHORT)
                         .show()
                 }
                 .build()
         }
 
-        return MaterialAboutList.Builder()
+        val builder = MaterialAboutList.Builder()
             .addCard(appCardBuilder.build())
             .addCard(authorCardBuilder.build())
             .addCard(tmdbCardBuilder.build())
-            .build()
+
+        if (BuildConfig.DEBUG) {
+            val debugCard = MaterialAboutCard.Builder().apply {
+                this += MaterialAboutTitleItem.Builder()
+                    .desc("You are using a debug build of the app.")
+                    .build()
+            }
+            builder.addCard(debugCard.build())
+        }
+
+        return builder.build()
     }
 
     private operator fun <T : MaterialAboutItem> MaterialAboutCard.Builder.plusAssign(item: T) {

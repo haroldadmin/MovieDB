@@ -41,39 +41,39 @@ class DetailsEpoxyController(
             is Resource.Success -> {
                 val movie = resource.data
                 header {
-                    id("description")
+                    id("${resource.hashCode()}-description")
                     title("Description")
                     spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                 }
 
                 mainText {
-                    id("overview")
+                    id("${resource.hashCode()}-overview")
                     text(movie.overview)
                     spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                 }
             }
             is Resource.Error -> {
                 header {
-                    id("description")
+                    id("${resource.hashCode()}-description")
                     title("Description")
                     spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                 }
 
                 mainText {
-                    id("overview")
+                    id("${resource.hashCode()}-overview")
                     text("We can't find a description for this movie")
                     spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                 }
             }
             is Resource.Loading -> {
                 header {
-                    id("description")
+                    id("${resource.hashCode()}-description")
                     title("Description")
                     spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                 }
 
                 loading {
-                    id("load-movie-description")
+                    id("${resource.hashCode()}-load-description")
                     description("Loading Description")
                     spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
                 }

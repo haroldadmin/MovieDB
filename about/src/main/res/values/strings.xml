@@ -12,4 +12,6 @@
     <string name="app_description">A gorgeous client for TheMovieDatabase API</string>
     <string name="tmdb_credit">Powered by TMDb</string>
     <string name="tmdb_credits_desc">This app uses TheMovieDatabase API to fetch and show information.</string>
+    <string name="easter_egg_message">There\'s an easter egg hidden here somewhere</string>
+    <string name="easter_egg">This is an easter egg, but a very disappointing one.</string>
 </resources>

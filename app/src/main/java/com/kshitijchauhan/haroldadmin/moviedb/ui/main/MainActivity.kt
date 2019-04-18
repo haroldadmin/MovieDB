@@ -6,6 +6,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -81,6 +83,22 @@ class MainActivity : AppCompatActivity() {
 
         mainNavView.setupWithNavController(navController)
 
+        navController.addOnDestinationChangedListener { controller, destination, _ ->
+            when (destination.id) {
+                R.id.aboutFragment -> {
+                    mainNavView.animateHideDown()
+                }
+                R.id.movieDetailsFragment, R.id.actorDetailsFragment -> {
+                    mainNavView.animateHideDown()
+                    mainToolbar.animatedHideUp()
+                }
+                else -> {
+                    mainNavView.animateShowUp()
+                    mainToolbar.animateShowDown()
+                }
+            }
+        }
+
         setSupportActionBar(mainToolbar)
         supportActionBar?.apply {
             title = getString(R.string.app_name)
@@ -143,5 +161,49 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         PreferenceManager.getDefaultSharedPreferences(this)
             .unregisterOnSharedPreferenceChangeListener(prefsListener)
+    }
+
+    private fun View.animateHideDown() {
+        if (this.visibility == View.VISIBLE) {
+            this.animate()
+                .translationY(-1f)
+                .alpha(0f)
+                .setInterpolator(AccelerateDecelerateInterpolator())
+                .setDuration(500)
+                .withEndAction { this.visibility = View.GONE }
+        }
+    }
+
+    private fun View.animatedHideUp() {
+        if (this.visibility == View.VISIBLE) {
+            this.animate()
+                .translationY(2f)
+                .alpha(0f)
+                .setInterpolator(AccelerateDecelerateInterpolator())
+                .setDuration(500)
+                .withEndAction { this.visibility = View.GONE }
+        }
+    }
+
+    private fun View.animateShowUp() {
+        if (this.visibility != View.VISIBLE) {
+            this.animate()
+                .translationY(1f)
+                .alpha(1f)
+                .setInterpolator(AccelerateDecelerateInterpolator())
+                .setDuration(500)
+                .withStartAction { this.visibility = View.VISIBLE }
+        }
+    }
+
+    private fun View.animateShowDown() {
+        if (this.visibility != View.VISIBLE) {
+            this.animate()
+                .translationY(0f)
+                .alpha(1f)
+                .setInterpolator(AccelerateDecelerateInterpolator())
+                .setDuration(500)
+                .withStartAction { this.visibility = View.VISIBLE }
+        }
     }
 }
