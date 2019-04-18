@@ -82,8 +82,8 @@ object Libs {
     /**
      * https://developer.android.com/testing
      */
-    const val androidx_test_espresso_espresso_core: String =
-            "androidx.test.espresso:espresso-core:" + Versions.androidx_test_espresso_espresso_core
+    const val espresso_core: String = "androidx.test.espresso:espresso-core:" +
+            Versions.espresso_core
 
     /**
      * https://developer.android.com/testing
@@ -100,19 +100,6 @@ object Libs {
      * https://github.com/airbnb/epoxy
      */
     const val epoxy: String = "com.airbnb.android:epoxy:" + Versions.com_airbnb_android
-
-    /**
-     * https://developer.android.com/testing
-     */
-    const val com_android_support_test_espresso_espresso_core: String =
-            "com.android.support.test.espresso:espresso-core:" +
-            Versions.com_android_support_test_espresso_espresso_core
-
-    /**
-     * https://developer.android.com/testing
-     */
-    const val com_android_support_test_runner: String = "com.android.support.test:runner:" +
-            Versions.com_android_support_test_runner
 
     /**
      * https://developer.android.com/studio
@@ -169,6 +156,13 @@ object Libs {
     const val google_services: String = "com.google.gms:google-services:" + Versions.google_services
 
     /**
+     * https://github.com/JakeWharton/retrofit2-kotlin-coroutines-adapter/
+     */
+    const val retrofit2_kotlin_coroutines_adapter: String =
+            "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:" +
+            Versions.retrofit2_kotlin_coroutines_adapter
+
+    /**
      * https://github.com/JakeWharton/RxBinding/
      */
     const val rxbinding: String = "com.jakewharton.rxbinding2:rxbinding:" + Versions.rxbinding
@@ -183,7 +177,18 @@ object Libs {
      * https://github.com/square/moshi
      */
     const val moshi_adapters: String = "com.squareup.moshi:moshi-adapters:" +
-            Versions.moshi_adapters
+            Versions.com_squareup_moshi
+
+    /**
+     * https://github.com/square/moshi
+     */
+    const val moshi_kotlin_codegen: String = "com.squareup.moshi:moshi-kotlin-codegen:" +
+            Versions.com_squareup_moshi
+
+    /**
+     * https://github.com/square/moshi
+     */
+    const val moshi: String = "com.squareup.moshi:moshi:" + Versions.com_squareup_moshi
 
     /**
      * https://github.com/square/okhttp
@@ -200,18 +205,19 @@ object Libs {
      * https://github.com/square/retrofit/
      */
     const val adapter_rxjava2: String = "com.squareup.retrofit2:adapter-rxjava2:" +
-            Versions.adapter_rxjava2
+            Versions.com_squareup_retrofit2
 
     /**
      * https://github.com/square/retrofit/
      */
     const val converter_moshi: String = "com.squareup.retrofit2:converter-moshi:" +
-            Versions.converter_moshi
+            Versions.com_squareup_retrofit2
 
     /**
      * https://github.com/square/retrofit/
      */
-    const val retrofit: String = "com.squareup.retrofit2:retrofit:" + Versions.retrofit
+    const val retrofit: String = "com.squareup.retrofit2:retrofit:" +
+            Versions.com_squareup_retrofit2
 
     const val de_fayard_buildsrcversions_gradle_plugin: String =
             "de.fayard.buildSrcVersions:de.fayard.buildSrcVersions.gradle.plugin:" +
@@ -245,32 +251,45 @@ object Libs {
      */
     const val kotlin_android_extensions_runtime: String =
             "org.jetbrains.kotlin:kotlin-android-extensions-runtime:" +
-            Versions.org_jetbrains_kotlin
+            Versions.kotlin_android_extensions_runtime
 
     /**
      * https://kotlinlang.org/
      */
     const val kotlin_android_extensions: String =
-            "org.jetbrains.kotlin:kotlin-android-extensions:" + Versions.org_jetbrains_kotlin
+            "org.jetbrains.kotlin:kotlin-android-extensions:" + Versions.kotlin_android_extensions
 
     /**
      * https://kotlinlang.org/
      */
     const val kotlin_annotation_processing_gradle: String =
             "org.jetbrains.kotlin:kotlin-annotation-processing-gradle:" +
-            Versions.org_jetbrains_kotlin
+            Versions.kotlin_annotation_processing_gradle
 
     /**
      * https://kotlinlang.org/
      */
     const val kotlin_gradle_plugin: String = "org.jetbrains.kotlin:kotlin-gradle-plugin:" +
-            Versions.org_jetbrains_kotlin
+            Versions.kotlin_gradle_plugin
 
     /**
      * https://kotlinlang.org/
      */
-    const val kotlin_stdlib_jdk7: String = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:" +
-            Versions.org_jetbrains_kotlin
+    const val org_jetbrains_kotlin_kotlin_stdlib_jdk7: String =
+            "org.jetbrains.kotlin:kotlin-stdlib-jdk7:" +
+            Versions.org_jetbrains_kotlin_kotlin_stdlib_jdk7
+
+    /**
+     * https://github.com/Kotlin/kotlinx.coroutines
+     */
+    const val kotlinx_coroutines_android: String =
+            "org.jetbrains.kotlinx:kotlinx-coroutines-android:" + Versions.org_jetbrains_kotlinx
+
+    /**
+     * https://github.com/Kotlin/kotlinx.coroutines
+     */
+    const val kotlinx_coroutines_core: String = "org.jetbrains.kotlinx:kotlinx-coroutines-core:" +
+            Versions.org_jetbrains_kotlinx
 
     const val koin_android: String = "org.koin:koin-android:" + Versions.org_koin
 

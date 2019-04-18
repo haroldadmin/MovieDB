@@ -1,5 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
+buildscript { 
+    ext.kotlin_version = '1.3.30'
+
     repositories {
         jcenter()
         maven {
@@ -13,7 +15,7 @@ buildscript {
         classpath Libs.google_services
         classpath Libs.navigation_safe_args_gradle_plugin
         classpath Libs.io_fabric_tools_gradle
-    }
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version" }
 }
 
 plugins {

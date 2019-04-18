@@ -5,48 +5,38 @@ apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.ext.compileSdk
-
     defaultConfig {
         minSdkVersion rootProject.ext.minSdk
         targetSdkVersion rootProject.ext.targetSdk
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         debug {
-
             if (project.hasProperty('MovieDB_ApiKey')) {
                 buildConfigField('String', 'API_KEY', MovieDB_ApiKey)
             } else {
                 buildConfigField('String', 'API_KEY', "\"mock-key\"")
             }
-
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-
         release {
-
             if (project.hasProperty('MovieDB_ApiKey')) {
                 buildConfigField('String', 'API_KEY', MovieDB_ApiKey)
             } else {
                 buildConfigField('String', 'API_KEY', "\"mock-key\"")
             }
-
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-
         dev {
-
             if (project.hasProperty('MovieDB_ApiKey')) {
                 buildConfigField('String', 'API_KEY', MovieDB_ApiKey)
             } else {
                 buildConfigField('String', 'API_KEY', "\"mock-key\"")
             }
-
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -55,35 +45,25 @@ android {
     androidExtensions {
         experimental = true
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation Libs.org_jetbrains_kotlin_kotlin_stdlib_jdk7
-    implementation project(path: ':core')
 
-    // Rx
-    implementation Libs.rxjava
-    implementation Libs.rxandroid
-    implementation Libs.rxkotlin
-    implementation Libs.rxrelay
+    implementation Libs.kotlinx_coroutines_core
+    implementation Libs.kotlinx_coroutines_android
 
-    // Networking
+    implementation Libs.retrofit2_kotlin_coroutines_adapter
     implementation Libs.retrofit
-    implementation Libs.adapter_rxjava2
-    implementation Libs.okhttp
     implementation Libs.logging_interceptor
+    implementation Libs.moshi
     implementation Libs.converter_moshi
     implementation Libs.moshi_adapters
+    kapt Libs.moshi_kotlin_codegen
 
-    // Room
-    implementation Libs.room_runtime
-    implementation Libs.room_rxjava2
-    kapt Libs.room_compiler
-
-    implementation Libs.koin_android
-}
-
-repositories {
-    mavenCentral()
 }

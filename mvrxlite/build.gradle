@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion rootProject.ext.compileSdk
@@ -12,17 +12,14 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
-
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-
         dev {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -36,11 +33,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation Libs.kotlin_stdlib_jdk7
-
-    testImplementation Libs.junit
-    androidTestImplementation Libs.androidx_test_runner
-    androidTestImplementation Libs.androidx_test_espresso_espresso_core
+    implementation Libs.org_jetbrains_kotlin_kotlin_stdlib_jdk7
 
     implementation Libs.lifecycle_extensions
     implementation Libs.rxjava

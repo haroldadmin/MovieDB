@@ -1,6 +1,6 @@
 apply plugin: 'com.android.dynamic-feature'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion rootProject.ext.compileSdk
@@ -23,8 +23,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':app')
-    implementation Libs.kotlin_stdlib_jdk7
-
+    implementation Libs.org_jetbrains_kotlin_kotlin_stdlib_jdk7
     implementation Libs.material_about_library
 }
 repositories {

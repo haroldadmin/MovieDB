@@ -69,7 +69,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation Libs.kotlin_stdlib_jdk7
+    implementation Libs.org_jetbrains_kotlin_kotlin_stdlib_jdk7
 
     implementation project(path: ':core')
     implementation project(path: ':repository')
@@ -108,7 +108,7 @@ dependencies {
     testImplementation Libs.junit
     testImplementation Libs.mockito_core
     androidTestImplementation Libs.androidx_test_runner
-    androidTestImplementation Libs.androidx_test_espresso_espresso_core
+    androidTestImplementation Libs.espresso_core
 
     implementation Libs.firebase_core
     implementation Libs.crashlytics

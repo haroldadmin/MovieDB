@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion rootProject.ext.compileSdk
@@ -34,15 +34,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation Libs.kotlin_stdlib_jdk7
+    implementation Libs.org_jetbrains_kotlin_kotlin_stdlib_jdk7
 
     implementation Libs.appcompat
     implementation Libs.rxjava
     implementation Libs.rxrelay
-
-    testImplementation Libs.junit
-    androidTestImplementation Libs.androidx_test_runner
-    androidTestImplementation Libs.androidx_test_espresso_espresso_core
 }
 repositories {
     mavenCentral()

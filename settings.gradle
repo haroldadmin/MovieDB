@@ -1,1 +1,1 @@
-include ':app', ':mvrxlite', ':repository', ':core', ':about'
+include ':app', ':mvrxlite', ':repository', ':core', ':about', ':tmdb_repository'
