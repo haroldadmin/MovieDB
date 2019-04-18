@@ -5,8 +5,8 @@ ext {
     targetSdk = 28
     minSdk = 21
     applicationId = "com.kshitijchauhan.haroldadmin.moviedb"
-    versionCode = 10
-    versionName = "0.5"
+    versionCode = 11
+    versionName = "0.6"
 }
 
 buildscript {
@@ -36,9 +36,9 @@ buildscript {
         rxrelay_version = "2.1.0"
 
         glide_version = "4.9.0"
-        epoxy_version = "3.3.0"
+        epoxy_version = "3.4.1"
 
-        okhttp_version = "3.14.0"
+        okhttp_version = "3.14.1"
         retrofit_version = "2.5.0"
         moshi_version = "2.4.0"
         moshiadapters_version = "1.8.0"
