@@ -12,7 +12,6 @@ android {
     buildTypes {
         debug { }
         release { }
-        dev { }
     }
 
     compileOptions {

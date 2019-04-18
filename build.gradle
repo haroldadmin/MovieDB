@@ -55,7 +55,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:3.5.0-alpha09"
+        classpath 'com.android.tools.build:gradle:3.5.0-alpha11'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "com.google.gms:google-services:$googleservices_version"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"

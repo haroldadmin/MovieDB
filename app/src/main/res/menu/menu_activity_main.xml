@@ -17,7 +17,7 @@
         app:showAsAction="never"/>
 
     <item
-        android:id="@+id/aboutFragmentDestination"
+        android:id="@+id/aboutFragment"
         android:title="About"
         app:showAsAction="never"/>
 </menu>
