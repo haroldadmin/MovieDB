@@ -4,12 +4,12 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdk
+    compileSdkVersion BuildConfig.compileSdk
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdk
-        targetSdkVersion rootProject.ext.targetSdk
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
+        minSdkVersion BuildConfig.minSdk
+        targetSdkVersion BuildConfig.targetSdk
+        versionCode BuildConfig.versionCode
+        versionName BuildConfig.versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -45,6 +45,10 @@ android {
     androidExtensions {
         experimental = true
     }
+    packagingOptions {
+        exclude 'META-INF/atomicfu.kotlin_module'
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -53,17 +57,29 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation Libs.org_jetbrains_kotlin_kotlin_stdlib_jdk7
+    implementation project(path: ':core')
 
-    implementation Libs.kotlinx_coroutines_core
-    implementation Libs.kotlinx_coroutines_android
+    implementation Libraries.kotlinStdlib
 
-    implementation Libs.retrofit2_kotlin_coroutines_adapter
-    implementation Libs.retrofit
-    implementation Libs.logging_interceptor
-    implementation Libs.moshi
-    implementation Libs.converter_moshi
-    implementation Libs.moshi_adapters
-    kapt Libs.moshi_kotlin_codegen
+    implementation Libraries.coroutinesCore
+    implementation Libraries.coroutinesAndroid
 
+    implementation Libraries.retrofit
+    implementation Libraries.loggingInterceptor
+    implementation Libraries.cnrAdapter
+    implementation Libraries.moshi
+    implementation Libraries.converterMoshi
+    implementation Libraries.moshiAdapters
+    kapt Libraries.moshiCodegen
+
+    implementation Libraries.room
+    implementation Libraries.roomCoroutines
+    kapt Libraries.roomCompiler
+
+    testImplementation Libraries.coroutinesTest
+    testImplementation Libraries.junit
+    testImplementation Libraries.mockitoCore
+    androidTestImplementation Libraries.androidxTestRunner
+    androidTestImplementation Libraries.espressoCore
+    androidTestImplementation Libraries.androidxTestExt
 }

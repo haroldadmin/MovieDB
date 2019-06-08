@@ -3,10 +3,11 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdk
+    compileSdkVersion BuildConfig.compileSdk
+
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdk
-        targetSdkVersion rootProject.ext.targetSdk
+        minSdkVersion BuildConfig.minSdk
+        targetSdkVersion BuildConfig.targetSdk
     }
 
     buildTypes {
@@ -23,8 +24,10 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project(':app')
-    implementation Libs.org_jetbrains_kotlin_kotlin_stdlib_jdk7
-    implementation Libs.material_about_library
+
+    implementation Libraries.kotlinStdlib
+
+    implementation Libraries.materialAbout
 }
 repositories {
     mavenCentral()

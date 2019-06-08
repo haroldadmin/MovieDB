@@ -1,8 +1,9 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.discover
 
+import com.haroldadmin.cnradapter.NetworkResponse
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.common.ErrorResponse
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.NetworkResponse
 import io.reactivex.Single
+import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Query
 import java.text.SimpleDateFormat
@@ -24,12 +25,12 @@ internal interface DiscoveryService {
         @Query("region") region: String,
         @Query("primary_release_date.lte") releaseDateGte: String = currentDate,
         @Query("primary_release_date.gte") releaseDateLte: String = pastDate
-    ): Single<NetworkResponse<DiscoverMoviesResponse, ErrorResponse>>
+    ): Deferred<NetworkResponse<DiscoverMoviesResponse, ErrorResponse>>
 
     @GET("movie/popular")
-    fun getPopularMovies(): Single<NetworkResponse<DiscoverMoviesResponse, ErrorResponse>>
+    fun getPopularMovies(): Deferred<NetworkResponse<DiscoverMoviesResponse, ErrorResponse>>
 
     @GET("movie/top_rated")
-    fun getTopRatedMovies(): Single<NetworkResponse<DiscoverMoviesResponse, ErrorResponse>>
+    fun getTopRatedMovies(): Deferred<NetworkResponse<DiscoverMoviesResponse, ErrorResponse>>
 
 }

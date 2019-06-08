@@ -10,9 +10,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.R
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.AccountState
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.CustomMaterialButton
 import com.kshitijchauhan.haroldadmin.moviedb.ui.common.KotlinEpoxyHolder
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayer
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.YouTubePlayerView
-import com.pierfrancescosoffritti.androidyoutubeplayer.player.listeners.AbstractYouTubePlayerListener
 
 @EpoxyModelClass(layout = R.layout.view_main_text)
 abstract class MainTextModel : EpoxyModelWithHolder<MainTextModel.MainTextViewHolder>() {
@@ -27,74 +24,6 @@ abstract class MainTextModel : EpoxyModelWithHolder<MainTextModel.MainTextViewHo
 
     inner class MainTextViewHolder : KotlinEpoxyHolder() {
         val mainText by bind<TextView>(R.id.tvMainText)
-    }
-}
-
-@EpoxyModelClass(layout = R.layout.view_youtube_player)
-abstract class TrailerModel : EpoxyModelWithHolder<TrailerModel.TrailerHolder>() {
-
-    @EpoxyAttribute
-    lateinit var trailerKey: String
-
-    override fun bind(holder: TrailerHolder) {
-        super.bind(holder)
-        if (holder.isInitialized) {
-            holder.youTubePlayer?.cueVideo(trailerKey, 0f)
-        } else {
-            holder.cueVideo(trailerKey)
-        }
-    }
-
-    override fun unbind(holder: TrailerHolder) {
-        super.unbind(holder)
-        // We should not release the player here, otherwise subsequent video requests will be not loaded
-        holder.youTubePlayer?.pause()
-    }
-
-    /**
-     * To create this view holder for Epoxy, we are using [EpoxyHolder] instead of [KotlinEpoxyHolder] because we need
-     * to initialize the youtube player view. For this, we need a reference to the inflated view object this holder is
-     * working with. [KotlinEpoxyHolder] does not provide this view object.
-     */
-    inner class TrailerHolder : EpoxyHolder() {
-        // Actual view inside the view hierarchy
-        private var youTubePlayerView: YouTubePlayerView? = null
-
-        // Youtube player backing the player view
-        var youTubePlayer: YouTubePlayer? = null
-
-        // Used to provide access to outside classes to the initialized status of the youtube player
-        var isInitialized = false
-
-        // If the youtube player is uninitialized when binding to it, we can store the video key in this variable.
-        // The youtube player view will cue this video upon initialization.
-        var videoKey: String = ""
-
-        fun cueVideo(key: String) {
-            videoKey = key
-        }
-
-        override fun bindView(itemView: View) {
-            youTubePlayerView = itemView.findViewById<YouTubePlayerView>(R.id.movieTrailer)
-                .apply {
-                    initialize(
-                        { initializedPlayer ->
-                            initializedPlayer.addListener(object : AbstractYouTubePlayerListener() {
-                                override fun onReady() {
-                                    super.onReady()
-                                    youTubePlayer = initializedPlayer
-                                    isInitialized = true
-                                    if (videoKey != "") {
-                                        initializedPlayer.cueVideo(videoKey, 0f)
-                                    }
-                                }
-                            })
-                        },
-                        true
-                    )
-                }
-        }
-
     }
 }
 

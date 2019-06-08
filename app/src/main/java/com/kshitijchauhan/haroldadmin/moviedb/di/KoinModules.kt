@@ -24,7 +24,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.ui.main.MainViewModel
 import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.DetailsEpoxyController
 import com.kshitijchauhan.haroldadmin.moviedb.ui.movie_details.MovieDetailsViewModel
 import org.koin.android.ext.koin.androidContext
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 

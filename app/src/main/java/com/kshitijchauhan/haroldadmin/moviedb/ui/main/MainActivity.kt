@@ -28,7 +28,7 @@ import com.kshitijchauhan.haroldadmin.moviedb.core.extensions.postDelayed
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.get
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.android.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 

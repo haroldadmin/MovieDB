@@ -1,5 +1,6 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote
 
+import com.haroldadmin.cnradapter.NetworkResponse
 import com.kshitijchauhan.haroldadmin.moviedb.core.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.account.AccountDetailsResponse
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.account.AccountService
@@ -10,7 +11,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.aut
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.discover.DiscoveryService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.MovieService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.search.SearchService
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.NetworkResponse
 import io.reactivex.Single
 
 class ApiManager internal constructor(

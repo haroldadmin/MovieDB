@@ -1,9 +1,9 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.collections
 
+import com.haroldadmin.cnradapter.NetworkResponse
 import com.kshitijchauhan.haroldadmin.moviedb.core.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.account.AccountService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.discover.DiscoveryService
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.NetworkResponse
 import com.kshitijchauhan.haroldadmin.moviedb.repository.toMovie
 import io.reactivex.Single
 

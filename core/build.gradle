@@ -3,13 +3,13 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdk
+    compileSdkVersion BuildConfig.compileSdk
 
     defaultConfig {
-        minSdkVersion rootProject.ext.minSdk
-        targetSdkVersion rootProject.ext.targetSdk
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
+        minSdkVersion BuildConfig.minSdk
+        targetSdkVersion BuildConfig.targetSdk
+        versionCode BuildConfig.versionCode
+        versionName BuildConfig.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -30,15 +30,21 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation Libs.org_jetbrains_kotlin_kotlin_stdlib_jdk7
+    implementation Libraries.kotlinStdlib
 
-    implementation Libs.appcompat
-    implementation Libs.rxjava
-    implementation Libs.rxrelay
+    implementation Libraries.appCompat
+    implementation Libraries.rxJava
+    implementation Libraries.rxRelay
+
 }
 repositories {
     mavenCentral()

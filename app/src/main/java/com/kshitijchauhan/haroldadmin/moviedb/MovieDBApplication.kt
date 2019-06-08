@@ -17,12 +17,14 @@ class MovieDBApplication : Application() {
         startKoin {
             androidContext(this@MovieDBApplication.applicationContext)
             modules(
-                applicationModule,
-                retrofitModule,
-                apiModule,
-                uiModule,
-                databaseModule,
-                repositoryModule
+                listOf(
+                    applicationModule,
+                    retrofitModule,
+                    apiModule,
+                    uiModule,
+                    databaseModule,
+                    repositoryModule
+                )
             )
         }
     }

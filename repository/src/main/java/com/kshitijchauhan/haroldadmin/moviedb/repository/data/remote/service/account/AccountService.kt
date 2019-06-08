@@ -1,8 +1,9 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.account
 
+import com.haroldadmin.cnradapter.NetworkResponse
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.common.ErrorResponse
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.NetworkResponse
 import io.reactivex.Single
+import kotlinx.coroutines.Deferred
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -11,13 +12,13 @@ import retrofit2.http.Path
 internal interface AccountService {
 
     @GET("account")
-    fun getAccountDetails(): Single<NetworkResponse<AccountDetailsResponse, ErrorResponse>>
+    fun getAccountDetails(): Deferred<NetworkResponse<AccountDetailsResponse, ErrorResponse>>
 
     @GET("account/{accountId}/watchlist/movies")
-    fun getMoviesWatchList(@Path("accountId") accountId: Int): Single<NetworkResponse<MovieWatchlistResponse, ErrorResponse>>
+    fun getMoviesWatchList(@Path("accountId") accountId: Int): Deferred<NetworkResponse<MovieWatchlistResponse, ErrorResponse>>
 
     @GET("account/{accountId}/favorite/movies")
-    fun getFavouriteMovies(@Path("accountId") accountId: Int): Single<NetworkResponse<FavouriteMoviesResponse, ErrorResponse>>
+    fun getFavouriteMovies(@Path("accountId") accountId: Int): Deferred<NetworkResponse<FavouriteMoviesResponse, ErrorResponse>>
 
     @POST("account/{accountId}/favorite")
     fun toggleMediaFavouriteStatus(

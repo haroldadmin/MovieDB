@@ -32,7 +32,6 @@ class DetailsEpoxyController(
             buildMovieResource(movieResource)
             buildCastResource(castResource)
             buildSimilarMoviesModel(similarMoviesResource)
-            buildTrailerResource(trailerResource)
         }
     }
 
@@ -98,38 +97,6 @@ class DetailsEpoxyController(
                 }
             }
             is Resource.Error -> Unit
-            is Resource.Loading -> Unit
-        }.safe
-    }
-
-    private fun buildTrailerResource(resource: Resource<MovieTrailer>) {
-        when (resource) {
-            is Resource.Success -> {
-                header {
-                    id("trailer")
-                    title("Trailer")
-                    spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
-                }
-
-                trailer {
-                    id(resource.data.movieId)
-                    trailerKey(resource.data.youtubeVideoKey)
-                    spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
-                }
-            }
-            is Resource.Error -> {
-                header {
-                    id("trailer")
-                    title("Trailer")
-                    spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
-                }
-
-                infoText {
-                    id("trailer-empty")
-                    text("We can't find a trailer for this movie")
-                    spanSizeOverride { totalSpanCount, _, _ -> totalSpanCount }
-                }
-            }
             is Resource.Loading -> Unit
         }.safe
     }

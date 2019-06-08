@@ -2,6 +2,7 @@ package com.kshitijchauhan.haroldadmin.moviedb.repository
 
 import android.content.SharedPreferences
 import androidx.room.Room
+import com.haroldadmin.cnradapter.CoroutinesNetworkResponseAdapterFactory
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.ActorsRepository
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.LocalActorsSource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.actors.RemoteActorsSource
@@ -18,7 +19,6 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.peo
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.search.SearchService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.ApiKeyInterceptor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.Config
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.KotlinRxJava2CallAdapterFactory
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.SessionIdInterceptor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.LocalMoviesSource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.movies.MoviesRepository
@@ -32,7 +32,6 @@ import org.koin.android.ext.koin.androidContext
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.*
 
@@ -79,15 +78,13 @@ val retrofitModule = module {
             .let { moshi -> MoshiConverterFactory.create(moshi) }
     }
 
-    single { RxJava2CallAdapterFactory.create() }
 
-    single { KotlinRxJava2CallAdapterFactory.create() }
+    single { CoroutinesNetworkResponseAdapterFactory() }
 
     single {
         Retrofit.Builder()
             .client(get())
-            .addCallAdapterFactory(get<KotlinRxJava2CallAdapterFactory>())
-            .addCallAdapterFactory(get<RxJava2CallAdapterFactory>())
+            .addCallAdapterFactory(get<CoroutinesNetworkResponseAdapterFactory>())
             .addConverterFactory(get<MoshiConverterFactory>())
             .baseUrl(Config.BASE_URL)
             .build()

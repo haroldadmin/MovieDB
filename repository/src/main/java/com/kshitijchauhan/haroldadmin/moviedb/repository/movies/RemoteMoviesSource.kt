@@ -1,11 +1,11 @@
 package com.kshitijchauhan.haroldadmin.moviedb.repository.movies
 
+import com.haroldadmin.cnradapter.NetworkResponse
 import com.kshitijchauhan.haroldadmin.moviedb.core.extensions.firstOrDefault
 import com.kshitijchauhan.haroldadmin.moviedb.core.Resource
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.account.*
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.movie.MovieService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.search.SearchService
-import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.utils.NetworkResponse
 import com.kshitijchauhan.haroldadmin.moviedb.repository.toAccountState
 import com.kshitijchauhan.haroldadmin.moviedb.repository.toActor
 import com.kshitijchauhan.haroldadmin.moviedb.repository.toMovie

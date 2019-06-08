@@ -11,16 +11,13 @@ kapt {
 }
 
 android {
-    kotlinOptions {
-        jvmTarget = '1.6'
-    }
-    compileSdkVersion rootProject.ext.compileSdk
+    compileSdkVersion BuildConfig.compileSdk
     defaultConfig {
-        applicationId rootProject.ext.applicationId
-        minSdkVersion rootProject.ext.minSdk
-        targetSdkVersion rootProject.ext.targetSdk
-        versionCode rootProject.ext.versionCode
-        versionName rootProject.ext.versionName
+        applicationId BuildConfig.applicationId
+        minSdkVersion BuildConfig.minSdk
+        targetSdkVersion BuildConfig.targetSdk
+        versionCode BuildConfig.versionCode
+        versionName BuildConfig.versionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -57,62 +54,64 @@ android {
         }
     }
 
+    androidExtensions {
+        experimental = true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    androidExtensions {
-        experimental = true
-    }
+
     dynamicFeatures = [":about"]
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation Libs.org_jetbrains_kotlin_kotlin_stdlib_jdk7
 
     implementation project(path: ':core')
     implementation project(path: ':repository')
     implementation project(path: ':mvrxlite')
 
-    implementation Libs.appcompat
-    implementation Libs.constraintlayout
-    implementation Libs.legacy_support_v4
-    implementation Libs.lifecycle_extensions
-    implementation Libs.material
-    implementation Libs.core_ktx
-    implementation Libs.preference
-    implementation Libs.legacy_preference_v14
+    implementation Libraries.kotlinStdlib
 
-    implementation Libs.navigation_fragment_ktx
-    implementation Libs.navigation_ui_ktx
+    implementation Libraries.appCompat
+    implementation Libraries.constraintLayout
+    implementation Libraries.legacySupportV4
+    implementation Libraries.lifecycle
+    implementation Libraries.material
+    implementation Libraries.coreKtx
+    implementation Libraries.preference
+    implementation Libraries.legacyPreferenceV14
 
-    implementation Libs.koin_android
-    implementation Libs.koin_androidx_scope
-    implementation Libs.koin_androidx_viewmodel
+    implementation Libraries.navigation
+    implementation Libraries.navigationUi
 
-    implementation Libs.rxjava
-    implementation Libs.rxandroid
-    implementation Libs.rxkotlin
-    implementation Libs.rxbinding
-    implementation Libs.rxrelay
+    implementation Libraries.koinAndroid
+    implementation Libraries.koinScope
+    implementation Libraries.koinViewModel
 
-    implementation Libs.glide
-    kapt Libs.com_github_bumptech_glide_compiler
+    implementation Libraries.rxJava
+    implementation Libraries.rxAndroid
+    implementation Libraries.rxKotlin
+    implementation Libraries.rxBinding
+    implementation Libraries.rxRelay
 
-    implementation Libs.com_pierfrancescosoffritti_androidyoutubeplayer_core
-    implementation Libs.lemniscate
-    implementation Libs.epoxy
-    kapt Libs.epoxy_processor
+    implementation Libraries.glide
+    kapt Libraries.glideCompiler
 
-    testImplementation Libs.junit
-    testImplementation Libs.mockito_core
-    androidTestImplementation Libs.androidx_test_runner
-    androidTestImplementation Libs.espresso_core
+    implementation Libraries.lemniscate
+    implementation Libraries.epoxy
+    kapt Libraries.epoxyProcessor
 
-    implementation Libs.firebase_core
-    implementation Libs.crashlytics
-    implementation Libs.okhttp
+    testImplementation Libraries.junit
+    testImplementation Libraries.mockitoCore
+    androidTestImplementation Libraries.androidxTestRunner
+    androidTestImplementation Libraries.espressoCore
+
+    implementation Libraries.firebaseCore
+    implementation Libraries.crashlytics
+    implementation Libraries.okhttp
 }
 
 apply plugin: 'com.google.gms.google-services'
