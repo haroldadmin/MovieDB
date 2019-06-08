@@ -45,6 +45,11 @@ dependencies {
     implementation Libraries.rxJava
     implementation Libraries.rxRelay
 
+    testImplementation Libraries.junit
+    testImplementation Libraries.mockitoCore
+    androidTestImplementation Libraries.androidxTestRunner
+    androidTestImplementation Libraries.espressoCore
+
 }
 repositories {
     mavenCentral()

@@ -30,16 +30,9 @@ class RoomDbTest {
 
     @Test
     fun movieTest() = runBlocking {
-//        moviesDao.saveMovie(Movie(1, "", "", "", "", 0.0, Date(0L), false, false, false, 0, 0))
+        moviesDao.saveMovie(Movie(1, "", "", "", "", 0.0, Date(0L), false, false, false, 0, 0))
         val movie: Movie = moviesDao.getMovie(1)
         assertEquals(1, movie.id)
-        println(""""
-            |XXXXXXXXXXX
-            |XXXXXXXXXX
-            |XXXXXXXXX
-            |\n\n\n\n\n$movie XXXXXXXXXXXXXXXXX
-            |XXXXXXXXXXXXXXXX
-            |XXXXXXXX\n\n\n\n\n\n\n""".trimMargin())
     }
 
     @After

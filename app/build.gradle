@@ -2,8 +2,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'io.fabric'
 apply plugin: "androidx.navigation.safeargs.kotlin"
+apply plugin: 'io.fabric'
 
 // For Epoxy
 kapt {
@@ -33,22 +33,15 @@ android {
         dev {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            matchingFallbacks = ['release', 'debug']
         }
     }
 
     def build_param = "${build}"
 
     if (build_param != "dev") {
-        //exclude production build
         android.variantFilter { variant ->
             if (variant.buildType.name == 'dev') {
-                variant.setIgnore(true)
-            }
-        }
-    } else {
-        //exclude all except production build
-        android.variantFilter { variant ->
-            if (variant.buildType.name != 'dev') {
                 variant.setIgnore(true)
             }
         }
@@ -61,6 +54,10 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    dataBinding {
+        enabled = true
     }
 
     dynamicFeatures = [":about"]

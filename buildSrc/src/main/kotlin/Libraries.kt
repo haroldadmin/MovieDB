@@ -40,6 +40,7 @@ object Libraries {
     const val materialAbout = "com.github.daniel-stoneuk:material-about-library:${Versions.materialAbout}"
 
     const val epoxy = "com.airbnb.android:epoxy:${Versions.epoxy}"
+    const val epoxyDatabinding = "com.airbnb.android:epoxy-databinding:${Versions.epoxy}"
     const val epoxyProcessor = "com.airbnb.android:epoxy-processor:${Versions.epoxy}"
 
     const val junit = "junit:junit:${Versions.junit}"

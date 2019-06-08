@@ -1,6 +1,11 @@
 apply plugin: 'com.android.dynamic-feature'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+kapt {
+    correctErrorTypes = true
+}
 
 android {
     compileSdkVersion BuildConfig.compileSdk
@@ -10,26 +15,32 @@ android {
         targetSdkVersion BuildConfig.targetSdk
     }
 
-    buildTypes {
-        debug { }
-        release { }
-    }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    dataBinding {
+        enabled = true
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':app')
+
+    implementation project(path: ':app')
 
     implementation Libraries.kotlinStdlib
 
     implementation Libraries.appCompat
-    implementation Libraries.materialAbout
     implementation Libraries.material
+    implementation Libraries.constraintLayout
+
+    implementation Libraries.koinAndroid
+
+    implementation Libraries.epoxy
+    implementation Libraries.epoxyDatabinding
+    kapt Libraries.epoxyProcessor
 }
 repositories {
     mavenCentral()
