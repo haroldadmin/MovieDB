@@ -9,6 +9,6 @@ object BuildConfig {
     const val targetSdk = 28
 
     const val applicationId = "com.kshitijchauhan.haroldadmin.moviedb"
-    const val versionCode = 12
+    const val versionCode = 14
     const val versionName = "0.7"
 }
