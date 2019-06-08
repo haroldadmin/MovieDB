@@ -6,6 +6,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.acc
 import com.kshitijchauhan.haroldadmin.moviedb.repository.data.remote.service.discover.DiscoveryService
 import com.kshitijchauhan.haroldadmin.moviedb.repository.toMovie
 import io.reactivex.Single
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.rx2.asSingle
 
 internal class RemoteCollectionsSource(
     private val discoveryService: DiscoveryService,
@@ -23,7 +25,7 @@ internal class RemoteCollectionsSource(
     }
 
     private fun getFavouritesCollection(accountId: Int): Single<Resource<Collection>> {
-        return accountService.getFavouriteMovies(accountId)
+        return accountService.getFavouriteMovies(accountId).asSingle(Dispatchers.Default)
             .flatMap { response ->
                 Single.just(when (response) {
                     is NetworkResponse.Success -> {
@@ -47,7 +49,7 @@ internal class RemoteCollectionsSource(
     }
 
     private fun getWatchlistedCollection(accountId: Int): Single<Resource<Collection>> {
-        return accountService.getMoviesWatchList(accountId)
+        return accountService.getMoviesWatchList(accountId).asSingle(Dispatchers.Default)
             .flatMap { response ->
                 Single.just(
                     when (response) {
@@ -73,7 +75,7 @@ internal class RemoteCollectionsSource(
     }
 
     private fun getPopularCollection(): Single<Resource<Collection>> {
-        return discoveryService.getPopularMovies()
+        return discoveryService.getPopularMovies().asSingle(Dispatchers.Default)
             .flatMap { response ->
                 Single.just(when (response) {
                     is NetworkResponse.Success -> {
@@ -98,7 +100,7 @@ internal class RemoteCollectionsSource(
     }
 
     private fun getTopRatedCollection(): Single<Resource<Collection>> {
-        return discoveryService.getTopRatedMovies()
+        return discoveryService.getTopRatedMovies().asSingle(Dispatchers.Default)
             .flatMap { response ->
                 Single.just(when (response) {
                     is NetworkResponse.Success -> {
@@ -123,7 +125,7 @@ internal class RemoteCollectionsSource(
     }
 
     private fun getInTheatresCollection(givenRegion: String): Single<Resource<Collection>> {
-        return discoveryService.getMoviesInTheatre(region = givenRegion)
+        return discoveryService.getMoviesInTheatre(region = givenRegion).asSingle(Dispatchers.Default)
             .flatMap { topRatedResponse ->
                 Single.just(when (topRatedResponse) {
                     is NetworkResponse.Success -> {

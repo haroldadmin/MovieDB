@@ -13,6 +13,8 @@ import com.kshitijchauhan.haroldadmin.moviedb.repository.toMovieTrailer
 import io.reactivex.Flowable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.rx2.asSingle
 
 internal class RemoteMoviesSource (
     private val movieService: MovieService,
@@ -22,6 +24,7 @@ internal class RemoteMoviesSource (
 
     fun getMovieDetails(id: Int): Single<Resource<Movie>> {
         return movieService.getMovieDetails(id)
+            .asSingle(Dispatchers.Default)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
             .flatMap { movieResponse ->
@@ -43,6 +46,7 @@ internal class RemoteMoviesSource (
 
     fun getMovieAccountStates(movieId: Int): Single<Resource<AccountState>> {
         return movieService.getAccountStatesForMovie(movieId)
+            .asSingle(Dispatchers.Default)
             .subscribeOn(Schedulers.io())
             .flatMap { accountStateResponse ->
                 Single.just(
@@ -63,6 +67,7 @@ internal class RemoteMoviesSource (
 
     fun getMovieCast(movieId: Int): Single<Resource<Cast>> {
         return movieService.getCreditsForMovie(movieId)
+            .asSingle(Dispatchers.Default)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
             .flatMap { response ->
@@ -91,6 +96,7 @@ internal class RemoteMoviesSource (
 
     fun getMovieTrailer(movieId: Int): Flowable<Resource<MovieTrailer>> {
         return movieService.getVideosForMovie(movieId)
+            .asSingle(Dispatchers.Default)
             .subscribeOn(Schedulers.io())
             .flatMapPublisher { movieVideosResponse ->
                 Flowable.just(when (movieVideosResponse) {
@@ -146,6 +152,7 @@ internal class RemoteMoviesSource (
     fun getSearchResultsForQuery(query: String): Single<Resource<List<Movie>>> {
         return searchService
             .searchForMovie(query)
+            .asSingle(Dispatchers.Default)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
             .flatMap { searchResponse ->
@@ -168,6 +175,7 @@ internal class RemoteMoviesSource (
     fun getSimilarMoviesForMovie(movieId: Int): Single<Resource<List<Movie>>> {
         return movieService
             .getSimilarMoviesForMovie(movieId)
+            .asSingle(Dispatchers.Default)
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.computation())
             .flatMap { similarMoviesResponse ->

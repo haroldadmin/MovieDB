@@ -68,6 +68,7 @@ dependencies {
 
     implementation Libraries.kotlinStdlib
     implementation Libraries.coroutinesCore
+    implementation Libraries.coroutinesRx2
 
     implementation Libraries.rxJava
     implementation Libraries.rxAndroid

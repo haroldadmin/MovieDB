@@ -41,7 +41,7 @@ class AboutFragment : MaterialAboutFragment() {
 
             this += ConvenienceBuilder.createRateActionItem(
                 ctx,
-                resources.getDrawable(R.drawable.ic_round_star_rate_18px, ctx.theme),
+                resources.getDrawable(R.drawable.ic_round_star_rate, ctx.theme),
                 getString(R.string.rate_the_app),
                 getString(R.string.rate_the_app_subtext)
             )

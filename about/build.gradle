@@ -27,7 +27,9 @@ dependencies {
 
     implementation Libraries.kotlinStdlib
 
+    implementation Libraries.appCompat
     implementation Libraries.materialAbout
+    implementation Libraries.material
 }
 repositories {
     mavenCentral()

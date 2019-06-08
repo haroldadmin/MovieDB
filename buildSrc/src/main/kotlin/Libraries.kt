@@ -9,6 +9,7 @@ object Libraries {
     const val kotlinStdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${BuildConfig.kotlin}"
     const val coroutinesCore = "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.coroutines}"
     const val coroutinesAndroid = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.coroutines}"
+    const val coroutinesRx2 = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:${Versions.coroutines}"
     const val coroutinesTest = "org.jetbrains.kotlinx:kotlinx-coroutines-test:${Versions.coroutines}"
 
     const val appCompat = "androidx.appcompat:appcompat:${Versions.appCompat}"
