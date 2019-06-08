@@ -33,7 +33,6 @@ android {
         dev {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            matchingFallbacks = ['release', 'debug']
         }
     }
 
@@ -42,6 +41,12 @@ android {
     if (build_param != "dev") {
         android.variantFilter { variant ->
             if (variant.buildType.name == 'dev') {
+                variant.setIgnore(true)
+            }
+        }
+    } else {
+        android.variantFilter { variant ->
+            if (variant.buildType.name != 'dev') {
                 variant.setIgnore(true)
             }
         }
@@ -59,8 +64,6 @@ android {
     dataBinding {
         enabled = true
     }
-
-    dynamicFeatures = [":about"]
 }
 
 dependencies {
@@ -69,6 +72,7 @@ dependencies {
     implementation project(path: ':core')
     implementation project(path: ':repository')
     implementation project(path: ':mvrxlite')
+    implementation project(path: ':about')
 
     implementation Libraries.kotlinStdlib
 

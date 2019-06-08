@@ -8,24 +8,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.kshitijchauhan.haroldadmin.moviedb.about.databinding.FragmentAboutBinding
+import kotlinx.android.synthetic.main.fragment_about.view.*
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
 
 class AboutFragment : Fragment() {
 
-    private lateinit var binding: FragmentAboutBinding
     private val epoxyHandler by inject<Handler>(named("epoxy-handler"))
     private val state = AboutState()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = FragmentAboutBinding.inflate(inflater, container, false)
-
-        binding.rvAbout.apply {
+        val view = inflater.inflate(R.layout.fragment_about, container, false)
+        view.rvAbout.apply {
             setController(epoxyController)
             epoxyController.setData(state)
         }
-        return binding.root
+        return view
     }
 
     private val epoxyController by lazy { AboutEpoxyController(epoxyHandler, callbacks) }
@@ -34,21 +32,21 @@ class AboutFragment : Fragment() {
         object : AboutEpoxyController.AboutEpoxyControllerCallbacks {
             override val onRateClick: View.OnClickListener = View.OnClickListener {
                 val uri = Uri.parse("market://details?id=${requireContext().packageName}")
-                createIntent(uri).let { intent -> startActivity(intent) }
+                startActivity(createIntent(uri))
             }
             override val onAuthorClick: View.OnClickListener = View.OnClickListener {
                 val uri = Uri.parse(state.authorUrl)
-                createIntent(uri).let { intent -> startActivity(intent) }
+                startActivity(createIntent(uri))
             }
 
             override val onRepoClick: View.OnClickListener = View.OnClickListener {
                 val uri = Uri.parse(state.repositoryUrl)
-                createIntent(uri).let { intent -> startActivity(intent) }
+                startActivity(createIntent(uri))
             }
 
             override val onTmdbClick: View.OnClickListener = View.OnClickListener {
                 val uri = Uri.parse(state.tmdbUrl)
-                createIntent(uri).let { intent -> startActivity(intent)}
+                startActivity(createIntent(uri))
             }
         }
     }

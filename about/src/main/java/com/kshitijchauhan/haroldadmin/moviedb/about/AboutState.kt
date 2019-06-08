@@ -1,6 +1,6 @@
 package com.kshitijchauhan.haroldadmin.moviedb.about
 
-import com.kshitijchauhan.haroldadmin.moviedb.BuildConfig
+import com.kshitijchauhan.haroldadmin.moviedb.about.BuildConfig
 
 private const val githubProfile = "https://www.github.com/haroldadmin"
 private const val authName = "Kshitij Chauhan"

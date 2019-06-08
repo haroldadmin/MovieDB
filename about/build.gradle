@@ -1,7 +1,8 @@
-apply plugin: 'com.android.dynamic-feature'
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.jakewharton.butterknife'
 
 kapt {
     correctErrorTypes = true
@@ -13,6 +14,9 @@ android {
     defaultConfig {
         minSdkVersion BuildConfig.minSdk
         targetSdkVersion BuildConfig.targetSdk
+        versionCode BuildConfig.versionCode
+        versionName BuildConfig.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     compileOptions {
@@ -23,12 +27,27 @@ android {
     dataBinding {
         enabled = true
     }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        dev {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-
-    implementation project(path: ':app')
 
     implementation Libraries.kotlinStdlib
 
@@ -42,6 +61,7 @@ dependencies {
     implementation Libraries.epoxyDatabinding
     kapt Libraries.epoxyProcessor
 }
+
 repositories {
     mavenCentral()
 }
